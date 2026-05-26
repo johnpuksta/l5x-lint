@@ -99,6 +99,399 @@ def check_undefined_tags(routine: Routine, scope: SymbolTable) -> list[Diagnosti
 
 ---
 
+## Core Type Definitions
+
+All domain types are pure dataclasses — zero dependencies, no pydantic.
+These are the single source of truth; every module imports from `domain/`.
+
+### TagPath
+
+```python
+@dataclass
+class TagPath:
+    """A dotted tag path with optional array indices, e.g. `Conveyor.Motor[3].Speed`."""
+    segments: list[TagPathSegment]
+
+    @property
+    def full_name(self) -> str:
+        return ".".join(s.path_str() for s in self.segments)
+
+    def resolve(self, scope: SymbolTable) -> Result[Tag, LintError]:
+        ...
+
+@dataclass
+class TagPathSegment:
+    name: str
+    index: int | None = None          # Arr[5] → name="Arr", index=5
+
+    def path_str(self) -> str:
+        return f"{self.name}[{self.index}]" if self.index is not None else self.name
+```
+
+### Location
+
+```python
+@dataclass
+class Location:
+    program: str
+    routine: str
+    rung: int | None = None           # RLL rung number
+    line: int | None = None           # ST line number
+```
+
+### Diagnostic
+
+```python
+@dataclass
+class Diagnostic:
+    code: str                         # "E001", "W003", etc.
+    severity: str                     # "error" | "warning"
+    location: Location
+    message: str
+    hint: str | None = None
+    fix_suggestion: str | None = None
+```
+
+### AnalysisResult
+
+```python
+@dataclass
+class AnalysisResult:
+    passed: bool
+    error_count: int
+    warning_count: int
+    diagnostics: list[Diagnostic]
+```
+
+### FixSuggestion
+
+```python
+@dataclass
+class FixSuggestion:
+    code: str
+    description: str
+    replacement: str | None = None    # CDATA text replacement for the rung/line
+    target_tag: str | None = None     # tag to create/rename
+```
+
+### LintError (typed union for Result error type)
+
+All 15 variants — one per E/W code. Used as the `Error` type in `Result[_, LintError]`.
+
+```python
+class LintError:
+    """Namespace for error variants. Match against these in pipeline error handling."""
+    @dataclass
+    class E001: name: str
+    @dataclass
+    class E002: expected: str; actual: str
+    @dataclass
+    class E003: name: str
+    @dataclass
+    class E004: routine: str
+    @dataclass
+    class E005: path: str; member: str
+    @dataclass
+    class E006: name: str; index: int; size: int
+    @dataclass
+    class E007: name: str; scope: str
+    @dataclass
+    class E008: chain: list[str]
+    @dataclass
+    class E009: opcode: str; expected: int; actual: int
+    @dataclass
+    class E010: name: str; accessed_from: str; declared_in: str
+    @dataclass
+    class W001: name: str
+    @dataclass
+    class W002: rung: int
+    @dataclass
+    class W003: name: str
+    @dataclass
+    class W004: name: str
+    @dataclass
+    class W005: name: str; hidden_by: str
+
+LintError = (
+    LintError.E001 | LintError.E002 | LintError.E003 | LintError.E004
+    | LintError.E005 | LintError.E006 | LintError.E007 | LintError.E008
+    | LintError.E009 | LintError.E010
+    | LintError.W001 | LintError.W002 | LintError.W003 | LintError.W004
+    | LintError.W005
+)
+```
+
+### RLL Domain Models
+
+```python
+@dataclass
+class Operand:
+    value: str                        # tag name, literal "42", or wildcard "?"
+    type_hint: str | None = None      # filled by type resolution pass
+
+@dataclass
+class Instruction:
+    opcode: str
+    operands: list[Operand]
+    branch: list[list[Instruction]] | None = None  # parallel branches in [...]
+    is_output_branch: bool = False
+
+@dataclass
+class ParsedRung:
+    number: int
+    text: str                         # raw CDATA
+    instructions: list[Instruction]
+    output_branches: list[list[Instruction]]
+```
+
+### ST Domain Models
+
+Full ST expression AST — needed so checks can walk tag references uniformly.
+
+```python
+# --- Expressions ---
+@dataclass
+class StBinaryOp:
+    left: StExpression
+    op: str                           # "+", "-", "*", "/", "=", "<>", "<", ">",
+                                      # "<=", ">=", "and", "or"
+    right: StExpression
+
+@dataclass
+class StUnaryOp:
+    op: str                           # "-", "not"
+    operand: StExpression
+
+@dataclass
+class StLiteral:
+    value: int | float | str | bool
+
+@dataclass
+class StTagRef:
+    path: TagPath
+
+StExpression = StBinaryOp | StUnaryOp | StLiteral | StTagRef | StCall
+
+# --- Statements ---
+@dataclass
+class StAssignment:
+    target: TagPath
+    expression: StExpression
+    line: int
+
+@dataclass
+class StCall:
+    name: str
+    args: list[StExpression]
+    line: int
+
+@dataclass
+class StIf:
+    condition: StExpression
+    body: list[StStatement]
+    elsif_pairs: list[tuple[StExpression, list[StStatement]]]
+    else_body: list[StStatement]
+    line: int
+
+@dataclass
+class StCase:
+    expression: StExpression
+    cases: list[tuple[list[StExpression], list[StStatement]]]
+    else_body: list[StStatement]
+    line: int
+
+@dataclass
+class StFor:
+    variable: TagPath
+    start: StExpression
+    end: StExpression
+    step: StExpression | None         # "by" clause
+    body: list[StStatement]
+    line: int
+
+@dataclass
+class StWhile:
+    condition: StExpression
+    body: list[StStatement]
+    line: int
+
+@dataclass
+class StRepeat:
+    body: list[StStatement]
+    until: StExpression
+    line: int
+
+@dataclass
+class StJsr:
+    routine_name: str
+    args: list[StExpression]
+    line: int
+
+@dataclass
+class StExit:
+    line: int
+
+@dataclass
+class StReturn:
+    line: int
+
+StStatement = (
+    StAssignment | StIf | StCase | StFor | StWhile | StRepeat
+    | StCall | StJsr | StExit | StReturn
+)
+
+@dataclass
+class StProgram:
+    statements: list[StStatement]
+```
+
+### CheckFn — Unified Check Signature
+
+Every check has the same interface. The routine router has already dispatched
+RLL vs ST parsing, so checks consume `Routine` without caring about the type.
+
+```python
+CheckFn = Callable[[SymbolTable, Routine], list[Diagnostic]]
+```
+
+### extract_tag_refs — The Bridge Between RLL and ST
+
+This is the single function that makes all 15 checks type-agnostic.
+It walks parsed content and returns flat tag paths.
+
+```python
+def extract_tag_refs(routine: Routine) -> list[TagPath]:
+    """Extract all tag references from a routine, regardless of type."""
+    match routine.type:
+        case "RLL":
+            return [
+                tp for rung in routine.rll_rungs
+                for instr in rung.instructions + [
+                    i for branch in rung.instructions
+                    if branch.branch for i in branch.branch
+                ]
+                for op in instr.operands
+                for tp in parse_tag_path(op.value)
+                if op.value != "?"             # skip wildcards
+            ]
+        case "ST":
+            return _extract_st_tag_refs(routine.st_body)
+        case _:
+            return []                          # FBD/SFC: no text to analyze
+
+
+def _extract_st_tag_refs(program: Maybe[StProgram]) -> list[TagPath]:
+    """Walk StProgram statements and collect all TagPaths."""
+    match program:
+        case Nothing:
+            return []
+        case Some(prog):
+            refs: list[TagPath] = []
+            _walk_statements(prog.statements, refs)
+            return refs
+
+
+def _walk_statements(stmts: list[StStatement], acc: list[TagPath]) -> None:
+    for stmt in stmts:
+        match stmt:
+            case StAssignment(target=tag):
+                acc.append(tag)
+                _walk_expression(stmt.expression, acc)
+            case StCall(args=args):
+                for a in args:
+                    _walk_expression(a, acc)
+            case StIf(condition=c, body=b, elsif_pairs=ep, else_body=eb):
+                _walk_expression(c, acc)
+                _walk_statements(b, acc)
+                for _, elsif_body in ep:
+                    _walk_statements(elsif_body, acc)
+                _walk_statements(eb, acc)
+            case StFor(variable=v, start=s, end=e, step=st, body=b):
+                acc.append(v)
+                _walk_expression(s, acc)
+                _walk_expression(e, acc)
+                if st: _walk_expression(st, acc)
+                _walk_statements(b, acc)
+            case StWhile(condition=c, body=b):
+                _walk_expression(c, acc)
+                _walk_statements(b, acc)
+            case StRepeat(body=b, until=u):
+                _walk_statements(b, acc)
+                _walk_expression(u, acc)
+            case StJsr(args=args):
+                for a in args:
+                    _walk_expression(a, acc)
+            case _:
+                pass  # StCase, StExit, StReturn — no tag refs to check
+
+
+def _walk_expression(expr: StExpression, acc: list[TagPath]) -> None:
+    match expr:
+        case StTagRef(path=tag):
+            acc.append(tag)
+        case StBinaryOp(left=l, right=r):
+            _walk_expression(l, acc)
+            _walk_expression(r, acc)
+        case StUnaryOp(operand=op):
+            _walk_expression(op, acc)
+        case StCall(args=args):
+            for a in args:
+                _walk_expression(a, acc)
+        case _:
+            pass  # StLiteral — no tag refs
+```
+
+### Routine — The Central Data Structure
+
+```python
+@dataclass
+class Routine:
+    name: str
+    type: str                        # "RLL" | "ST" | "FBD" | "SFC"
+    rll_rungs: list[ParsedRung]      # populated for RLL type
+    st_body: Maybe[StProgram]        # populated for ST type, Nothing for others
+    cdata: str                       # raw CDATA for debugging
+```
+
+### Tag, DataType, SymbolTable — Declaration-Side Models
+
+```python
+@dataclass
+class Tag:
+    name: str
+    data_type: str                   # "DINT", "TIMER", "MyUDT", etc.
+    dimensions: tuple[int, ...] = ()
+    scope: str = "controller"        # "controller" | "program:<name>" | "aoi:<name>"
+    description: str = ""
+
+@dataclass
+class Member:
+    name: str
+    data_type: str
+    dimension: int = 0
+    bit_number: int | None = None
+
+@dataclass
+class DataType:
+    name: str
+    family: str                      # "NoFamily", "StringFamily", etc.
+    class_: str                      # "ProductDefined" | "User"
+    members: list[Member]
+
+@dataclass
+class SymbolTable:
+    controller_tags: dict[str, Tag]
+    program_tags: dict[str, dict[str, Tag]]   # program_name → {tag_name → Tag}
+    aoi_tags: dict[str, dict[str, Tag]]
+    data_types: dict[str, DataType]
+
+    def lookup(self, path: TagPath) -> Maybe[Tag]: ...
+    def resolve_type(self, type_name: str) -> Maybe[DataType]: ...
+    def scope_for(self, program: str) -> Scope: ...
+```
+
+---
+
 ## Research Findings (May 2026)
 
 ### Library Audit Summary
@@ -828,11 +1221,15 @@ suggest_fixes(diagnostic: Diagnostic) → list[FixSuggestion]
 ```
 l5x_lint/
   domain/                        # Pure data types — zero dependencies
-    models.py                    # Tag, DataType, Routine, ParsedRung, StProgram, StStatement, etc.
-    diagnostics.py               # Diagnostic, Location, Severity
-    errors.py                    # LintError (typed union for Result error type)
+    __init__.py                  # Re-exports all public types
+    models.py                    # Tag, DataType, Routine, TagPath, Location
+    diagnostics.py               # Diagnostic, AnalysisResult, FixSuggestion
+    errors.py                    # LintError (typed union of 15 variants)
+    rll_models.py                # ParsedRung, Instruction, Operand
+    st_models.py                 # StProgram, StStatement, StExpression AST
     symbol_table.py              # SymbolTable, Scope (pure query methods)
     type_system.py               # Type compatibility matrix, member resolution
+    tag_refs.py                  # extract_tag_refs (RLL + ST dispatch)
 
   checks/                        # One pure function per E/W code
     e001_undefined_tag.py
