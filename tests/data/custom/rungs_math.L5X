@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetType="Rung" TargetCount="6" ContainsContext="true" Owner="l5x-tools" ExportDate="Mon May 25 2026" ExportOptions="References NoRawData L5KData DecoratedData Context">
+<Controller Use="Context" Name="TestController">
+<DataTypes Use="Context">
+</DataTypes>
+<Tags Use="Context">
+<Tag Name="SrcA" TagType="Base" DataType="DINT" ExternalAccess="Read/Write"/>
+<Tag Name="SrcB" TagType="Base" DataType="DINT" ExternalAccess="Read/Write"/>
+<Tag Name="DestDint" TagType="Base" DataType="DINT" ExternalAccess="Read/Write"/>
+<Tag Name="DestReal" TagType="Base" DataType="REAL" ExternalAccess="Read/Write"/>
+<Tag Name="Enabling" TagType="Base" DataType="BOOL" ExternalAccess="Read/Write"/>
+</Tags>
+<Programs Use="Context">
+<Program Use="Context" Name="MainProgram">
+<Tags Use="Context">
+</Tags>
+<Routines Use="Context">
+<Routine Use="Context" Name="MathRoutine">
+<RLLContent Use="Context">
+<Rung Use="Target" Number="0" Type="N">
+<Text><![CDATA[XIC(Enabling)ADD(SrcA, SrcB, DestDint);]]></Text>
+</Rung>
+<Rung Use="Target" Number="1" Type="N">
+<Text><![CDATA[XIC(Enabling)SUB(SrcA, SrcB, DestDint);]]></Text>
+</Rung>
+<Rung Use="Target" Number="2" Type="N">
+<Text><![CDATA[XIC(Enabling)MUL(SrcA, SrcB, DestDint);]]></Text>
+</Rung>
+<Rung Use="Target" Number="3" Type="N">
+<Text><![CDATA[XIC(Enabling)DIV(SrcA, SrcB, DestReal);]]></Text>
+</Rung>
+<Rung Use="Target" Number="4" Type="N">
+<Text><![CDATA[XIC(Enabling)ADD(42, SrcB, DestDint);]]></Text>
+</Rung>
+<Rung Use="Target" Number="5" Type="N">
+<Text><![CDATA[XIC(Enabling)CPT(DestReal, SrcA + SrcB * 2);]]></Text>
+</Rung>
+</RLLContent>
+</Routine>
+</Routines>
+</Program>
+</Programs>
+</Controller>
+</RSLogix5000Content>

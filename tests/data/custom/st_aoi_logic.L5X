@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="36.00" TargetType="Instruction" TargetCount="1" ContainsContext="true" Owner="l5x-tools" ExportDate="Mon May 25 2026" ExportOptions="References NoRawData L5KData DecoratedData Context">
+<Controller Use="Context" Name="TestController">
+<DataTypes Use="Context">
+</DataTypes>
+<AddOnInstructionDefinitions Use="Context">
+<AddOnInstructionDefinition Use="Target" Name="StAoiLogic" Revision="1.0" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false">
+<Parameters>
+<Parameter Name="EnableIn" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only"/>
+<Parameter Name="EnableOut" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only"/>
+<Parameter Name="InputValue" TagType="Base" DataType="DINT" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write"/>
+<Parameter Name="Threshold" TagType="Base" DataType="DINT" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write"/>
+<Parameter Name="OutputValue" TagType="Base" DataType="DINT" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write"/>
+<Parameter Name="Status" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write"/>
+</Parameters>
+<LocalTags>
+<LocalTag Name="LocalTimer" DataType="TIMER" ExternalAccess="None"/>
+<LocalTag Name="LocalAccum" DataType="DINT" ExternalAccess="None"/>
+</LocalTags>
+<Routines>
+<Routine Name="Logic" Type="ST">
+<STContent>
+<Line Number="0"><![CDATA[if InputValue > Threshold then]]></Line>
+<Line Number="1"><![CDATA[	OutputValue := InputValue * 2;]]></Line>
+<Line Number="2"><![CDATA[	Status := 1;]]></Line>
+<Line Number="3"><![CDATA[else]]></Line>
+<Line Number="4"><![CDATA[	OutputValue := 0;]]></Line>
+<Line Number="5"><![CDATA[	Status := 0;]]></Line>
+<Line Number="6"><![CDATA[end_if;]]></Line>
+<Line Number="7"><![CDATA[]]></Line>
+<Line Number="8"><![CDATA[LocalAccum := LocalAccum + 1;]]></Line>
+<Line Number="9"><![CDATA[]]></Line>
+<Line Number="10"><![CDATA[if LocalAccum >= 1000 and Status then]]></Line>
+<Line Number="11"><![CDATA[	TON(LocalTimer, 5000, 0);]]></Line>
+<Line Number="12"><![CDATA[	LocalAccum := 0;]]></Line>
+<Line Number="13"><![CDATA[end_if;]]></Line>
+</STContent>
+</Routine>
+<Routine Name="Prescan" Type="RLL"/>
+</Routines>
+</AddOnInstructionDefinition>
+</AddOnInstructionDefinitions>
+</Controller>
+</RSLogix5000Content>

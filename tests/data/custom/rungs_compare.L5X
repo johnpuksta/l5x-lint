@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetType="Rung" TargetCount="7" ContainsContext="true" Owner="l5x-tools" ExportDate="Mon May 25 2026" ExportOptions="References NoRawData L5KData DecoratedData Context">
+<Controller Use="Context" Name="TestController">
+<DataTypes Use="Context">
+</DataTypes>
+<Tags Use="Context">
+<Tag Name="Value" TagType="Base" DataType="DINT" ExternalAccess="Read/Write"/>
+<Tag Name="Limit" TagType="Base" DataType="DINT" ExternalAccess="Read/Write"/>
+<Tag Name="Setpoint" TagType="Base" DataType="REAL" ExternalAccess="Read/Write"/>
+<Tag Name="Process" TagType="Base" DataType="REAL" ExternalAccess="Read/Write"/>
+<Tag Name="Enabled" TagType="Base" DataType="BOOL" ExternalAccess="Read/Write"/>
+<Tag Name="AtLimit" TagType="Base" DataType="BOOL" ExternalAccess="Read/Write"/>
+<Tag Name="BelowLimit" TagType="Base" DataType="BOOL" ExternalAccess="Read/Write"/>
+<Tag Name="AtSetpoint" TagType="Base" DataType="BOOL" ExternalAccess="Read/Write"/>
+</Tags>
+<Programs Use="Context">
+<Program Use="Context" Name="MainProgram">
+<Tags Use="Context">
+</Tags>
+<Routines Use="Context">
+<Routine Use="Context" Name="CompareRoutine">
+<RLLContent Use="Context">
+<Rung Use="Target" Number="0" Type="N">
+<Text><![CDATA[XIC(Enabled)EQU(Value, Limit)OTE(AtLimit);]]></Text>
+</Rung>
+<Rung Use="Target" Number="1" Type="N">
+<Text><![CDATA[XIC(Enabled)NEQ(Value, Limit)OTE(AtLimit);]]></Text>
+</Rung>
+<Rung Use="Target" Number="2" Type="N">
+<Text><![CDATA[XIC(Enabled)GRT(Value, Limit)OTE(AtLimit);]]></Text>
+</Rung>
+<Rung Use="Target" Number="3" Type="N">
+<Text><![CDATA[XIC(Enabled)GEQ(Value, Limit)OTE(AtLimit);]]></Text>
+</Rung>
+<Rung Use="Target" Number="4" Type="N">
+<Text><![CDATA[XIC(Enabled)LES(Value, Limit)OTE(BelowLimit);]]></Text>
+</Rung>
+<Rung Use="Target" Number="5" Type="N">
+<Text><![CDATA[XIC(Enabled)LEQ(Value, Limit)OTE(BelowLimit);]]></Text>
+</Rung>
+<Rung Use="Target" Number="6" Type="N">
+<Text><![CDATA[XIC(Enabled)EQU(Process, Setpoint)OTE(AtSetpoint);]]></Text>
+</Rung>
+</RLLContent>
+</Routine>
+</Routines>
+</Program>
+</Programs>
+</Controller>
+</RSLogix5000Content>

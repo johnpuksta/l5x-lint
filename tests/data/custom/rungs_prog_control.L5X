@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetType="Rung" TargetCount="6" ContainsContext="true" Owner="l5x-tools" ExportDate="Mon May 25 2026" ExportOptions="References NoRawData L5KData DecoratedData Context">
+<Controller Use="Context" Name="TestController">
+<DataTypes Use="Context">
+</DataTypes>
+<Tags Use="Context">
+<Tag Name="JsrEnable" TagType="Base" DataType="BOOL" ExternalAccess="Read/Write"/>
+<Tag Name="McpEnable" TagType="Base" DataType="BOOL" ExternalAccess="Read/Write"/>
+<Tag Name="Param1" TagType="Base" DataType="DINT" ExternalAccess="Read/Write"/>
+<Tag Name="Param2" TagType="Base" DataType="DINT" ExternalAccess="Read/Write"/>
+</Tags>
+<Programs Use="Context">
+<Program Use="Context" Name="MainProgram">
+<Tags Use="Context">
+</Tags>
+<Routines Use="Context">
+<Routine Use="Context" Name="ProgControlRoutine">
+<RLLContent Use="Context">
+<Rung Use="Target" Number="0" Type="N">
+<Text><![CDATA[AFI;]]></Text>
+</Rung>
+<Rung Use="Target" Number="1" Type="N">
+<Text><![CDATA[XIC(JsrEnable)JSR(SubRoutine, Param1, Param2);]]></Text>
+</Rung>
+<Rung Use="Target" Number="2" Type="N">
+<Text><![CDATA[XIC(JsrEnable)JSR(SubRoutine);]]></Text>
+</Rung>
+<Rung Use="Target" Number="3" Type="N">
+<Text><![CDATA[XIC(McpEnable)MCR;]]></Text>
+</Rung>
+<Rung Use="Target" Number="4" Type="N">
+<Text><![CDATA[XIC(JsrEnable)JMP(MyLabel);]]></Text>
+</Rung>
+<Rung Use="Target" Number="5" Type="N">
+<Text><![CDATA[LBL(MyLabel);]]></Text>
+</Rung>
+</RLLContent>
+</Routine>
+<Routine Use="Context" Name="SubRoutine">
+<RLLContent Use="Context">
+<Rung Use="Target" Number="0" Type="N">
+<Text><![CDATA[XIC(JsrEnable)ADD(Param1, Param2, Param1);]]></Text>
+</Rung>
+</RLLContent>
+</Routine>
+</Routines>
+</Program>
+</Programs>
+</Controller>
+</RSLogix5000Content>

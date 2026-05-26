@@ -1,10 +1,10 @@
 from pathlib import Path
-from conftest import VALID_DIR, INVALID_DIR
+from conftest import VALID_DIR, INVALID_DIR, CUSTOM_DIR
 
 
 def test_valid_files_exist():
     files = list(VALID_DIR.rglob("*.L5X"))
-    assert len(files) >= 14, f"Expected at least 14 valid L5X files, found {len(files)}"
+    assert len(files) >= 22, f"Expected at least 22 valid L5X files, found {len(files)}"
     for f in files:
         assert f.stat().st_size > 0, f"{f.name} is empty"
 
@@ -16,6 +16,21 @@ def test_invalid_files_exist():
     found = {f.stem.split("_")[0] for f in files}
     missing = expected - found
     assert not missing, f"Missing test files for codes: {missing}"
+
+
+def test_custom_files_exist():
+    files = list(CUSTOM_DIR.glob("*.L5X"))
+    assert len(files) >= 5, f"Expected at least 5 custom L5X files, found {len(files)}"
+    for f in files:
+        assert f.stat().st_size > 0, f"{f.name} is empty"
+
+
+def test_custom_files_are_valid_xml():
+    import xml.etree.ElementTree as ET
+    for f in CUSTOM_DIR.glob("*.L5X"):
+        root = ET.parse(f).getroot()
+        assert root.tag == "RSLogix5000Content", f"{f.name}: unexpected root tag"
+        assert root.find("Controller") is not None, f"{f.name}: missing Controller"
 
 
 def test_invalid_files_are_valid_xml():
