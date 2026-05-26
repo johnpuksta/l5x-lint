@@ -10,3 +10,6 @@
 [submodule "references/L5Sharp"]
 	path = references/L5Sharp
 	url = https://github.com/tnunnink/L5Sharp.git
+[submodule "references/l5x-schema"]
+	path = references/l5x-schema
+	url = https://github.com/benmusson/l5x-schema.git
