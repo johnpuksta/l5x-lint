@@ -445,12 +445,37 @@ WARNINGS:
 
 ## 7. Implementation Notes
 
-### 7.1 Recommended Parser Approach
+### 7.1 Decision: Leverage Existing Libraries vs Rebuild
 
-**Layer 1 — XML parser:**
-- Use `xml.etree.ElementTree` (stdlib) for XML parsing
-- Build Pydantic models matching the object model in §1.2
-- Parse tags, data types, programs, routines, AOIs in separate passes
+**XML Parsing — USE EXISTING (`jvalenzuela/l5x`):**
+The `l5x` Python library is a mature, tested L5X reader/writer that handles:
+- Full project/controller/program/tag/routine object model
+- Decorated data, L5K data, arrays, structures, aliases, message tags
+- Bit-level access, UDT member resolution
+- CDATA sections (the tricky part of L5X XML)
+
+Building a custom XML parser would duplicate hundreds of lines of tested code
+for zero benefit. The linter only needs to **adapt** `l5x`'s output into its
+`SymbolTable` — not replace it entirely.
+
+**RLL Neutral Text — PARTIAL REBUILD using Lark:**
+`alairjunior/l5x2c` has a working PLY-based RLL parser covering ~25 instructions.
+But it misses ~75 instructions (math, comparison, PID, GSV/SSV, FAL, DDT, etc.)
+and PLY grammars are harder to maintain than Lark.
+
+Strategy: Use `lark` with the grammar from §2.2, using `l5x2c`'s parser as
+reference for branch syntax and instruction patterns. This gives us:
+- Complete instruction coverage (add new opcodes declaratively in the grammar)
+- Better error messages (critical for linter diagnostics)
+- Readable, maintainable grammar file
+
+### 7.2 Recommended Parser Approach
+
+**Layer 1 — XML adapter:**
+- Use `l5x` library (`from l5x import Project`) to parse L5X XML
+- Map `Project.controller.tags` and `program.tags` to linter's `SymbolTable`
+- Map `DataType` definitions to internal type registry
+- Wrap the library, don't reimplement it
 
 **Layer 2 — RLL neutral text parser:**
 - Use `lark` (LALR parser) with the grammar from §2.2
@@ -462,24 +487,36 @@ WARNINGS:
 - Resolve UDT members and built-in types
 - Track scope hierarchy (controller → program → routine)
 
-### 7.2 Key Dependencies
+### 7.3 Key Dependencies
 
 ```
+l5x           — L5X XML parsing (jvalenzuela/l5x or fork)
 lark          — RLL neutral text parsing (LALR parser generator)
-pydantic      — Typed object models with validation
+pydantic      — Optional: typed object models for linter output
 xmlschema     — Optional: XSD validation via l5x-schema
+pytest        — Test framework
 ```
 
-### 7.3 Module Structure
+### 7.4 Module Structure
 
 ```
-l5x_core/
-  parser.py           # XML → L5XProject model
-  models.py           # All Pydantic dataclasses
-  rll_grammar.py      # Lark grammar definition
-  rll_parser.py       # Lark transformer → ParsedRung AST
+l5x_lint/
+  __init__.py
+  adapter.py          # l5x library → linter's SymbolTable (Layer 1)
+  rll_grammar.py      # Lark grammar definition (Layer 2)
+  rll_parser.py       # Lark transformer → ParsedRung AST (Layer 2)
   builtins.py         # Built-in type registry (§4.1)
   symbol_table.py     # Scope-aware tag/type resolution
   type_checker.py     # Type compatibility checks
-  validator.py        # XSD structural validation
+  analyzer.py         # SemanticAnalyzer orchestrating checks
+  checks.py           # Individual check implementations (E001-E010, W001-W005)
+  diagnostics.py      # Diagnostic output model
+  mcp_server.py       # FastMCP tool server
+
+tests/
+  conftest.py
+  test_data_inventory.py
+  data/
+    valid/            # 14+ working L5X files for baseline
+    invalid/          # 14 intentionally broken files, one per error code
 ```
