@@ -7,14 +7,8 @@
 ## Purpose
 
 Semantic analyzer — the "dotnet build" / compiler equivalent.
-Consumes l5x-core's AST and produces structured, agent-readable diagnostics.
+Consumes an L5X AST and produces structured, agent-readable diagnostics.
 No execution — pure static analysis.
-
-### Tech Stack: Python 3.12+
-
-**Why Python:** Static analysis is tree-walking + symbol table lookups.
-Python is fast enough, and staying in the same language as l5x-core
-means direct import — no RPC overhead for the hot validation loop.
 
 ---
 
@@ -23,7 +17,6 @@ means direct import — no RPC overhead for the hot validation loop.
 ```python
 class SemanticAnalyzer:
     def __init__(self, project: L5XProject):
-        # Build symbol tables on construction
         self.ctrl_scope  = SymbolTable(project.tags, project.data_types)
         self.aoi_table   = AOITable(project.add_on_instructions)
         self.type_system = TypeSystem(project.data_types)
@@ -40,7 +33,7 @@ class SemanticAnalyzer:
 
 ---
 
-## Checks to Implement (Priority Order)
+## Checks to Implement
 
 ```
 ERRORS (block simulation):
@@ -50,53 +43,86 @@ ERRORS (block simulation):
   E004  Invalid JSR target                JSR(NoSuchRoutine,0)
   E005  Invalid UDT member access         Tag.NonExistent
   E006  Array index out of bounds         Arr[10] on Arr[10] (0-indexed)
-  E007  Duplicate tag name in scope       Same name, same scope
+  E007  Duplicate tag name in scope
   E008  AOI circular dependency           AOI_A → AOI_B → AOI_A
   E009  Wrong operand count               XIC() with no args
   E010  Cross-scope tag violation         Program tag used in another program
 
 WARNINGS (allow simulation):
-  W001  Unused tag declared               Tag defined, never referenced
-  W002  Unreachable rung                  AFI as first instruction always false
-  W003  Output never driven              Tag used in XIC, never in OTE/OTL/OTU
-  W004  Timer PRE never set              TON with PRE still 0
-  W005  Shadowed tag name               Prog-scope tag shadows ctrl-scope same name
+  W001  Unused tag declared
+  W002  Unreachable rung                  AFI as first instruction
+  W003  Output never driven               Used in XIC, never in OTE/OTL/OTU
+  W004  Timer PRE never set               TON with PRE still 0
+  W005  Shadowed tag name                 Prog tag hides ctrl tag
 ```
 
 ---
 
-## Structured Output for Agent Consumption
+## Structured Output
 
 ```json
 {
   "passed": false,
   "error_count": 2,
   "warning_count": 1,
-  "diagnostics": [
-    {
-      "code": "E001",
-      "severity": "error",
-      "location": { "program": "MainProgram", "routine": "MainRoutine", "rung": 4 },
-      "message": "Undefined tag reference 'Moter_Run'",
-      "hint": "Did you mean 'Motor_Run'? (edit distance: 1)",
-      "fix_suggestion": "Change 'Moter_Run' to 'Motor_Run', or declare tag 'Moter_Run' as BOOL"
-    }
-  ]
+  "diagnostics": [{
+    "code": "E001",
+    "severity": "error",
+    "location": { "program": "MainProgram", "routine": "MainRoutine", "rung": 4 },
+    "message": "Undefined tag reference 'Moter_Run'",
+    "hint": "Did you mean 'Motor_Run'? (edit distance: 1)",
+    "fix_suggestion": "Change 'Moter_Run' to 'Motor_Run', or declare tag 'Moter_Run' as BOOL"
+  }]
 }
 ```
 
-The `fix_suggestion` field is critical — it lets the agent fix without
-another expensive LLM call for simple typos and type errors.
+The `fix_suggestion` field lets the agent fix without another LLM call for simple errors.
 
 ---
 
-## Existing OSS to Leverage
+## Implementation Strategy
 
-| Repo | What to take |
+### XML Parsing — Use `jvalenzuela/l5x` (don't rebuild)
+
+The `l5x` Python library is a mature, tested L5X reader/writer handling the full object model — tags, UDTs, arrays, aliases, modules, AOIs, CDATA sections. The linter only needs a thin **adapter** layer mapping its output into `SymbolTable`. Rebuilding would duplicate hundreds of lines of tested code for zero benefit.
+
+### RLL Neutral Text — Lark grammar (partial rebuild)
+
+`alairjunior/l5x2c` has a working PLY parser for ~25 instructions but misses ~75. Rather than extend PLY, we define a **[Lark](https://github.com/lark-parser/lark)** grammar covering all 100+ instructions. Lark is a Python parsing toolkit (similar to ANTLR but native Python, no code generation step). The grammar is declarative and produces better error messages — critical for linter diagnostics.
+
+```
+Example Lark rule:
+?input_instruction : OPCODE "(" params ")"
+params             : param ("," param)*
+param              : TAG_NAME | NUMBER | "?"
+```
+
+Lark vs ANTLR: Both are parser generators that take a grammar file and produce a parse tree. ANTLR generates standalone code in Java/JS/Python/etc. and is heavier (separate build step). Lark runs directly from the grammar at runtime (or optionally generates a standalone parser), is Python-native, and simpler to integrate for a pure-Python project. ANTLR would be overkill here.
+
+### Why Python
+
+Static analysis is tree-walking + symbol table lookups — not CPU-bound. Direct import of `l5x` (Python library) avoids FFI/RPC overhead. The MCP tool layer and LangGraph agent are also Python. Rust/C++/Go would add build complexity for zero performance gain in this use case.
+
+### Testing — TDD with real L5X files
+
+**28 test files** in `tests/data/`:
+- **14 valid baselines** — real L5X files from L5Sharp's test suite covering projects, routines (RLL/ST), individual rungs, data types, AOIs
+- **14 intentionally broken** — one per E001-E010 and W001-W005, each crafted to trigger exactly one diagnostic code
+
+Workflow: implement a check → test against matching broken file → assert expected diagnostic code.
+
+---
+
+## Existing OSS Referenced
+
+| Repo | What for |
 |---|---|
-| `alairjunior/l5x2c` | Instruction operand type tables (what type each operand expects) |
-| `lark` (existing L5X grammar repo) | Starting point for RLL parser used in type-checking pass |
-| Rockwell General Instructions Ref Manual (1756-rm084) | Ground truth for every instruction's operand types |
+| `jvalenzuela/l5x` | XML parsing — adapter target |
+| `alairjunior/l5x2c` | RLL grammar reference, operand type tables |
+| `tnunnink/L5Sharp` | 46 test L5X files, C# object model reference |
+| `hutcheb/acd` | Full L5X element model, built-in struct definitions |
+| `benmusson/l5x-schema` | XSD schemas for structural validation |
+| Rockwell 1756-rm084 | Ground truth for instruction semantics |
 
 ---
 
@@ -111,26 +137,34 @@ suggest_fixes(diagnostic: Diagnostic) → list[FixSuggestion]
 
 ---
 
+## Module Structure
+
+```
+l5x_lint/
+  adapter.py          # l5x library → SymbolTable
+  rll_grammar.py      # Lark grammar file
+  rll_parser.py       # Lark transformer → ParsedRung AST
+  builtins.py         # Built-in type registry (TIMER, COUNTER...)
+  symbol_table.py     # Scope-aware tag/type resolution
+  type_checker.py     # Type compatibility checks
+  analyzer.py         # SemanticAnalyzer orchestrator
+  checks.py           # E001-E010, W001-W005 implementations
+  diagnostics.py      # Output models
+  mcp_server.py       # FastMCP server
+tests/
+  conftest.py
+  test_data_inventory.py
+  data/valid/         # 14 baseline L5X files
+  data/invalid/       # 14 broken L5X files (one per code)
+```
+
+---
+
 ## Integration Context
 
-l5x-lint sits between l5x-core (AST provider) and the agent orchestrator
-in the toolchain data flow:
-
 ```
-Agent → l5x-forge:  generate_routine("conveyor with E-stop")
-                     returns: l5x_xml_v1
-
-Agent → l5x-lint:   validate_l5x(l5x_xml_v1)
-                     returns: { errors: [E001: 'Moter_Run' undefined] }
-
-Agent → l5x-forge:  fix_errors(l5x_xml_v1, diagnostics)
-                     returns: l5x_xml_v2  (typo fixed)
+Agent → l5x-forge:  generate_routine(...) → l5x_xml
+Agent → l5x-lint:   validate_l5x(l5x_xml) → diagnostics
+Agent → l5x-forge:  fix_errors(xml, diagnostics) → corrected xml
+Agent → l5x-sim:    load + simulate + assert
 ```
-
-## Build Order Context
-
-Part of **Phase 2 — RLL + ST Simulation (6–8 weeks)**.
-l5x-core must be built first (Phase 1) since l5x-lint depends on its AST.
-
-**Success criteria for Phase 2:** Agent autonomously debugs a broken motor
-routine using trace feedback, fixes the logic, re-runs, passes all assertions.
