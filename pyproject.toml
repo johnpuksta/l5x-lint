@@ -9,12 +9,23 @@ dependencies = [
     "returns>=0.27",
 ]
 
+[tool.setuptools.packages.find]
+exclude = ["references*"]
+
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0",
     "pytest-cov>=5.0",
+    "ruff>=0.9",
 ]
+mcp = ["mcp>=1.0"]
+xsd = ["xmlschema>=3.0"]
 
-[tool.lint]
-checks = ["E001", "E002", "E003", "E004", "E005", "E006", "E007", "E008", "E009", "E010",
-           "W001", "W002", "W003", "W004", "W005"]
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W"]
+
+[tool.ruff.format]
+line-ending = "auto"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

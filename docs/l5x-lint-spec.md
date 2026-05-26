@@ -24,33 +24,38 @@ No execution — pure static analysis.
 ### Data Flow
 
 ```
-                     ┌──────────────────────┐
-XML string ─────────►│  adapter.py           │
-                     │  (l5x library wrapper)│
-                     │  → Result[L5XProject] │
-                     └──────────┬───────────┘
-                                ▼
-                     ┌──────────────────────┐
-                     │  SymbolTable(project) │
-                     │  (pure construction)  │
-                     └──────────┬───────────┘
-                                ▼
-                     ┌──────────────────────┐
-                     │  rung_parser.py       │
-                     │  Lark → ParsedRung[]  │
-                     │  → Result[ParsedRung] │
-                     └──────────┬───────────┘
-                                ▼
-               ┌──────────────────────────────────┐
-               │  checks/*.py                      │
-               │  Each: (SymbolTable, Routine)     │
-               │       → list[Diagnostic]          │
-               │  Composed via flow:               │
-               │  flow(project,                     │
-               │    build_symbol_tables,           │
-               │    bind(parse_all_rungs),          │
-               │    bind(run_all_checks))           │
-               └──────────┬───────────────────────┘
+                      ┌──────────────────────────┐
+XML string ─────────►│  adapter.py               │
+                      │  ElementTree (primary)    │
+                      │  l5x lib (tag value opt.) │
+                      │  → Result[L5XProject]     │
+                      └──────────┬───────────────┘
+                                 ▼
+                      ┌──────────────────────────┐
+                      │  SymbolTable(project)    │
+                      │  (pure construction)     │
+                      └──────────┬───────────────┘
+                                 ▼
+              ┌──────────────────┴──────────────────┐
+              ▼                                     ▼
+  ┌──────────────────────┐              ┌──────────────────────┐
+  │  rung_parser.py      │              │  st_parser.py        │
+  │  Lark LALR           │              │  Lark LALR           │
+  │  → ParsedRung[]      │              │  → StProgram         │
+  └──────────┬───────────┘              └──────────┬───────────┘
+              │                                     │
+              └──────────┬──────────────────────────┘
+                                 ▼
+                ┌─────────────────────────────────────┐
+                │  checks/*.py                         │
+                │  Each: (SymbolTable, content)        │
+                │       → list[Diagnostic]             │
+                │  Composed via flow:                  │
+                │  flow(project,                       │
+                │    build_symbol_tables,              │
+                │    bind(parse_all_routine_content),   │
+                │    bind(run_all_checks))              │
+                └──────────┬──────────────────────────┘
                           ▼
                ┌──────────────────────┐
                │  AnalysisResult      │
@@ -91,6 +96,41 @@ def check_undefined_tags(routine: Routine, scope: SymbolTable) -> list[Diagnosti
         if scope.lookup(ref) is Nothing
     ]
 ```
+
+---
+
+## Research Findings (May 2026)
+
+### Library Audit Summary
+
+| Library | Stars | Status | Maturity | Key Finding |
+|---------|-------|--------|----------|-------------|
+| **jvalenzuela/l5x** v1.7 | 53 | Production/Stable (Mar 2026) | High | **Gap**: Exposes `controller.tags`, `programs[n].tags`, `modules` but does NOT expose `DataTypes`, `AddOnInstructionDefinitions`, or `Routine.RLLContent` as first-class model objects. Tag VALUE parsing is excellent (Decorated/L5K formats, struct/array/bit access). For structural metadata (type defs, AOIs, programs), must use ElementTree directly or the library's internal XML DOM. |
+| **hutcheb/acd** v0.2a8 | 76 | Active (Mar 2026) | High | Full L5X element model in `acd/l5x/elements.py`: Controller, Program, Routine, Rung, Tag, DataType, Member, AOI, Parameter, Module, Port, etc. Built-in struct defs (TIMER, COUNTER, CONTROL) confirmed. ACD-to-L5X export recently added. **Excellent reference for domain model design.** |
+| **alairjunior/l5x2c** | 11 | Archived (2019) | Low | PLY-based RLL parser covering ~25 instructions. Branch handling (parallel OR) and tag resolution are well-done. Grammar structure transfers 1:1 to Lark. Cant use as-is (PLY, unmaintained) but grammar is solid reference. |
+| **benmusson/l5x-schema** | N/A | Static (archived) | High | XSD files for v32-v38 already cloned as submodule. Covers all XML structural constraints. Ready for validation via `xmlschema` library. |
+| **tnunnink/L5Sharp** (C#) | 95 | Active | High | 46 test L5X files available. Strongly-typed query API is reference for symbol table design. Test data files already in use as baselines. |
+| **mcp (Python SDK)** v1.25.0 | 23K | Official Anthropic SDK | Production | `FastMCP` class with tool/resource/prompt support. Transports: stdio, SSE, Streamable HTTP. MIT license. Python 3.10+. Well-suited for MCP server. |
+
+### Key Architectural Decision: XML Adapter Strategy
+
+**The `jvalenzuela/l5x` library does NOT expose DataTypes or AOI definitions as model attributes.** Its public API (`controller.tags`, `programs[n].tags`, `modules[n]`) covers tag value access but not structural metadata. Therefore the adapter layer is split:
+
+1. **Structural XML parsing** (tags, data types, programs, routines, AOIs, tasks): Python `xml.etree.ElementTree` — stdlib, no dependency, handles all L5X structural XML.
+2. **Tag value parsing** (for W004 Timer PRE value check, etc.): `l5x` library handles the complex Decorated/L5K data parsing.
+3. **XSD validation** (optional): `xmlschema` library against `references/l5x-schema/`.
+
+This is actually *lower risk* than depending entirely on `l5x` since ElementTree is built-in and XSD provides structural validation.
+
+### Existing Codebase State
+
+- `pyproject.toml`: Has `lark`, `l5x`, `returns` as deps. **Note**: `[tool.lint]` is non-standard — should be `[tool.ruff.lint]`.
+- `tests/conftest.py`: Path setup only (5 lines).
+- `tests/test_data_inventory.py`: 3 tests — file existence, per-code coverage assertion, XML validity.
+- **14 valid L5X files**: projects (Simple, Test, Empty, ACDTestsWithAOI, ex1), routines (Main, ST), rungs (Rung0_from_Main, Message_Rung), instructions (aoi_Test), data types (SimpleType, ComplexType, ArrayType). Good coverage of real-world constructs.
+- **14 invalid L5X files**: One per E/W code (E001-E010, W001-W005). Each triggers exactly one diagnostic.
+- **Source code**: No `l5x_lint/` package yet — implementation from scratch.
+- **Submodules**: All 5 reference repos cloned (`references/l5x2c`, `references/l5x`, `references/acd`, `references/L5Sharp`, `references/l5x-schema`).
 
 ---
 
@@ -143,27 +183,591 @@ The `fix_suggestion` field lets the agent fix without another LLM call for simpl
 
 ## Implementation Strategy
 
-### Reuse vs Build
+### Revised Architecture
 
-| Layer | Reuse | Build |
-|-------|-------|-------|
-| **L5X XML parsing** | `jvalenzuela/l5x` library — full project/tag/type model | Thin adapter mapping into our `SymbolTable` |
-| **RLL text parsing** | `alairjunior/l5x2c` as reference for branch syntax | New Lark grammar covering ~120 instructions (l5x2c covers ~25) |
-| **Instruction operand rules** | `l5x2c` operand tables + Rockwell 1756-rm084 as reference data | Encode rules as data in `type_system.py` |
-| **Built-in type definitions** | `hutcheb/acd` struct defs (TIMER, COUNTER, etc.) | Hard-code in `builtins.py` (they're static) |
-| **XSD structural validation** | `benmusson/l5x-schema` XSD files per revision | Load + validate before analysis |
-| **15 checks (E001–W005)** | — | One pure function per check in `checks/` |
-| **Pipeline + MCP server** | — | `pipeline/analyze.py` + `mcp_server.py` |
+| Layer | Approach | Dependencies | Risk |
+|-------|----------|-------------|------|
+| **L5X XML → Domain Model** | ElementTree for structural (tags, types, programs, AOIs, routines). `l5x` library for tag value parsing (W004). | `l5x` (optional tag values), stdlib `xml.etree.ElementTree` | **Low** — ElementTree is stdlib, L5X XML is well-structured |
+| **XSD Structural Validation** | `xmlschema` library + `references/l5x-schema/` XSD files | `xmlschema`, `l5x-schema` submodule | **Low** — XSD files are frozen specs |
+| **RLL Neutral Text Parsing** | Lark LALR(1) grammar — new grammar covering ~120 instructions | `lark` | **Medium** — grammar complexity, 120+ opcodes |
+| **ST Text Parsing** | Lark LALR(1) grammar — IEC 61131-3 with Rockwell dialect | `lark` | **Low** — well-defined EBNF, same infrastructure as RLL |
+| **Routine Type Router** | `match` on `Routine.type`, dispatches to RLL/ST parser or skips FBD/SFC | None | **Low** — straightforward dispatch |
+| **Symbol Table** | Pure construction from domain model. Scope-aware lookup (controller → program). | None | **Low** — textbook symbol table |
+| **Type System** | Data-driven: opcode → (position → type_constraint) matrix | None | **Medium** — data entry for 120+ instructions |
+| **15 Checks (E001-W005)** | One pure function per check | `returns` | **Low-Medium** — most are straightforward, checks are content-type-agnostic |
+| **MCP Server** | `FastMCP` exposing 4 tools | `mcp` | **Low** — well-documented SDK |
+| **Pipeline** | `flow()` composition | `returns` | **Low** — already designed in detail |
 
-### Why Python
+### L5X XML Adapter Detail
 
-Static analysis is tree-walking + symbol table lookups — not CPU-bound. Direct import of `l5x` (Python library) avoids FFI. The MCP tool layer and LangGraph agent are also Python. Rust/C++/Go add complexity for zero performance gain here.
+The adapter layer handles these XML sections:
 
-### Testing
+```xml
+<!-- Tags (controller-scoped) -->
+<Controller>
+  <Tags>
+    <Tag Name="MyTag" TagType="Base" DataType="DINT" Dimensions="10" .../>
+  </Tags>
+</Controller>
 
-**28 test files** in `tests/data/`:
-- **14 valid baselines** from L5Sharp (projects, routines, rungs, data types, AOIs)
-- **14 intentionally broken** — one per E001–W005, each triggers exactly one diagnostic code
+<!-- Data type definitions -->
+<DataTypes>
+  <DataType Name="MyUDT" Family="NoFamily" Class="User">
+    <Members>
+      <Member Name="Value" DataType="DINT" Dimension="0" .../>
+    </Members>
+  </DataType>
+</DataTypes>
+
+<!-- Programs with routines and rungs -->
+<Programs>
+  <Program Name="MainProgram">
+    <Tags>...</Tags>
+    <Routines>
+      <Routine Name="MainRoutine" Type="RLL">
+        <RLLContent>
+          <Rung Number="0">
+            <Text><![CDATA[XIC(Start)OTE(Run);]]></Text>
+          </Rung>
+        </RLLContent>
+      </Routine>
+    </Routines>
+  </Program>
+</Programs>
+
+<!-- AOI definitions -->
+<AddOnInstructionDefinitions>
+  <AddOnInstructionDefinition Name="MyAOI" Revision="1.0">
+    <Parameters>...</Parameters>
+    <LocalTags>...</LocalTags>
+    <Routines>...</Routines>
+  </AddOnInstructionDefinition>
+</AddOnInstructionDefinitions>
+```
+
+The adapter maps these into typed dataclasses:
+
+```python
+@dataclass
+class L5XProject:
+    schema_revision: str
+    software_revision: str
+    controller: Controller
+
+@dataclass
+class Controller:
+    name: str
+    processor_type: str | None
+    data_types: list[DataType]       # from <DataTypes>
+    tags: list[Tag]                  # controller-scoped tags
+    programs: list[Program]          # from <Programs>
+    tasks: list[Task]
+    aois: list[AOI]                  # from <AddOnInstructionDefinitions>
+    modules: list[Module]
+
+# Routine with type-aware parsed content
+@dataclass
+class Routine:
+    name: str
+    type: str                        # "RLL" | "ST" | "FBD" | "SFC"
+    rll_rungs: list[ParsedRung]      # populated for RLL type
+    st_body: Maybe[StProgram]        # populated for ST type, Nothing for others
+    cdata: str                       # raw CDATA for debugging
+
+# ST parsed program
+@dataclass
+class StProgram:
+    statements: list[StStatement]
+
+StStatement = (
+    StAssignment
+    | StIf
+    | StCase
+    | StFor
+    | StWhile
+    | StRepeat
+    | StCall
+    | StJsr
+    | StExit
+    | StReturn
+)
+
+@dataclass
+class StAssignment:
+    target: TagPath
+    expression: StExpression
+    line: int
+
+@dataclass
+class StCall:
+    name: str
+    args: list[StExpression]
+    line: int
+
+@dataclass
+class StIf:
+    condition: StExpression
+    body: list[StStatement]
+    elsif_pairs: list[tuple[StExpression, list[StStatement]]]
+    else_body: list[StStatement]
+    line: int
+```
+
+**Implementation plan for `adapter.py`**:
+1. Parse XML with `xml.etree.ElementTree.parse()` or `fromstring()`
+2. Walk the tree using XPath-like `findall()`/`find()`
+3. Construct dataclass instances
+4. Wrap in `Result` using `@safe` decorator
+
+No need for `pydantic` — dataclasses are sufficient for pure data.
+
+### Routine Type Routing
+
+The `parse_all_routine_content` pipeline step dispatches by `Routine.type`:
+
+```python
+def parse_routine_content(routine: Routine) -> Result[Routine, LintError]:
+    """Parse a routine's CDATA based on its type field."""
+    match routine.type:
+        case "RLL":
+            result = parse_rll(routine.cdata)
+            return result.map(lambda rungs: replace(routine, rll_rungs=rungs))
+        case "ST":
+            result = parse_st(routine.cdata)
+            return result.map(
+                lambda prog: replace(routine, st_body=Some(prog))
+            )
+        case _:
+            # FBD/SFC — graphical XML, no text to parse. Skip.
+            return Success(routine)
+```
+
+Routine type is read from the XML attribute:
+
+```xml
+<Routine Name="MainRoutine" Type="RLL">     <!-- RLL → rung_parser -->
+<Routine Name="StRoutine" Type="ST">         <!-- ST  → st_parser    -->
+<Routine Name="FbdRoutine" Type="FBD">       <!-- FBD → skip         -->
+<Routine Name="SfcRoutine" Type="SFC">       <!-- SFC → skip         -->
+```
+
+All FBD/SFC routines pass through the pipeline unmodified — they contribute
+no tag references to the analysis, which means E001/E002/E005 are blind to
+their contents. This is acceptable for v1: FBD/SFC analysis requires graph
+parsing (wire tracing, block connections) and is tracked as a separate
+architectural effort. The symbol table is built from tag declarations, not
+tag usages, so FBD/SFC routines are still fully analyzed for Declaration-side
+checks (W001, E007, E010) via their program's `<Tags>`.
+
+### RLL Grammar: l5x2c → Lark Migration
+
+The reference grammar (25 instructions, PLY) maps cleanly to Lark:
+
+| l5x2c (PLY) | Lark Equivalent | Status |
+|-------------|----------------|--------|
+| `input_instruction : XIC LPAR parameter RPAR` | `input_instruction : OPCODE LPAR params RPAR` | Generalized — same pattern for all 120+ instructions |
+| Branch: `[INPUT_LEVEL]` → `LBRA ... RBRA` | Same syntax | Direct 1:1 mapping |
+| Tag: complex regex with member/index | `TAG_NAME` token + grammar rules | Simplified in Lark |
+| CPT: expression with `+ - * / ( )` | `cpt_expression : ...` | Same structure |
+
+The Lark grammar from `docs/parser-spec.md §2.2` is already well-designed. Key verification points:
+- Terminal opcode list: 120+ opcodes as a single `OPCODE` token with case-insensitive matching
+- Branch structure: parallel OR (comma-separated) within `[...]`
+- Tag name regex: `[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)*(\[\d+\])*`
+- Wildcard `?` operand for TON/TOF/RTO/CTU/CTD PRE/ACC positions
+
+### RLL Parser Verification (New)
+
+Before implementing all checks, write a standalone RLL parser verification suite:
+
+```python
+# tests/test_rll_parser.py
+RLL_CASES = [
+    ("XIC(Start)OTE(Run);", True),
+    ("XIC(A)[XIO(B),XIO(C)]OTE(D);", True),   # branch
+    ("TON(Timer1,?,?);", True),                  # wildcards
+    ("XIC()OTE(D);", False),                     # E009 — missing operand
+    ("MOV(42,Dest);", True),
+    ("CPT(Dest, A+B*C);", True),                 # expression
+    ("XIC(Moter_Run)OTE(Motor);", True),          # typo is syntactically valid
+]
+```
+
+This catches grammar issues before any check implementation.
+
+### ST (Structured Text) Grammar
+
+ST is parsed with Lark LALR(1), same infrastructure as RLL. The grammar targets IEC 61131-3 with Rockwell's dialect:
+
+| Feature | IEC 61131-3 | Rockwell Dialect |
+|---------|-------------|-----------------|
+| Keywords | `IF, THEN, ELSIF, ELSE, END_IF` | `if, then, elsif, else, end_if` (lowercase) |
+| Assignment | `A := B;` | Same — `:=` operator |
+| Function calls | `TON(IN:=, PT:=)` | `TON(Timer1, ?, ?)` — positional args, `?` wildcard |
+| JSR | N/A | `JSR(RoutineName, Param1);` |
+| Comments | `(* *)` and `//` | Both supported |
+| Type punning | No standard | Implicit — `DINT := BOOL` passes checks |
+
+#### Grammar Structure
+
+```
+st_program:  statement+
+statement:   assignment
+           | if_statement
+           | case_statement
+           | for_loop
+           | while_loop
+           | repeat_loop
+           | function_call ";"
+           | exit_statement
+           | return_statement
+           | jsr_call
+
+assignment:  tag_path ":=" expression ";"
+
+if_statement:
+  "if" expression "then" statement+
+  ("elsif" expression "then" statement+)*
+  ("else" statement+)?
+  "end_if"
+
+case_statement:
+  "case" expression "of"
+    case_element+
+  ("else" statement+)?
+  "end_case"
+
+case_element:  expression ("," expression)* ":" statement+
+
+for_loop:      "for" tag_path ":=" expression "to" expression
+               ("by" expression)? "do" statement+ "end_for"
+
+function_call: IDENTIFIER "(" (expression ("," expression)*)? ")"
+
+expression:    or_expr
+or_expr:       and_expr ("or" and_expr)*
+and_expr:      compare_expr ("and" compare_expr)*
+compare_expr:  add_expr (("=" | "<>" | "<" | ">" | "<=" | ">=") add_expr)?
+add_expr:      mul_expr (("+" | "-") mul_expr)*
+mul_expr:      unary_expr (("*" | "/") unary_expr)*
+unary_expr:    ("-" | "not")* atom
+atom:          tag_path | NUMBER | function_call | "(" expression ")"
+```
+
+#### Shared Infrastructure with RLL
+
+- **Same symbol table** — ST tag refs go through identical `scope.lookup()` path
+- **Same type system** — `TON(Timer1, ?, ?)` in ST resolves the same type rules as in RLL
+- **Same checks** — E001 (undefined tag), E002 (type mismatch), E005 (invalid member), E009 (operand count) all apply
+- **Same `Diagnostic` model** — location just uses `(program, routine, line)` instead of `rung`
+
+#### Transformer Design
+
+```python
+class StTransformer(Transformer):
+    def assignment(self, items) -> StAssignment:
+        tag_path, expr = items
+        return StAssignment(tag_path, expr)
+
+    def if_statement(self, items) -> StIf:
+        # items: [condition, *body_blocks, (elsif_pairs, else_block)?]
+        ...
+
+    def function_call(self, items) -> StCall:
+        name, *args = items
+        return StCall(str(name), args)
+```
+
+#### Extraction Flow
+
+```
+adapter.py → finds <Routine Type="ST">
+           → reads <STContent><![CDATA[...]]></STContent>
+           → calls st_parser.parse(cdata) → StProgram
+           → stores in Routine.st_body (Maybe[StProgram])
+```
+
+The `parse_all_routine_content` pipeline step dispatches by `Routine.type`:
+
+```python
+def parse_routine_content(
+    routine: Routine
+) -> Result[Routine, LintError]:
+    match routine.type:
+        case "RLL": return bind(parse_rll)(routine.rll_cdata)
+        case "ST":  return bind(parse_st)(routine.st_cdata)
+        case _:     return Success(routine)  # FBD/SFC: skip, no text analysis
+```
+
+### Instruction Operand Data
+
+Instruction operand rules are encoded as **data**, not code:
+
+```python
+# type_system.py
+@dataclass
+class OperandRule:
+    position: int       # 0-based operand index
+    types: list[str]    # accepted types: ["BOOL"], ["TIMER"], ["numeric", "ANY"], ...
+
+@dataclass
+class InstructionRule:
+    opcode: str
+    min_operands: int
+    max_operands: int
+    operand_rules: list[OperandRule]
+    category: str       # "input", "output", "both"
+
+# Instruction catalog — ~120 entries
+INSTRUCTION_RULES: dict[str, InstructionRule] = {
+    "XIC":  InstructionRule("XIC", 1, 1, [OperandRule(0, ["BOOL"])], "input"),
+    "XIO":  InstructionRule("XIO", 1, 1, [OperandRule(0, ["BOOL"])], "input"),
+    "OTE":  InstructionRule("OTE", 1, 1, [OperandRule(0, ["BOOL"])], "output"),
+    "TON":  InstructionRule("TON", 3, 3, [
+        OperandRule(0, ["TIMER"]),
+        OperandRule(1, ["wildcard"]),   # PRE — ? is valid
+        OperandRule(2, ["wildcard"]),   # ACC — ? is valid
+    ], "output"),
+    "MOV":  InstructionRule("MOV", 2, 2, [
+        OperandRule(0, ["any"]),        # source: any type
+        OperandRule(1, ["same_as_0"]),  # dest: must match source
+    ], "output"),
+    "JSR":  InstructionRule("JSR", 1, 10, [
+        OperandRule(0, ["routine_name"]),
+    ], "output"),
+    "AFI":  InstructionRule("AFI", 0, 0, [], "input"),
+    # ... 115+ more entries
+}
+```
+
+Source data comes from:
+1. l5x2c operand tables (~25 entries, verified reference)
+2. Rockwell 1756-rm084 PDF (ground truth for all ~120 instructions)
+3. Cross-referenced with `hutcheb/acd` element model
+
+### Built-In Type Registry
+
+```python
+BUILTIN_TYPES: dict[str, DataType] = {
+    "BOOL":    DataType("BOOL", "NoFamily", "ProductDefined", []),
+    "SINT":    DataType("SINT", "NoFamily", "ProductDefined", []),
+    "INT":     DataType("INT", "NoFamily", "ProductDefined", []),
+    "DINT":    DataType("DINT", "NoFamily", "ProductDefined", []),
+    "LINT":    DataType("LINT", "NoFamily", "ProductDefined", []),
+    "USINT":   DataType("USINT", "NoFamily", "ProductDefined", []),
+    "UINT":    DataType("UINT", "NoFamily", "ProductDefined", []),
+    "UDINT":   DataType("UDINT", "NoFamily", "ProductDefined", []),
+    "ULINT":   DataType("ULINT", "NoFamily", "ProductDefined", []),
+    "REAL":    DataType("REAL", "NoFamily", "ProductDefined", []),
+    "LREAL":   DataType("LREAL", "NoFamily", "ProductDefined", []),
+    "TIMER":   DataType("TIMER", "NoFamily", "ProductDefined", [
+        Member("PRE", "DINT"), Member("ACC", "DINT"),
+        Member("EN", "BOOL"), Member("TT", "BOOL"), Member("DN", "BOOL"),
+    ]),
+    "COUNTER": DataType("COUNTER", "NoFamily", "ProductDefined", [
+        Member("PRE", "DINT"), Member("ACC", "DINT"),
+        Member("CU", "BOOL"), Member("CD", "BOOL"), Member("DN", "BOOL"),
+        Member("OV", "BOOL"), Member("UN", "BOOL"),
+    ]),
+    "CONTROL": DataType("CONTROL", "NoFamily", "ProductDefined", [
+        Member("LEN", "DINT"), Member("POS", "DINT"),
+        Member("EN", "BOOL"), Member("EU", "BOOL"), Member("DN", "BOOL"),
+        Member("EM", "BOOL"), Member("ER", "BOOL"), Member("UL", "BOOL"),
+        Member("IN", "BOOL"), Member("FD", "BOOL"),
+    ]),
+    "STRING":  DataType("STRING", "StringFamily", "ProductDefined", [
+        Member("LEN", "DINT"), Member("DATA", "STRING"),
+    ]),
+    "MESSAGE": DataType("MESSAGE", "NoFamily", "ProductDefined", []),
+}
+```
+
+Confirmed from `hutcheb/acd` elements.py and `docs/initial-data-collection.md`.
+
+### Testing Strategy — Expanded
+
+#### Unit Tests (per check)
+
+```python
+# tests/test_e001_undefined_tag.py
+def test_undefined_tag_detected():
+    scope = SymbolTable([Tag("Motor_Run", "BOOL")])
+    rung = ParsedRung(0, "XIC(Moter_Run)", [
+        Instruction("XIC", [Operand("Moter_Run")])
+    ], [])
+    diags = check_undefined_tags([rung], scope)
+    assert len(diags) == 1
+    assert diags[0].code == "E001"
+    assert "Moter_Run" in diags[0].message
+    assert "Motor_Run" in diags[0].hint  # edit distance = 1
+
+def test_defined_tag_no_error():
+    scope = SymbolTable([Tag("Motor_Run", "BOOL")])
+    rung = ParsedRung(0, "XIC(Motor_Run)", [
+        Instruction("XIC", [Operand("Motor_Run")])
+    ], [])
+    diags = check_undefined_tags([rung], scope)
+    assert len(diags) == 0
+```
+
+#### Integration Tests (per L5X file)
+
+```python
+# tests/test_integration.py
+@pytest.mark.parametrize("code, file", [
+    ("E001", "E001_undefined_tag.L5X"),
+    ("E002", "E002_type_mismatch.L5X"),
+    # ... all 14 codes
+])
+def test_invalid_file_triggers_diagnostic(code, file):
+    result = run_analysis(INVALID_DIR / file)
+    assert result.passed == (code.startswith("W"))  # warnings don't fail
+    codes = [d.code for d in result.diagnostics]
+    assert code in codes
+
+@pytest.mark.parametrize("file", [
+    "projects/Simple.L5X", "projects/ACDTestsWithAOI.L5X",
+    "routines/Main.L5X", "instructions/aoi_Test.L5X",
+])
+def test_valid_file_no_diagnostics(file):
+    result = run_analysis(VALID_DIR / file)
+    assert len(result.diagnostics) == 0
+```
+
+#### RLL Parser Tests (new)
+
+```python
+# tests/test_rll_parser.py
+RLL_CASES = [
+    "XIC(Start)OTE(Run);",
+    "XIC(A)[XIO(B),XIO(C)]OTE(D);",       # parallel branch
+    "TON(Timer1,?,?);",                     # wildcards
+    "MOV(42,Dest);",
+    "CPT(Dest, A+B*C);",                   # expression
+    "XIC(A)[XIO(B),XIO(C)]OTE(D)[OTL(E)];", # output branches
+    "AFI;",                                 # zero-operand
+    "JSR(MyRoutine,Param1,Param2);",        # multi-param JSR
+]
+
+@pytest.mark.parametrize("text", RLL_CASES)
+def test_parse_valid_rll(text):
+    result = parse_rll(text)
+    assert isinstance(result, ParsedRung)
+
+INVALID_RLL = [
+    ("XIC()OTE(D);", "missing_operand"),
+    ("XIC(A, B)OTE(D);", "too_many_operands"),
+    (";", "empty"),
+    ("INVALID_OP(Tag);", "unknown_opcode"),
+]
+
+@pytest.mark.parametrize("text,reason", INVALID_RLL)
+def test_parse_invalid_rll(text, reason):
+    result = parse_rll(text)
+    assert isinstance(result, Failure)
+
+#### ST Parser Tests (new)
+
+```python
+# tests/test_st_parser.py
+ST_VALID = [
+    ("x := 42;", "simple_assign"),
+    ("x := y + 1;", "add"),
+    ("if x then y := 1; end_if", "if_block"),
+    ("if x then y := 1; else y := 2; end_if", "if_else"),
+    ("if x then y := 1; elsif z then y := 2; end_if", "elsif"),
+    ("for i := 1 to 10 do x := x + 1; end_for", "for_loop"),
+    ("while x < 10 do x := x + 1; end_while", "while_loop"),
+    ("TON(Timer1, ?, ?);", "timer_call_rll_style"),
+    ("JSR(MyRoutine, Param1);", "jsr_call"),
+    ("x := (a + b) * c;", "paren_expr"),
+    ("if x and not y then z := 1; end_if", "compound_condition"),
+]
+
+@pytest.mark.parametrize("text,reason", ST_VALID)
+def test_parse_valid_st(text, reason):
+    result = parse_st(text)
+    assert isinstance(result, StProgram)
+    assert len(result.statements) >= 1
+
+ST_INVALID = [
+    ("x := ;", "incomplete_assign"),
+    ("if x then end_if", "empty_if_body"),
+    ("x := 1 +;", "trailing_op"),
+    ("case x of end_case", "empty_case"),
+]
+
+@pytest.mark.parametrize("text,reason", ST_INVALID)
+def test_parse_invalid_st(text, reason):
+    result = parse_st(text)
+    assert isinstance(result, Failure)
+```
+
+---
+
+## Dependency Verification
+
+### `jvalenzuela/l5x` — API Surface Confirmed
+
+From README and source analysis:
+- `l5x.Project(path)` → `prj.controller` (Controller), `prj.programs`, `prj.modules`
+- `controller.tags` → tag scope with dict-like access by name
+- `programs['name'].tags` → program-scoped tag scope
+- `tag.data_type` → string like "DINT", "TIMER"
+- `tag.value` → Python native value (int, float, dict for structs, list for arrays)
+- `tag['member']` → member access for struct types
+- `tag[3]` → bit access for integers
+- `tag.shape` → tuple of array dimensions
+- `tag.description` → string or None
+- `tag.alias_for` → string or None (alias tags only)
+- **Not exposed**: `controller.data_types`, `controller.add_on_instruction_definitions`, `program.routines`, `routine.rungs`
+
+**Implication**: Adapter uses ElementTree for structural data, `l5x` for tag value parsing only. This is fine.
+
+### `mcp` Python SDK — Capability Confirmed
+
+```python
+from mcp.server.fastmcp import FastMCP
+
+mcp = FastMCP("l5x-lint")
+
+@mcp.tool()
+def validate_l5x(l5x_xml: str) -> AnalysisResult:
+    """Validate an L5X XML file and return structured diagnostics."""
+    ...
+
+@mcp.tool()
+def suggest_fixes(diagnostic: Diagnostic) -> list[FixSuggestion]:
+    """Get fix suggestions for a diagnostic."""
+    ...
+```
+
+Transport: `Streamable HTTP` for agent integration. `stdio` for local CLI.
+
+---
+
+## Revised Confidence Assessment (Post-Research)
+
+| Component | Confidence | Evidence |
+|-----------|-----------|----------|
+| **XML Adapter (ElementTree)** | 95% | ElementTree is stdlib; L5X XML is well-structured; XSD available for validation |
+| **Symbol Table** | 95% | Textbook design; scope hierarchy is clear; tag model is well-defined |
+| **Lark RLL Grammar** | 85% | l5x2c proves the approach works; Lark spike validated 24/25 cases. Risk: ~120 opcodes need correct tag name parsing edge cases (communication tags, expressions in CPT). CPT expression parsing needs precedence grammar port. |
+| **Lark ST Grammar** | 90% | IEC 61131-3 EBNF is well-defined; Lark handles it naturally. Rockwell dialect is a strict subset (lowercase keywords, positional args, JSR). Infers 15/15 checks identically to RLL — tag refs are tag refs regardless of syntax. |
+| **Routine Type Router** | 95% | Simple `match` on `Routine.type` string. FBD/SFC are XML-only, skipped by text parsers. No complexity. |
+| **Type System Data** | 85% | ~120 instruction rules from 1756-rm084 + l5x2c + acd cross-reference. Data-entry effort, but well-defined format reduces error |
+| **15 Checks (E001-W005)** | 92% | Most are straightforward. E008 (circular AOI dep) needs DFS. W002 (unreachable rung) needs AFI-as-first detection. W004 (timer PRE) needs tag value parsing from l5x lib. All checks are content-type-agnostic — same code works for RLL and ST tag refs. |
+| **MCP Server** | 95% | FastMCP API is documented and simple; 4 tools only |
+| **Test Data** | 85% | 14 valid + 14 invalid files exist. L5Sharp provides 33+ more untapped files (FBD.L5X, SFC.L5X, ST.L5X, LotOfTags.L5X). ~5 custom rung files needed for instruction coverage gaps. Need ST-specific valid/invalid files. |
+| **Edge Case Coverage** | 80% | RLL spike covered nested branches, wildcards, comm tags. ST plan covers loops, conditionals, JSR. Gaps: safety tags, produced/consumed tags, module-scoped tags, string manipulation instructions. |
+
+### Remaining Risks
+
+1. **RLL grammar: communication tags** (`CIP:0:Tag.Member`) — l5x2c supports these; our grammar must too. This adds complexity to the tag regex.
+2. **CPT expression parsing** — l5x2c has a precedence-based expression grammar that handles `+`, `-`, `*`, `/`, and `()`. Needs to be ported to Lark.
+3. **Timer PRE value access via l5x library** — only needed for W004. Confirmed the library supports `tag['PRE'].value`.
+4. **Valid test file coverage** — some valid files have no rungs or simple rungs only. L5Sharp's LotOfTags.L5X (3.1MB, 10K tags) and 5 custom rung files will close this gap.
+5. **ST CDATA in L5X XML** — need to confirm L5X `<STContent>` CDATA format vs `<RLLContent>`. ACD library confirms ST routines wrap text in `<STContent><![CDATA[...]]></STContent>` same as RLL.
 
 ---
 
@@ -175,7 +779,9 @@ Static analysis is tree-walking + symbol table lookups — not CPU-bound. Direct
 | `ruff` | Code formatting + linting |
 | `returns` | `Result`, `Maybe`, `flow`, `bind` for functional composition |
 | `lark` | RLL neutral text parser generator |
-| `jvalenzuela/l5x` | L5X XML parsing library |
+| `jvalenzuela/l5x` | L5X tag value parsing (optional, for W004) |
+| `xmlschema` | XSD validation (optional, for structural checks) |
+| `mcp` | MCP protocol server (Anthropic SDK) |
 | `pytest` | Test framework |
 
 ### uv Commands
@@ -184,7 +790,9 @@ Static analysis is tree-walking + symbol table lookups — not CPU-bound. Direct
 uv sync                           # Install all deps from pyproject.toml
 uv add <package>                  # Add runtime dependency
 uv add --dev <package>            # Add dev dependency
-uv run pytest tests/ -v          # Run tests in env
+uv run python -m l5x_lint ...    # Run module in env
+uv run pytest tests/ -v          # Run tests
+uv run pytest tests/ --cov       # Run with coverage
 uvx ruff check .                  # Lint (ephemeral)
 uvx ruff format .                 # Format
 ```
@@ -195,7 +803,7 @@ uvx ruff format .                 # Format
 
 | Repo | What for |
 |---|---|
-| `jvalenzuela/l5x` | XML parsing — adapter target |
+| `jvalenzuela/l5x` | Tag value parsing (Decorated/L5K data) |
 | `alairjunior/l5x2c` | RLL grammar reference, operand type tables |
 | `tnunnink/L5Sharp` | 46 test L5X files, C# object model reference |
 | `hutcheb/acd` | Full L5X element model, built-in struct definitions |
@@ -220,7 +828,7 @@ suggest_fixes(diagnostic: Diagnostic) → list[FixSuggestion]
 ```
 l5x_lint/
   domain/                        # Pure data types — zero dependencies
-    models.py                    # Tag, DataType, Routine, ParsedRung, etc.
+    models.py                    # Tag, DataType, Routine, ParsedRung, StProgram, StStatement, etc.
     diagnostics.py               # Diagnostic, Location, Severity
     errors.py                    # LintError (typed union for Result error type)
     symbol_table.py              # SymbolTable, Scope (pure query methods)
@@ -245,17 +853,40 @@ l5x_lint/
 
   pipeline/
     analyze.py                   # Compose all checks via flow()
+    routine_router.py            # Dispatch by Routine.type → RLL/ST parser
     rung_parser.py               # Lark grammar + transformer → ParsedRung
+    st_grammar.py                # Lark grammar for IEC 61131-1 ST + Rockwell dialect
+    st_parser.py                 # Lark transformer + parse_st() → StProgram
 
   infrastructure/                # Impure shell — IO lives here
-    adapter.py                   # Wraps l5x library → domain models
+    adapter.py                   # ElementTree + l5x → domain models
     mcp_server.py                # FastMCP server exposing MCP tools
 
 tests/
-  conftest.py
-  test_data_inventory.py
-  data/valid/                    # 14 baseline L5X files
+  conftest.py                    # Path fixtures
+  test_data_inventory.py         # Sanity checks on test data
+  test_adapter.py                # XML → domain model parsing
+  test_rll_parser.py             # RLL grammar cases
+  test_st_parser.py              # ST grammar cases
+  test_symbol_table.py           # Scope resolution, lookup
+  test_type_system.py            # Type compatibility, member resolution
+  test_integration.py            # Full pipeline per L5X file
+  test_e001_undefined_tag.py     # Unit tests per check (one file per code)
+  ...
+  data/valid/                    # Baseline L5X files
+    projects/Simple.L5X, Test.L5X, Empty.L5X, ACDTestsWithAOI.L5X, ex1.L5X
+    routines/Main.L5X, ST.L5X, FBD.L5X, SFC.L5X, Rung1_from_Main.L5X
+    instructions/aoi_Test.L5X, Message_Rung.L5X, Rung0_from_Main.L5X
+    types/SimpleType.L5X, ComplexType.L5X, ArrayType.L5X
+    large/LotOfTags.L5X              # 3.1MB, 10K tags — stress test
+    # +5 custom rung files (see Custom Test Data below)
   data/invalid/                  # 14 broken L5X files (one per code)
+  data/custom/                   # Hand-crafted files targeting specific coverage gaps
+    rungs_math.L5X               # ADD/SUB/MUL/DIV, all variants
+    rungs_compare.L5X            # LES/NEQ/LEQ/GEQ/EQU/GRT
+    rungs_prog_control.L5X       # JMP/LBL/MCR/JSR with params
+    rungs_process.L5X            # SCL/PID/TON/TOF/RTO with real operands
+    st_aoi_logic.L5X             # AOI with ST routine body
 ```
 
 ---
