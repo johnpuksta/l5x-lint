@@ -143,11 +143,24 @@ The `fix_suggestion` field lets the agent fix without another LLM call for simpl
 
 ## Implementation Strategy
 
-### XML Parsing — Use `jvalenzuela/l5x` (don't rebuild)
+### Reuse vs Build
+
+| Layer | Approach | What we build |
+|-------|----------|---------------|
+| **L5X XML parsing** | **Reuse** `jvalenzuela/l5x` | Thin adapter (`adapter.py`) mapping its models into our `SymbolTable` |
+| **RLL neutral text parsing** | **Build** new Lark grammar | Full Lark grammar + transformer for ~120 instructions; use `l5x2c` as reference for branch syntax |
+| **Instruction operand rules** | **Reuse** `l5x2c` tables + 1756-rm084 | Encode as data in `type_system.py`, not custom code per instruction |
+| **Built-in type definitions** | **Reuse** `hutcheb/acd` struct defs | Hard-code TIMER/COUNTER/CONTROL/STRING in `builtins.py` (they never change) |
+| **XSD structural validation** | **Reuse** `benmusson/l5x-schema` XSDs | Load XSD per schema revision, validate before semantic analysis |
+| **Check implementations** | **Build** 15 pure functions | One file per E/W code in `checks/` |
+| **Pipeline orchestration** | **Build** `flow()` composition | Wire checks together in `pipeline/analyze.py` |
+| **MCP server** | **Build** FastMCP tool endpoints | `mcp_server.py` exposing `validate_l5x` etc. |
+
+### XML Parsing — Reuse `jvalenzuela/l5x`
 
 The `l5x` Python library is a mature, tested L5X reader/writer handling the full object model — tags, UDTs, arrays, aliases, modules, AOIs, CDATA sections. The linter only needs a thin **adapter** layer mapping its output into `SymbolTable`. Rebuilding would duplicate hundreds of lines of tested code for zero benefit.
 
-### RLL Neutral Text — Lark grammar (partial rebuild)
+### RLL Neutral Text — Build new Lark grammar
 
 `alairjunior/l5x2c` has a working PLY parser for ~25 instructions but misses ~75. Rather than extend PLY, we define a **Lark** grammar covering all 100+ instructions. Lark (like ANTLR) is a parser generator — you write a grammar file, it produces a parse tree. Unlike ANTLR, Lark is Python-native with no separate code generation step, making it simpler to integrate.
 
