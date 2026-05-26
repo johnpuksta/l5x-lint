@@ -1,3 +1,16 @@
+# Project Structure
+
+## Test Folder Mirrors Source
+
+Every module in `src/l5x_lint/` has a corresponding test file at the same relative path under `tests/`.
+
+```
+src/l5x_lint/domain/models.py         →  tests/domain/test_models.py
+src/l5x_lint/domain/diagnostics.py    →  tests/domain/test_diagnostics.py
+src/l5x_lint/domain/errors.py         →  tests/domain/test_errors.py
+src/l5x_lint/checks/e001_foo.py       →  tests/checks/test_e001_foo.py
+```
+
 # Toolchain
 
 ## uv (Package Management)

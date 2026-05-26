@@ -1,5 +1,4 @@
-from pathlib import Path
-from conftest import VALID_DIR, INVALID_DIR, CUSTOM_DIR
+from conftest import CUSTOM_DIR, INVALID_DIR, VALID_DIR
 
 
 def test_valid_files_exist():

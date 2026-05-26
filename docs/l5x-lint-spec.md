@@ -174,51 +174,58 @@ class FixSuggestion:
     target_tag: str | None = None     # tag to create/rename
 ```
 
-### LintError (typed union for Result error type)
+### LintError (typed union for Result error type) — ✅ IMPLEMENTED
 
 All 15 variants — one per E/W code. Used as the `Error` type in `Result[_, LintError]`.
+Each variant is self-describing: `.code`, `.severity`, `.message`, `.description`.
 
 ```python
-class LintError:
-    """Namespace for error variants. Match against these in pipeline error handling."""
-    @dataclass
-    class E001: name: str
-    @dataclass
-    class E002: expected: str; actual: str
-    @dataclass
-    class E003: name: str
-    @dataclass
-    class E004: routine: str
-    @dataclass
-    class E005: path: str; member: str
-    @dataclass
-    class E006: name: str; index: int; size: int
-    @dataclass
-    class E007: name: str; scope: str
-    @dataclass
-    class E008: chain: list[str]
-    @dataclass
-    class E009: opcode: str; expected: int; actual: int
-    @dataclass
-    class E010: name: str; accessed_from: str; declared_in: str
-    @dataclass
-    class W001: name: str
-    @dataclass
-    class W002: rung: int
-    @dataclass
-    class W003: name: str
-    @dataclass
-    class W004: name: str
-    @dataclass
-    class W005: name: str; hidden_by: str
+from typing import ClassVar
+import dataclasses as _dc
 
-LintError = (
-    LintError.E001 | LintError.E002 | LintError.E003 | LintError.E004
-    | LintError.E005 | LintError.E006 | LintError.E007 | LintError.E008
-    | LintError.E009 | LintError.E010
-    | LintError.W001 | LintError.W002 | LintError.W003 | LintError.W004
-    | LintError.W005
-)
+class LintErrorBase:
+    code: ClassVar[str]
+    severity: ClassVar[str]
+    description: ClassVar[str]
+    message_template: ClassVar[str]
+
+    @property
+    def message(self) -> str:
+        fields = {f.name: getattr(self, f.name) for f in _dc.fields(self)}
+        return self.message_template.format(**fields)
+
+@dataclass
+class E001(LintErrorBase):
+    code: ClassVar[str] = "E001"
+    severity: ClassVar[str] = "error"
+    message_template: ClassVar[str] = "Undefined tag reference '{name}'"
+    description: ClassVar[str] = "..."
+    name: str
+
+@dataclass
+class E002(LintErrorBase):
+    code: ClassVar[str] = "E002"
+    severity: ClassVar[str] = "error"
+    message_template: ClassVar[str] = "Type mismatch: expected '{expected}', got '{actual}'"
+    description: ClassVar[str] = "..."
+    expected: str; actual: str
+
+# ... (all 15 variants follow the same pattern)
+
+LintError = E001 | E002 | E003 | E004 | E005 | E006 | E007 | E008 | E009 | E010 | W001 | W002 | W003 | W004 | W005
+```
+
+Usage:
+```python
+err = E001("Moter_Run")
+err.code       # "E001"
+err.severity   # "error"
+err.message    # "Undefined tag reference 'Moter_Run'"
+err.description  # long prose explanation
+
+match err:
+    case E001(name=n): print(f"undefined: {n}")
+    case W002(rung=r): print(f"unreachable: {rung}")
 ```
 
 ### RLL Domain Models
@@ -1216,60 +1223,45 @@ suggest_fixes(diagnostic: Diagnostic) → list[FixSuggestion]
 
 ---
 
-## Module Structure
+## Module Structure — Implementation Status
 
 ```
 l5x_lint/
-  domain/                        # Pure data types — zero dependencies
-    __init__.py                  # Re-exports all public types
-    models.py                    # Tag, DataType, Routine, TagPath, Location
-    diagnostics.py               # Diagnostic, AnalysisResult, FixSuggestion
-    errors.py                    # LintError (typed union of 15 variants)
-    rll_models.py                # ParsedRung, Instruction, Operand
-    st_models.py                 # StProgram, StStatement, StExpression AST
-    symbol_table.py              # SymbolTable, Scope (pure query methods)
-    type_system.py               # Type compatibility matrix, member resolution
-    tag_refs.py                  # extract_tag_refs (RLL + ST dispatch)
+  domain/                        # ✅ DONE — Pure data types, zero dependencies
+    __init__.py                  #     Re-exports all public types
+    models.py                    #     Tag, DataType, Routine, TagPath, Location
+    diagnostics.py               #     Diagnostic, AnalysisResult, FixSuggestion
+    errors.py                    #     LintError (15 self-describing variants with .code, .severity, .message, .description)
+    rll_models.py                #     ParsedRung, Instruction, Operand
+    st_models.py                 #     StProgram, StStatement, StExpression AST
+    symbol_table.py              # ⏳ PENDING — SymbolTable, Scope (pure query methods)
+    type_system.py               # ⏳ PENDING — Type compatibility matrix, member resolution
+    tag_refs.py                  # ⏳ PENDING — extract_tag_refs (RLL + ST dispatch)
 
-  checks/                        # One pure function per E/W code
+  checks/                        # ⏳ PENDING — One pure function per E/W code
     e001_undefined_tag.py
-    e002_type_mismatch.py
-    e003_missing_aoi.py
-    e004_invalid_jsr.py
-    e005_invalid_member.py
-    e006_array_oob.py
-    e007_duplicate_tag.py
-    e008_aoi_circular.py
-    e009_operand_count.py
-    e010_cross_scope.py
-    w001_unused_tag.py
-    w002_unreachable_rung.py
-    w003_output_never_driven.py
-    w004_timer_pre_zero.py
-    w005_shadowed_tag.py
+    ...
 
-  pipeline/
-    analyze.py                   # Compose all checks via flow()
-    routine_router.py            # Dispatch by Routine.type → RLL/ST parser
-    rung_parser.py               # Lark grammar + transformer → ParsedRung
-    st_grammar.py                # Lark grammar for IEC 61131-1 ST + Rockwell dialect
-    st_parser.py                 # Lark transformer + parse_st() → StProgram
+  pipeline/                      # ⏳ PENDING
+    analyze.py                   #     Compose all checks via flow()
+    routine_router.py            #     Dispatch by Routine.type → RLL/ST parser
+    rung_parser.py               #     Lark grammar + transformer → ParsedRung
+    st_grammar.py                #     Lark grammar for IEC 61131-1 ST + Rockwell dialect
+    st_parser.py                 #     Lark transformer + parse_st() → StProgram
 
-  infrastructure/                # Impure shell — IO lives here
-    adapter.py                   # ElementTree + l5x → domain models
-    mcp_server.py                # FastMCP server exposing MCP tools
+  infrastructure/                # ⏳ PENDING
+    adapter.py                   #     ElementTree + l5x → domain models
+    mcp_server.py                #     FastMCP server exposing MCP tools
 
-tests/
+tests/                           # Test folder mirrors src/ structure
   conftest.py                    # Path fixtures
   test_data_inventory.py         # Sanity checks on test data
-  test_adapter.py                # XML → domain model parsing
-  test_rll_parser.py             # RLL grammar cases
-  test_st_parser.py              # ST grammar cases
-  test_symbol_table.py           # Scope resolution, lookup
-  test_type_system.py            # Type compatibility, member resolution
-  test_integration.py            # Full pipeline per L5X file
-  test_e001_undefined_tag.py     # Unit tests per check (one file per code)
-  ...
+  domain/                        # ✅ DONE — mirrors src/l5x_lint/domain/
+    test_models.py               #     TagPath, Location, Tag, DataType, Routine, ...
+    test_diagnostics.py          #     Diagnostic, AnalysisResult, FixSuggestion
+    test_errors.py               #     All 15 LintError variants, .code .severity .message .description
+    test_rll_models.py           #     ParsedRung, Instruction, Operand
+    test_st_models.py            #     StProgram, StStatement, StExpression AST
   data/valid/                    # Baseline L5X files
     projects/Simple.L5X, Test.L5X, Empty.L5X, ACDTestsWithAOI.L5X, ex1.L5X
     routines/Main.L5X, ST.L5X, FBD.L5X, SFC.L5X, Rung1_from_Main.L5X
