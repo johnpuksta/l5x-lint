@@ -145,42 +145,25 @@ The `fix_suggestion` field lets the agent fix without another LLM call for simpl
 
 ### Reuse vs Build
 
-| Layer | Approach | What we build |
-|-------|----------|---------------|
-| **L5X XML parsing** | **Reuse** `jvalenzuela/l5x` | Thin adapter (`adapter.py`) mapping its models into our `SymbolTable` |
-| **RLL neutral text parsing** | **Build** new Lark grammar | Full Lark grammar + transformer for ~120 instructions; use `l5x2c` as reference for branch syntax |
-| **Instruction operand rules** | **Reuse** `l5x2c` tables + 1756-rm084 | Encode as data in `type_system.py`, not custom code per instruction |
-| **Built-in type definitions** | **Reuse** `hutcheb/acd` struct defs | Hard-code TIMER/COUNTER/CONTROL/STRING in `builtins.py` (they never change) |
-| **XSD structural validation** | **Reuse** `benmusson/l5x-schema` XSDs | Load XSD per schema revision, validate before semantic analysis |
-| **Check implementations** | **Build** 15 pure functions | One file per E/W code in `checks/` |
-| **Pipeline orchestration** | **Build** `flow()` composition | Wire checks together in `pipeline/analyze.py` |
-| **MCP server** | **Build** FastMCP tool endpoints | `mcp_server.py` exposing `validate_l5x` etc. |
-
-### XML Parsing — Reuse `jvalenzuela/l5x`
-
-The `l5x` Python library is a mature, tested L5X reader/writer handling the full object model — tags, UDTs, arrays, aliases, modules, AOIs, CDATA sections. The linter only needs a thin **adapter** layer mapping its output into `SymbolTable`. Rebuilding would duplicate hundreds of lines of tested code for zero benefit.
-
-### RLL Neutral Text — Build new Lark grammar
-
-`alairjunior/l5x2c` has a working PLY parser for ~25 instructions but misses ~75. Rather than extend PLY, we define a **Lark** grammar covering all 100+ instructions. Lark (like ANTLR) is a parser generator — you write a grammar file, it produces a parse tree. Unlike ANTLR, Lark is Python-native with no separate code generation step, making it simpler to integrate.
-
-```lark
-?input_instruction : OPCODE "(" params ")"
-params             : param ("," param)*
-param              : TAG_NAME | NUMBER | "?"
-```
+| Layer | Reuse | Build |
+|-------|-------|-------|
+| **L5X XML parsing** | `jvalenzuela/l5x` library — full project/tag/type model | Thin adapter mapping into our `SymbolTable` |
+| **RLL text parsing** | `alairjunior/l5x2c` as reference for branch syntax | New Lark grammar covering ~120 instructions (l5x2c covers ~25) |
+| **Instruction operand rules** | `l5x2c` operand tables + Rockwell 1756-rm084 as reference data | Encode rules as data in `type_system.py` |
+| **Built-in type definitions** | `hutcheb/acd` struct defs (TIMER, COUNTER, etc.) | Hard-code in `builtins.py` (they're static) |
+| **XSD structural validation** | `benmusson/l5x-schema` XSD files per revision | Load + validate before analysis |
+| **15 checks (E001–W005)** | — | One pure function per check in `checks/` |
+| **Pipeline + MCP server** | — | `pipeline/analyze.py` + `mcp_server.py` |
 
 ### Why Python
 
-Static analysis is tree-walking + symbol table lookups — not CPU-bound. Direct import of `l5x` (Python library) avoids FFI/RPC overhead. The MCP tool layer and LangGraph agent are also Python. Rust/C++/Go would add build complexity for zero performance gain in this use case.
+Static analysis is tree-walking + symbol table lookups — not CPU-bound. Direct import of `l5x` (Python library) avoids FFI. The MCP tool layer and LangGraph agent are also Python. Rust/C++/Go add complexity for zero performance gain here.
 
-### Testing — TDD with real L5X files
+### Testing
 
 **28 test files** in `tests/data/`:
-- **14 valid baselines** — real L5X files from L5Sharp's test suite covering projects, routines (RLL/ST), individual rungs, data types, AOIs
-- **14 intentionally broken** — one per E001-E010 and W001-W005, each crafted to trigger exactly one diagnostic code
-
-Workflow: implement a check → test against matching broken file → assert expected diagnostic code.
+- **14 valid baselines** from L5Sharp (projects, routines, rungs, data types, AOIs)
+- **14 intentionally broken** — one per E001–W005, each triggers exactly one diagnostic code
 
 ---
 
