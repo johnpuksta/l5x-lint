@@ -12,23 +12,84 @@ No execution — pure static analysis.
 
 ---
 
-## Architecture
+## Architecture: Functional Pipeline + Ports & Adapters
+
+**Principles:**
+- **Functional core, imperative shell** — all business logic is pure functions returning `Result` or `list[Diagnostic]`. IO (file reading, MCP server) lives at the edges.
+- **Railway Oriented Programming** — each step returns `Result[T, LintError]`. Composition via `flow` + `bind`, not try/except.
+- **No None** — `Maybe[Tag]` instead of `Tag | None`. Forces explicit handling.
+- **Typed errors** — `LintError` is a union of dataclass variants, not a string.
+- **One function per check** — each E/W code is a standalone pure function, easy to test in isolation.
+
+### Data Flow
+
+```
+                     ┌──────────────────────┐
+XML string ─────────►│  adapter.py           │
+                     │  (l5x library wrapper)│
+                     │  → Result[L5XProject] │
+                     └──────────┬───────────┘
+                                ▼
+                     ┌──────────────────────┐
+                     │  SymbolTable(project) │
+                     │  (pure construction)  │
+                     └──────────┬───────────┘
+                                ▼
+                     ┌──────────────────────┐
+                     │  rung_parser.py       │
+                     │  Lark → ParsedRung[]  │
+                     │  → Result[ParsedRung] │
+                     └──────────┬───────────┘
+                                ▼
+               ┌──────────────────────────────────┐
+               │  checks/*.py                      │
+               │  Each: (SymbolTable, Routine)     │
+               │       → list[Diagnostic]          │
+               │  Composed via flow:               │
+               │  flow(project,                     │
+               │    build_symbol_tables,           │
+               │    bind(parse_all_rungs),          │
+               │    bind(run_all_checks))           │
+               └──────────┬───────────────────────┘
+                          ▼
+               ┌──────────────────────┐
+               │  AnalysisResult      │
+               │  { passed, errors,   │
+               │    warnings, fixes } │
+               └──────────────────────┘
+```
+
+### Functional Patterns
 
 ```python
-class SemanticAnalyzer:
-    def __init__(self, project: L5XProject):
-        self.ctrl_scope  = SymbolTable(project.tags, project.data_types)
-        self.aoi_table   = AOITable(project.add_on_instructions)
-        self.type_system = TypeSystem(project.data_types)
+from returns.result import Result, Success, Failure, safe
+from returns.maybe import Maybe, Some, Nothing
+from returns.pipeline import flow
+from returns.pointfree import bind
 
-    def analyze(self) -> AnalysisResult:
-        errors, warnings = [], []
-        for program in self.project.programs:
-            prog_scope = SymbolTable(program.tags, parent=self.ctrl_scope)
-            for routine in program.routines:
-                checker = self._get_checker(routine.type)
-                checker.check(routine, prog_scope, errors, warnings)
-        return AnalysisResult(errors=errors, warnings=warnings)
+# Result for fallible operations
+def resolve_tag(name: str, scope: SymbolTable) -> Result[Tag, LintError]:
+    match scope.lookup(name):
+        case Nothing: return Failure(LintError.E001(name))
+        case Some(tag): return Success(tag)
+
+# flow for linear pipelines (no try/except)
+result = flow(input, step1, bind(step2), bind(step3))
+
+# @safe converts exceptions → Failure automatically
+@safe
+def parse_l5x(xml: str) -> L5XProject: ...
+
+# Maybe instead of None
+def lookup(self, name: str) -> Maybe[Tag]: ...
+
+# Checks return list[Diagnostic] — they always "succeed", may produce 0 results
+def check_undefined_tags(routine: Routine, scope: SymbolTable) -> list[Diagnostic]:
+    return [
+        Diagnostic("E001", f"Undefined tag '{ref}'", loc)
+        for ref in extract_tag_refs(routine)
+        if scope.lookup(ref) is Nothing
+    ]
 ```
 
 ---
@@ -88,16 +149,13 @@ The `l5x` Python library is a mature, tested L5X reader/writer handling the full
 
 ### RLL Neutral Text — Lark grammar (partial rebuild)
 
-`alairjunior/l5x2c` has a working PLY parser for ~25 instructions but misses ~75. Rather than extend PLY, we define a **[Lark](https://github.com/lark-parser/lark)** grammar covering all 100+ instructions. Lark is a Python parsing toolkit (similar to ANTLR but native Python, no code generation step). The grammar is declarative and produces better error messages — critical for linter diagnostics.
+`alairjunior/l5x2c` has a working PLY parser for ~25 instructions but misses ~75. Rather than extend PLY, we define a **Lark** grammar covering all 100+ instructions. Lark (like ANTLR) is a parser generator — you write a grammar file, it produces a parse tree. Unlike ANTLR, Lark is Python-native with no separate code generation step, making it simpler to integrate.
 
-```
-Example Lark rule:
+```lark
 ?input_instruction : OPCODE "(" params ")"
 params             : param ("," param)*
 param              : TAG_NAME | NUMBER | "?"
 ```
-
-Lark vs ANTLR: Both are parser generators that take a grammar file and produce a parse tree. ANTLR generates standalone code in Java/JS/Python/etc. and is heavier (separate build step). Lark runs directly from the grammar at runtime (or optionally generates a standalone parser), is Python-native, and simpler to integrate for a pure-Python project. ANTLR would be overkill here.
 
 ### Why Python
 
@@ -110,6 +168,30 @@ Static analysis is tree-walking + symbol table lookups — not CPU-bound. Direct
 - **14 intentionally broken** — one per E001-E010 and W001-W005, each crafted to trigger exactly one diagnostic code
 
 Workflow: implement a check → test against matching broken file → assert expected diagnostic code.
+
+---
+
+## Toolchain
+
+| Tool | Purpose |
+|------|---------|
+| `uv` | Package management (replaces pip/poetry/virtualenv) |
+| `ruff` | Code formatting + linting |
+| `returns` | `Result`, `Maybe`, `flow`, `bind` for functional composition |
+| `lark` | RLL neutral text parser generator |
+| `jvalenzuela/l5x` | L5X XML parsing library |
+| `pytest` | Test framework |
+
+### uv Commands
+
+```powershell
+uv sync                           # Install all deps from pyproject.toml
+uv add <package>                  # Add runtime dependency
+uv add --dev <package>            # Add dev dependency
+uv run pytest tests/ -v          # Run tests in env
+uvx ruff check .                  # Lint (ephemeral)
+uvx ruff format .                 # Format
+```
 
 ---
 
@@ -141,21 +223,43 @@ suggest_fixes(diagnostic: Diagnostic) → list[FixSuggestion]
 
 ```
 l5x_lint/
-  adapter.py          # l5x library → SymbolTable
-  rll_grammar.py      # Lark grammar file
-  rll_parser.py       # Lark transformer → ParsedRung AST
-  builtins.py         # Built-in type registry (TIMER, COUNTER...)
-  symbol_table.py     # Scope-aware tag/type resolution
-  type_checker.py     # Type compatibility checks
-  analyzer.py         # SemanticAnalyzer orchestrator
-  checks.py           # E001-E010, W001-W005 implementations
-  diagnostics.py      # Output models
-  mcp_server.py       # FastMCP server
+  domain/                        # Pure data types — zero dependencies
+    models.py                    # Tag, DataType, Routine, ParsedRung, etc.
+    diagnostics.py               # Diagnostic, Location, Severity
+    errors.py                    # LintError (typed union for Result error type)
+    symbol_table.py              # SymbolTable, Scope (pure query methods)
+    type_system.py               # Type compatibility matrix, member resolution
+
+  checks/                        # One pure function per E/W code
+    e001_undefined_tag.py
+    e002_type_mismatch.py
+    e003_missing_aoi.py
+    e004_invalid_jsr.py
+    e005_invalid_member.py
+    e006_array_oob.py
+    e007_duplicate_tag.py
+    e008_aoi_circular.py
+    e009_operand_count.py
+    e010_cross_scope.py
+    w001_unused_tag.py
+    w002_unreachable_rung.py
+    w003_output_never_driven.py
+    w004_timer_pre_zero.py
+    w005_shadowed_tag.py
+
+  pipeline/
+    analyze.py                   # Compose all checks via flow()
+    rung_parser.py               # Lark grammar + transformer → ParsedRung
+
+  infrastructure/                # Impure shell — IO lives here
+    adapter.py                   # Wraps l5x library → domain models
+    mcp_server.py                # FastMCP server exposing MCP tools
+
 tests/
   conftest.py
   test_data_inventory.py
-  data/valid/         # 14 baseline L5X files
-  data/invalid/       # 14 broken L5X files (one per code)
+  data/valid/                    # 14 baseline L5X files
+  data/invalid/                  # 14 broken L5X files (one per code)
 ```
 
 ---
