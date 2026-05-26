@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetType="Rung" ContainsContext="true" ExportDate="Sat Mar 04 21:40:05 2023" ExportOptions="References NoRawData L5KData DecoratedData Context">
+<Controller Use="Context" Name="TestController">
+<DataTypes Use="Context">
+<DataType Name="MyType" Family="NoFamily" Class="User">
+<Members>
+<Member Name="ValidField" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
+</Members>
+</DataType>
+</DataTypes>
+<Programs Use="Context">
+<Program Use="Context" Name="NProgram">
+<Tags Use="Context">
+<Tag Name="MyTag" TagType="Base" DataType="MyType" Constant="false" ExternalAccess="Read/Write">
+<Data Format="Decorated">
+<Structure DataType="MyType">
+<DataValueMember Name="ValidField" DataType="DINT" Radix="Decimal" Value="0"/>
+</Structure>
+</Data>
+</Tag>
+<Tag Name="LocalBool" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data Format="Decorated"><DataValue DataType="BOOL" Radix="Decimal" Value="0"/></Data>
+</Tag>
+</Tags>
+<Routines Use="Context">
+<Routine Use="Context" Name="Main">
+<RLLContent Use="Context">
+<Rung Use="Target" Number="0" Type="N">
+<Text><![CDATA[XIC(MyTag.NonExistentMember)OTE(LocalBool);]]></Text>
+</Rung>
+</RLLContent>
+</Routine>
+</Routines>
+</Program>
+</Programs>
+</Controller>
+</RSLogix5000Content>

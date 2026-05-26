@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetType="Rung" ContainsContext="true" ExportDate="Sat Mar 04 21:40:05 2023" ExportOptions="References NoRawData L5KData DecoratedData Context">
+<Controller Use="Context" Name="TestController">
+<DataTypes Use="Context"/>
+<Programs Use="Context">
+<Program Use="Context" Name="NProgram">
+<Tags Use="Context">
+<Tag Name="LocalBool" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data Format="Decorated"><DataValue DataType="BOOL" Radix="Decimal" Value="0"/></Data>
+</Tag>
+</Tags>
+<Routines Use="Context">
+<Routine Use="Context" Name="Main">
+<RLLContent Use="Context">
+<Rung Use="Target" Number="0" Type="N">
+<Text><![CDATA[XIC(LocalBool)JSR(NonExistentRoutine,0);]]></Text>
+</Rung>
+</RLLContent>
+</Routine>
+</Routines>
+</Program>
+</Programs>
+</Controller>
+</RSLogix5000Content>
