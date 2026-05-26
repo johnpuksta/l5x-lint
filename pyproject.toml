@@ -1,0 +1,20 @@
+[project]
+name = "l5x-lint"
+version = "0.1.0"
+description = "Semantic analyzer / linter for Rockwell L5X PLC programs"
+requires-python = ">=3.12"
+dependencies = [
+    "lark>=1.1",
+    "l5x>=0.1",
+    "pydantic>=2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+]
+
+[tool.lint]
+checks = ["E001", "E002", "E003", "E004", "E005", "E006", "E007", "E008", "E009", "E010",
+           "W001", "W002", "W003", "W004", "W005"]
