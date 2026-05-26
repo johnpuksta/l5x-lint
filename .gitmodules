@@ -1,0 +1,12 @@
+[submodule "references/l5x2c"]
+	path = references/l5x2c
+	url = https://github.com/alairjunior/l5x2c.git
+[submodule "references/l5x"]
+	path = references/l5x
+	url = https://github.com/jvalenzuela/l5x.git
+[submodule "references/acd"]
+	path = references/acd
+	url = https://github.com/hutcheb/acd.git
+[submodule "references/L5Sharp"]
+	path = references/L5Sharp
+	url = https://github.com/tnunnink/L5Sharp.git
