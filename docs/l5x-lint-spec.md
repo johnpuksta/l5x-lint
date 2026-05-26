@@ -1296,3 +1296,125 @@ Agent → l5x-lint:   validate_l5x(l5x_xml) → diagnostics
 Agent → l5x-forge:  fix_errors(xml, diagnostics) → corrected xml
 Agent → l5x-sim:    load + simulate + assert
 ```
+
+---
+
+## Packaging & Deployment
+
+l5x-lint is a **pip-installable Python package** exposed as an MCP server.
+It does NOT need Docker, Kubernetes, or any container orchestration.
+The MCP protocol means any MCP host (Claude Desktop, Cursor, VS Code, custom agent)
+can discover and invoke it over stdio or HTTP.
+
+### Distribution Options
+
+| Method | Command | Use Case |
+|--------|---------|----------|
+| **pip install (from source)** | `uv pip install -e .` | Dev, local testing |
+| **pip install (from PyPI)** | `uv pip install l5x-lint` | CI/CD, production |
+| **uvx (ephemeral)** | `uvx l5x-lint` | One-shot runs, no install needed |
+| **Docker image** | `docker run l5x-lint ...` | Sandboxed/isolated environments |
+
+### Primary Deployment: MCP Server via stdio
+
+The simplest deployment — **no ports, no daemons, no Docker.**
+
+```powershell
+# Install once
+uv pip install l5x-lint
+
+# Run as MCP server (stdio transport)
+python -m l5x_lint serve
+```
+
+The MCP host (Claude Desktop, VS Code, etc.) configures it like any other MCP tool:
+
+```json
+{
+  "mcpServers": {
+    "l5x-lint": {
+      "command": "uvx",
+      "args": ["l5x-lint"]
+    }
+  }
+}
+```
+
+`uvx l5x-lint` downloads and runs on the fly — no install step.
+The MCP host spawns the process, pipes stdin/stdout, and auto-discovers
+the `validate_l5x`, `check_tag_references`, `get_cross_references`, and
+`suggest_fixes` tools via the MCP ListTools handshake.
+
+### Secondary Deployment: MCP Server via HTTP
+
+For remote agent access (e.g., an agent running on a different machine):
+
+```powershell
+python -m l5x_lint serve --transport http --port 8080
+```
+
+The MCP host connects to `http://host:8080/` using Streamable HTTP transport.
+This is useful when the PLC toolchain runs on a dedicated build server and
+agents connect remotely.
+
+### Tertiary Deployment: CLI Direct Invocation
+
+```powershell
+# Validate a single file
+python -m l5x_lint validate program.L5X
+
+# Validate from stdin
+cat program.L5X | python -m l5x_lint validate -
+
+# Validate from agent-generated XML string
+python -m l5x_lint validate --xml "<RSLogix5000Content>...</RSLogix5000Content>"
+```
+
+Prints structured JSON to stdout. Useful for shell scripts, CI pipelines,
+and pre-commit hooks.
+
+### Docker (Optional)
+
+Only needed for sandboxed environments where you can't install Python
+or need to pin the exact runtime.
+
+```dockerfile
+FROM python:3.12-slim
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+RUN uv pip install l5x-lint
+ENTRYPOINT ["uvx", "l5x-lint"]
+```
+
+```powershell
+docker build -t l5x-lint .
+docker run -i l5x-lint validate - < program.L5X
+```
+
+### CI/CD Integration
+
+```yaml
+# .github/workflows/lint.yml
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: uvx l5x-lint validate --xml "$(cat exports/*.L5X)"
+```
+
+The linter exits non-zero if any errors are found, making it suitable
+for gating merges.
+
+### Summary
+
+| Scenario | Transport | Command |
+|----------|-----------|---------|
+| Claude Desktop | stdio | `uvx l5x-lint` |
+| VS Code | stdio | `uvx l5x-lint` |
+| Remote agent (LAN) | HTTP | `python -m l5x_lint serve --transport http` |
+| CI pipeline | CLI | `python -m l5x_lint validate file.L5X` |
+| pre-commit hook | CLI | `python -m l5x_lint validate --stdin` |
+| Docker sandbox | CLI | `docker run -i l5x-lint validate -` |
+
+No compilation. No containers required. A single `uvx` invocation from
+any MCP host is the intended primary path.
