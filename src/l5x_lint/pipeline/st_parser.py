@@ -61,7 +61,7 @@ or_expr: and_expr (OR and_expr)*
 and_expr: compare_expr (AND compare_expr)*
 compare_expr: add_expr ((EQ | NE | LT | GT | LE | GE) add_expr)?
 add_expr: mul_expr ((PLUS | MINUS) mul_expr)*
-mul_expr: unary_expr ((MUL | DIV) unary_expr)*
+mul_expr: unary_expr ((MUL | DIV | MOD) unary_expr)*
 unary_expr: (MINUS | NOT)* atom
 atom: tag_path | number | bool_literal | wildcard | call | LPAREN expression RPAREN
 
@@ -71,32 +71,33 @@ number: INTEGER | FLOAT
 
 bool_literal: TRUE | FALSE
 
-// Keywords — string literals have highest lexer priority
-IF: "if"
-THEN: "then"
-ELSIF: "elsif"
-ELSE: "else"
-END_IF: "end_if"
-CASE: "case"
-OF: "of"
-END_CASE: "end_case"
-FOR: "for"
-TO: "to"
-BY: "by"
-DO: "do"
-END_FOR: "end_for"
-WHILE: "while"
-END_WHILE: "end_while"
-REPEAT: "repeat"
-UNTIL: "until"
-END_REPEAT: "end_repeat"
-EXIT: "exit"
-RETURN: "return"
-OR: "or"
-AND: "and"
-NOT: "not"
-TRUE: "true"
-FALSE: "false"
+// Keywords — case-insensitive via inline regex flag
+IF: /(?i:if)/
+THEN: /(?i:then)/
+ELSIF: /(?i:elsif)/
+ELSE: /(?i:else)/
+END_IF: /(?i:end_if)/
+CASE: /(?i:case)/
+OF: /(?i:of)/
+END_CASE: /(?i:end_case)/
+FOR: /(?i:for)/
+TO: /(?i:to)/
+BY: /(?i:by)/
+DO: /(?i:do)/
+END_FOR: /(?i:end_for)/
+WHILE: /(?i:while)/
+END_WHILE: /(?i:end_while)/
+REPEAT: /(?i:repeat)/
+UNTIL: /(?i:until)/
+END_REPEAT: /(?i:end_repeat)/
+EXIT: /(?i:exit)/
+RETURN: /(?i:return)/
+OR: /(?i:or)/
+AND: /(?i:and)/
+NOT: /(?i:not)/
+MOD.100: /(?i:mod)/
+TRUE: /(?i:true)/
+FALSE: /(?i:false)/
 
 // Operators
 ASSIGN: ":="
@@ -123,7 +124,7 @@ RSQB: "]"
 
 // Identifiers and literals
 WILDCARD: "?"
-TAG_BASE: /[A-Za-z_][A-Za-z0-9_]*/
+TAG_BASE.-1: /[A-Za-z_][A-Za-z0-9_]*/
 INTEGER: /-?[0-9]+/
 FLOAT: /-?[0-9]+\.[0-9]+([eE][-+]?[0-9]+)?/
 
@@ -400,6 +401,9 @@ class _StTransformer(Transformer):
 
     def DIV(self, token):  # noqa: N802
         return "/"
+
+    def MOD(self, token):  # noqa: N802
+        return "mod"
 
     def ASSIGN(self, token):  # noqa: N802
         return token.value

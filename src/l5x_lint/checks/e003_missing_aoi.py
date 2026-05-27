@@ -9,7 +9,7 @@ _BUILTIN_OPCODES: frozenset[str] = frozenset({
     "JSR", "JXR", "XIC", "XIO", "OTE", "OTL", "OTU",
     "TON", "TOF", "RTO", "CTU", "CTD",
     "ADD", "SUB", "MUL", "DIV", "MOV", "CLR", "CPT",
-    "EQU", "NEQ", "LES", "LEQ", "GRT", "GEQ",
+    "EQU", "NEQ", "LES", "LEQ", "GRT", "GEQ", "GT",
     "RES", "PID", "MSG", "GSV", "SSV",
     "COP", "CPS", "FAL", "FSC",
     "MCR", "JMP", "LBL", "AFI", "NOP", "TND",

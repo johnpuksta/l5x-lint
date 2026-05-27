@@ -15,7 +15,8 @@ items: item*
 item: instruction
     | branch
 
-instruction: OPCODE ("(" params? ")")?
+instruction: CMP "(" CMP_CONTENT ")"
+           | OPCODE ("(" params? ")")?
 
 branch: "[" items ("," items)* "]"
 
@@ -23,19 +24,23 @@ params: param ("," param)*
 
 param: tag_path
      | NUMBER
+     | HEX_LITERAL
      | WILDCARD
      | EXPR
 
-tag_path: TAG_BASE ("." TAG_BASE | "[" NUMBER "]")*
+tag_path: TAG_BASE ("." (TAG_BASE | NUMBER | "[" TAG_BASE ("." TAG_BASE)* "]") | "[" NUMBER ("," NUMBER)* "]" | "[" TAG_BASE ("." TAG_BASE)* "]")*
 
 // Tokens
-OPCODE: /[A-Z][A-Z0-9_]*/
-TAG_BASE: /[A-Za-z_][A-Za-z0-9_]*/
-        | /[A-Za-z_]+:[0-9]+:[A-Za-z_]+/
+OPCODE: /[A-Za-z_][A-Za-z0-9_]*/
+TAG_BASE: /[A-Za-z_][A-Za-z0-9_]*:[0-9]+:[A-Za-z_][A-Za-z0-9_]*/
+        | /[A-Za-z_][A-Za-z0-9_]*/
 WILDCARD: "?"
+HEX_LITERAL.100: /[0-9]+#[0-9A-Fa-f]+/
 NUMBER: /-?[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?/
 SEMICOLON: ";"
 EXPR: /[A-Za-z0-9_.+*\/\-\s]+/
+CMP.100: "CMP"
+CMP_CONTENT: /(?:[^)()]+|\([^)]*\))+/
 %ignore /[ \t\n\r]+/
 """
 
@@ -69,8 +74,12 @@ class _RLLTransformer(Transformer):
 
     def instruction(self, items):
         opcode = str(items[0])
-        has_params = len(items) > 1 and isinstance(items[1], list)
-        operands = list(items[1]) if has_params else []
+        operands = []
+        for item in items[1:]:
+            if isinstance(item, list):
+                operands.extend(item)
+            elif isinstance(item, Operand):
+                operands.append(item)
         return Instruction(opcode=opcode, operands=operands)
 
     def branch(self, items):
@@ -90,14 +99,26 @@ class _RLLTransformer(Transformer):
 
     def tag_path(self, items):
         value = ""
+        prev = None
         for item in items:
             if isinstance(item, Operand):
-                value += f"[{item.value}]"
+                if prev == "[":
+                    value += f"[{item.value}]"
+                else:
+                    if value:
+                        value += "."
+                    value += str(item.value)
             else:
                 s = str(item)
-                if value and value[-1] not in ("[", "."):
-                    value += "."
-                value += s
+                if s == "[":
+                    value += "["
+                elif s == "]":
+                    value += "]"
+                else:
+                    if value and value[-1] not in ("[", "."):
+                        value += "."
+                    value += s
+                prev = s
         return Operand(value=value)
 
     def OPCODE(self, token):  # noqa: N802
@@ -112,11 +133,20 @@ class _RLLTransformer(Transformer):
     def WILDCARD(self, token):  # noqa: N802
         return Operand(value="?")
 
+    def HEX_LITERAL(self, token):  # noqa: N802
+        return Operand(value=str(token))
+
     def EXPR(self, token):  # noqa: N802
         return Operand(value=str(token).strip())
 
     def SEMICOLON(self, token):  # noqa: N802
         return None
+
+    def CMP(self, token):  # noqa: N802
+        return str(token)
+
+    def CMP_CONTENT(self, token):  # noqa: N802
+        return Operand(value=str(token).strip())
 
 
 def _merge_branches(items: list) -> list[Instruction]:

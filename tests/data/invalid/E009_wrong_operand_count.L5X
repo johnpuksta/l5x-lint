@@ -10,7 +10,7 @@
 </Tag>
 </Tags>
 <Routines Use="Context">
-<Routine Use="Context" Name="Main">
+<Routine Use="Context" Name="Main" Type="RLL">
 <RLLContent Use="Context">
 <Rung Use="Target" Number="0" Type="N">
 <Text><![CDATA[XIC()OTE(LocalBool);]]></Text>

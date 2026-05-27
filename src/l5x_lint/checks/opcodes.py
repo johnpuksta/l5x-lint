@@ -11,7 +11,7 @@ OPCODE_OPERANDS: dict[str, tuple[int | None, int | None]] = {
     "CPT": (1, None), "SQR": (2, 2), "ABS": (1, 1),
     # Compare
     "EQU": (2, 2), "NEQ": (2, 2), "LES": (2, 2), "LEQ": (2, 2),
-    "GRT": (2, 2), "GEQ": (2, 2), "CMP": (1, 1), "LIM": (3, 3),
+    "GRT": (2, 2), "GEQ": (2, 2), "GT": (2, 2), "CMP": (1, 1), "LIM": (3, 3),
     # Program control
     "JSR": (1, None), "JXR": (1, None), "JMP": (1, 1), "LBL": (1, 1),
     "MCR": (0, 0), "AFI": (0, 0), "NOP": (0, 0), "TND": (0, 0),
@@ -34,7 +34,7 @@ OPCODE_OPERANDS: dict[str, tuple[int | None, int | None]] = {
 
 INPUT_OPCODES: frozenset[str] = frozenset({
     "XIC", "XIO", "ONS", "OSR", "OSF",
-    "EQU", "NEQ", "LES", "LEQ", "GRT", "GEQ", "CMP", "LIM",
+    "EQU", "NEQ", "LES", "LEQ", "GRT", "GEQ", "GT", "CMP", "LIM",
 })
 
 OUTPUT_OPCODES: frozenset[str] = frozenset({

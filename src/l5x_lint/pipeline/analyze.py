@@ -1,9 +1,10 @@
 from collections.abc import Callable
 
-from returns.result import Result, Success
+from returns.result import Failure, Result, Success
 
 from l5x_lint.domain.diagnostics import AnalysisResult, Diagnostic
 from l5x_lint.domain.models import Controller, Location, Routine
+from l5x_lint.pipeline.routine_router import route_routines
 from l5x_lint.pipeline.symbols import SymbolTable, build_symbol_table
 
 CheckFn = Callable[[Routine, SymbolTable, Location], list[Diagnostic]]
@@ -17,6 +18,13 @@ def register(check: CheckFn) -> CheckFn:
 
 
 def analyze(controller: Controller) -> Result[AnalysisResult, Exception]:
+    route_result = route_routines(controller)
+    match route_result:
+        case Failure(err):
+            return Failure(err)
+        case Success():
+            pass
+
     symbols = build_symbol_table(controller)
     diagnostics: list[Diagnostic] = []
 

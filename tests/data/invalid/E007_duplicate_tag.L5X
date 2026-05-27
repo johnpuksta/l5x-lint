@@ -14,7 +14,7 @@
 <Program Use="Context" Name="MainProgram">
 <Tags Use="Context"/>
 <Routines Use="Context">
-<Routine Use="Context" Name="Main">
+<Routine Use="Context" Name="Main" Type="RLL">
 <RLLContent Use="Context">
 <Rung Use="Target" Number="0" Type="N">
 <Text><![CDATA[XIC(DuplicateTag)OTE(DuplicateTag);]]></Text>

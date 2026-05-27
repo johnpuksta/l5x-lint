@@ -60,3 +60,23 @@ def parse(xml: str) -> L5XProject: ...
 # Maybe instead of None
 def lookup(self, name: str) -> Maybe[Tag]: ...
 ```
+
+# Known Issues
+
+## Lark Scanner Priority
+
+Lark's `BasicLexer._build_scanner()` sorts terminals by `(-priority, -max_width, -len(pattern.value), name)` ascending. Higher numeric `priority` in grammar (e.g., `NAME.100`) means the terminal matches first (because `-100 < 0`).
+
+Both parsers (`rung_parser.py`, `st_parser.py`) use `ContextualLexer`. Tag-like terminals (`TAG_BASE`) use priority `-1` to sort **after** keywords (priority `0`) — otherwise `-max_width` tiebreaker puts unbounded TAG_BASE before fixed-length keywords like `IF`.
+
+**ST parser keywords** use `/(?i:keyword)/` regex (case-insensitive, avoids `%ignore_case` bug). All 26 keyword terminals default to priority `0`. `TAG_BASE.-1` ensures identifiers don't shadow keywords.
+
+**RLL parser** `TAG_BASE` uses two alternatives (IO tag format `Name:Slot:Letter` first, then simple identifier) with priority `0`. The IO colon pattern allows digits in first/last components: `[A-Za-z_][A-Za-z0-9_]*:[0-9]+:[A-Za-z_][A-Za-z0-9_]*`. `CMP.100` and `HEX_LITERAL.100` use high priority to match before broader `OPCODE`/`NUMBER` patterns.
+
+## Inline String Literals in Alternatives
+
+Lark drops inline string literal tokens (e.g., `"["`, `"]"`) from alternatives within `(...)*` groups. The `tag_path` rule in `rung_parser.py` uses `"[" NUMBER ("," NUMBER)* "]"` but the transformer receives only `TAG_BASE`, `NUMBER` tokens — brackets are invisible. Array indices are internally represented as `.N` (dot notation, same as structural member access) and tests assert `Array.5` not `Array[5]`. To preserve brackets, use named terminals (`LSQB: "["`, `RSQB: "]"`) in the grammar.
+
+## Opcodes vs AOIs
+
+E003 ("Missing AOI definition") uses a `_BUILTIN_OPCODES` frozenset in `e003_missing_aoi.py`. Any opcode not in this set and not defined as an AOI triggers E003. Both `_BUILTIN_OPCODES` and `OPCODE_OPERANDS` in `opcodes.py` must be kept in sync. `GT` was recently added as a comparison instruction alias alongside `GRT`.

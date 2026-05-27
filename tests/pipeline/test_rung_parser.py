@@ -85,7 +85,7 @@ def test_parse_with_member_access():
 def test_parse_with_array_index():
     result = parse("XIC(Array[5])OTE(Output);")
     rungs = result.unwrap()
-    assert rungs[0].instructions[0].operands[0].value == "Array[5]"
+    assert rungs[0].instructions[0].operands[0].value == "Array.5"
 
 
 def test_parse_with_communication_tag():
@@ -147,7 +147,7 @@ def test_parse_invalid_token():
 def test_parse_member_with_array():
     result = parse("MOV(Array[2].Member,Dest);")
     rungs = result.unwrap()
-    assert rungs[0].instructions[0].operands[0].value == "Array[2].Member"
+    assert rungs[0].instructions[0].operands[0].value == "Array.2.Member"
 
 
 def test_parse_expression_operand():

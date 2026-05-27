@@ -14,6 +14,8 @@ class SymbolTable:
     routine_names: set[str] = field(default_factory=set)
     aoi_names: set[str] = field(default_factory=set)
     aoi_list: list[AOI] = field(default_factory=list)
+    duplicate_controller_tags: list[str] = field(default_factory=list)
+    duplicate_program_tags: dict[str, list[str]] = field(default_factory=dict)
 
     def resolve(self, name: str, program: str | None = None) -> Maybe[Tag]:
         if program and program in self.program_tags:
@@ -37,15 +39,24 @@ def build_symbol_table(controller: Controller) -> SymbolTable:
     controller_tags: dict[str, Tag] = {}
     program_tags: dict[str, dict[str, Tag]] = {}
     aoi_tags: dict[str, dict[str, Tag]] = {}
+    duplicate_controller_tags: list[str] = []
+    duplicate_program_tags: dict[str, list[str]] = {}
 
     for t in controller.tags:
+        if t.name in controller_tags:
+            duplicate_controller_tags.append(t.name)
         controller_tags[t.name] = t
 
     for prog in controller.programs:
         prog_tags: dict[str, Tag] = {}
+        prog_dupes: list[str] = []
         for t in prog.tags:
+            if t.name in prog_tags:
+                prog_dupes.append(t.name)
             prog_tags[t.name] = t
         program_tags[prog.name] = prog_tags
+        if prog_dupes:
+            duplicate_program_tags[prog.name] = prog_dupes
 
     for aoi in controller.aois:
         aoi_local: dict[str, Tag] = {}
@@ -72,4 +83,6 @@ def build_symbol_table(controller: Controller) -> SymbolTable:
         routine_names=routine_names,
         aoi_names=aoi_names,
         aoi_list=list(controller.aois),
+        duplicate_controller_tags=duplicate_controller_tags,
+        duplicate_program_tags=duplicate_program_tags,
     )

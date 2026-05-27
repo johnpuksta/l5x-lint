@@ -11,36 +11,25 @@ def e007_duplicate_tag(
 ) -> list[Diagnostic]:
     result: list[Diagnostic] = []
 
-    names = {t.name for t in symbols.controller_tags.values()}
-    if len(names) != len(symbols.controller_tags):
-        seen: set[str] = set()
-        for t in symbols.controller_tags.values():
-            if t.name in seen:
-                result.append(
-                    Diagnostic(
-                        code=E007.code,
-                        severity=E007.severity,
-                        location=Location(program="controller", routine=""),
-                        message=E007(name=t.name, scope="controller").message,
-                    )
-                )
-            else:
-                seen.add(t.name)
+    for name in symbols.duplicate_controller_tags:
+        result.append(
+            Diagnostic(
+                code=E007.code,
+                severity=E007.severity,
+                location=Location(program="controller", routine=""),
+                message=E007(name=name, scope="controller").message,
+            )
+        )
 
-    for prog_name, tags in symbols.program_tags.items():
-        if len(set(tags.keys())) != len(tags):
-            seen = set()
-            for tag_name in tags:
-                if tag_name in seen:
-                    result.append(
-                        Diagnostic(
-                            code=E007.code,
-                            severity=E007.severity,
-                            location=Location(program=prog_name, routine=""),
-                            message=E007(name=tag_name, scope=prog_name).message,
-                        )
-                    )
-                else:
-                    seen.add(tag_name)
+    for prog_name, dupes in symbols.duplicate_program_tags.items():
+        for name in dupes:
+            result.append(
+                Diagnostic(
+                    code=E007.code,
+                    severity=E007.severity,
+                    location=Location(program=prog_name, routine=""),
+                    message=E007(name=name, scope=prog_name).message,
+                )
+            )
 
     return result
