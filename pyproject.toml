@@ -7,6 +7,7 @@ dependencies = [
     "lark>=1.1",
     "l5x>=0.1",
     "returns>=0.27",
+    "mcp>=1.0",
 ]
 
 [tool.setuptools.packages.find]
@@ -15,6 +16,7 @@ exclude = ["references*"]
 
 [project.scripts]
 l5x-lint = "l5x_lint.presentation.cli:main"
+l5x-lint-mcp = "l5x_lint.presentation.mcp_server:main"
 
 [project.optional-dependencies]
 dev = [
