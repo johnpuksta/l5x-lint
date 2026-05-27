@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.00" TargetName="V32Test" TargetType="Controller" ContainsContext="false">
+<Controller Use="Target" Name="V32Test" ProcessorType="1756-L72" MajorRev="32" MinorRev="11">
+<RedundancyInfo Enabled="false"/>
+<Security Code="0"/>
+<SafetyInfo/>
+<DataTypes/>
+<Tags>
+<Tag Name="V32Tag" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+</Tags>
+<Programs/>
+<Tasks/>
+<AddOnInstructionDefinitions>
+<AddOnInstructionDefinition Name="V32AOI" Revision="1.0" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false">
+<Parameters>
+<Parameter Name="InputParam" TagType="Base" DataType="DINT" Usage="Input" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write"/>
+</Parameters>
+<LocalTags/>
+<Routines/>
+</AddOnInstructionDefinition>
+</AddOnInstructionDefinitions>
+<Modules/>
+<DataLogs/>
+</Controller>
+</RSLogix5000Content>

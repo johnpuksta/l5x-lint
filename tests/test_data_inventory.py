@@ -3,7 +3,7 @@ from conftest import CUSTOM_DIR, INVALID_DIR, VALID_DIR
 
 def test_valid_files_exist():
     files = list(VALID_DIR.rglob("*.L5X"))
-    assert len(files) >= 22, f"Expected at least 22 valid L5X files, found {len(files)}"
+    assert len(files) >= 24, f"Expected at least 24 valid L5X files, found {len(files)}"
     for f in files:
         assert f.stat().st_size > 0, f"{f.name} is empty"
 

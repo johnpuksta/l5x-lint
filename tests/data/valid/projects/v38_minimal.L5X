@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="38.00" TargetName="V38Test" TargetType="Controller" ContainsContext="false">
+<Controller Use="Target" Name="V38Test" ProcessorType="1756-L85E" MajorRev="38" MinorRev="11" OldName="V38LegacyName" DataExchangeId="DX001">
+<RedundancyInfo Enabled="false"/>
+<Security Code="0"/>
+<SafetyInfo/>
+<DataTypes/>
+<Tags>
+<Tag Name="V38Tag" TagType="Base" DataType="DINT" Radix="Decimal" Constant="false" ExternalAccess="Read/Write" OldName="V38OldTagName" DataExchangeId="DXTAG001">
+<Data Format="Decorated">
+<DataValue DataType="DINT" Radix="Decimal" Value="42"/>
+</Data>
+</Tag>
+<Tag Name="V38TagNoMeta" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write">
+<Data Format="Decorated">
+<DataValue DataType="BOOL" Radix="Decimal" Value="0"/>
+</Data>
+</Tag>
+</Tags>
+<Programs>
+<Program Name="MainProgram" TestEdits="false" MainRoutineName="Main">
+<Tags/>
+<Routines>
+<Routine Name="Main" Type="ST">
+<STContent>
+<Line Number="0"><![CDATA[V38Tag := 0;]]></Line>
+</STContent>
+</Routine>
+</Routines>
+</Program>
+</Programs>
+<Tasks>
+<Task Name="MainTask" Type="CONTINUOUS" Priority="10" Watchdog="500" DisableUpdateOutputs="false" InhibitTask="false">
+<ScheduledPrograms>
+<ScheduledProgram Name="MainProgram"/>
+</ScheduledPrograms>
+</Task>
+</Tasks>
+<AddOnInstructionDefinitions>
+<AddOnInstructionDefinition Name="V38AOI" Revision="1.0" ExecutePrescan="false" ExecutePostscan="false" ExecuteEnableInFalse="false">
+<Parameters>
+<Parameter Name="InputParam" DataType="DINT" Usage="Input" Required="false" Visible="true" ExternalAccess="Read/Write"/>
+</Parameters>
+<LocalTags/>
+<Routines/>
+</AddOnInstructionDefinition>
+</AddOnInstructionDefinitions>
+<Modules>
+<Module Name="Local" CatalogNumber="1756-L85E" ParentModule="Local" Inhibited="false" MajorFault="true" Use="Target">
+<EKey State="Disabled"/>
+<Ports>
+<Port Id="1" Address="0" Type="ICP" Upstream="false">
+<Bus Size="10"/>
+</Port>
+</Ports>
+</Module>
+</Modules>
+</Controller>
+</RSLogix5000Content>
