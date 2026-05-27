@@ -13,6 +13,9 @@ dependencies = [
 where = ["src"]
 exclude = ["references*"]
 
+[project.scripts]
+l5x-lint = "l5x_lint.presentation.cli:main"
+
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0",
@@ -21,6 +24,9 @@ dev = [
 ]
 mcp = ["mcp>=1.0"]
 xsd = ["xmlschema>=3.0"]
+
+[tool.ruff]
+exclude = ["references/"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W"]
