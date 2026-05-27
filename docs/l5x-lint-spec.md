@@ -358,7 +358,22 @@ Every check has the same interface. The routine router has already dispatched
 RLL vs ST parsing, so checks consume `Routine` without caring about the type.
 
 ```python
-CheckFn = Callable[[SymbolTable, Routine], list[Diagnostic]]
+CheckFn = Callable[[Routine, SymbolTable, Location], list[Diagnostic]]
+```
+
+### Check Registration
+
+Checks are registered via a module-level `register()` decorator in `pipeline/analyze.py`:
+
+```python
+@register
+def e001_undefined_tag(routine: Routine, symbols: SymbolTable, loc: Location) -> list[Diagnostic]:
+    ...
+```
+
+The global `_registry` list collects all decorated functions at import time.
+`analyze()` iterates `_registry` and calls each check for every program/routine pair.
+Tests manage isolation via `analyze._registry.clear()` in setup.
 ```
 
 ### extract_tag_refs — The Bridge Between RLL and ST
@@ -538,23 +553,23 @@ This is actually *lower risk* than depending entirely on `l5x` since ElementTree
 
 ```
 ERRORS (block simulation):
-  E001  Undefined tag reference           XIC(Moter_Run) — tag doesn't exist
-  E002  Type mismatch                     TON(MyDINT,...) — DINT ≠ TIMER
-  E003  Missing AOI definition            Calling My_AOI, not defined
-  E004  Invalid JSR target                JSR(NoSuchRoutine,0)
-  E005  Invalid UDT member access         Tag.NonExistent
-  E006  Array index out of bounds         Arr[10] on Arr[10] (0-indexed)
-  E007  Duplicate tag name in scope
-  E008  AOI circular dependency           AOI_A → AOI_B → AOI_A
-  E009  Wrong operand count               XIC() with no args
-  E010  Cross-scope tag violation         Program tag used in another program
+  E001  Undefined tag reference           XIC(Moter_Run) — tag doesn't exist          ✅
+  E002  Type mismatch                     TON(MyDINT,...) — DINT ≠ TIMER              ✅
+  E003  Missing AOI definition            Calling My_AOI, not defined                 ✅
+  E004  Invalid JSR target                JSR(NoSuchRoutine,0)                        ✅
+  E005  Invalid UDT member access         Tag.NonExistent                             ✅
+  E006  Array index out of bounds         Arr[10] on Arr[10] (0-indexed)              ✅
+  E007  Duplicate tag name in scope                                                   ✅
+  E008  AOI circular dependency           AOI_A → AOI_B → AOI_A                      ✅
+  E009  Wrong operand count               XIC() with no args                          ✅
+  E010  Cross-scope tag violation         Program tag used in another program         ✅
 
 WARNINGS (allow simulation):
-  W001  Unused tag declared
-  W002  Unreachable rung                  AFI as first instruction
-  W003  Output never driven               Used in XIC, never in OTE/OTL/OTU
-  W004  Timer PRE never set               TON with PRE still 0
-  W005  Shadowed tag name                 Prog tag hides ctrl tag
+  W001  Unused tag declared                                                           ✅
+  W002  Unreachable rung                  AFI as first instruction                    ✅
+  W003  Output never driven               Used in XIC, never in OTE/OTL/OTU          ✅
+  W004  Timer PRE never set               TON with PRE still 0                       ✅
+  W005  Shadowed tag name                 Prog tag hides ctrl tag                    ✅
 ```
 
 ---
@@ -1156,7 +1171,7 @@ Transport: `Streamable HTTP` for agent integration. `stdio` for local CLI.
 | **Lark ST Grammar** | 90% | IEC 61131-3 EBNF is well-defined; Lark handles it naturally. Rockwell dialect is a strict subset (lowercase keywords, positional args, JSR). Infers 15/15 checks identically to RLL — tag refs are tag refs regardless of syntax. |
 | **Routine Type Router** | 95% | Simple `match` on `Routine.type` string. FBD/SFC are XML-only, skipped by text parsers. No complexity. |
 | **Type System Data** | 85% | ~120 instruction rules from 1756-rm084 + l5x2c + acd cross-reference. Data-entry effort, but well-defined format reduces error |
-| **15 Checks (E001-W005)** | 92% | Most are straightforward. E008 (circular AOI dep) needs DFS. W002 (unreachable rung) needs AFI-as-first detection. W004 (timer PRE) needs tag value parsing from l5x lib. All checks are content-type-agnostic — same code works for RLL and ST tag refs. |
+| **15 Checks (E001-W005)** | 100% | All 15 checks implemented and tested (329 total tests). Simple checks (E004/E007/W005) done first, medium (E005/E006/E009/E010/W003/W001) next, complex (E002/E003/E008/W004) last. E008 uses DFS for cycle detection. W004 flags any timer used with TON/TOF/RTO (full PRE parsing requires l5x tag value access). |
 | **MCP Server** | 95% | FastMCP API is documented and simple; 4 tools only |
 | **Test Data** | 85% | 14 valid + 14 invalid files exist. L5Sharp provides 33+ more untapped files (FBD.L5X, SFC.L5X, ST.L5X, LotOfTags.L5X). ~5 custom rung files needed for instruction coverage gaps. Need ST-specific valid/invalid files. |
 | **Edge Case Coverage** | 80% | RLL spike covered nested branches, wildcards, comm tags. ST plan covers loops, conditionals, JSR. Gaps: safety tags, produced/consumed tags, module-scoped tags, string manipulation instructions. |
@@ -1238,25 +1253,44 @@ l5x_lint/
     type_system.py               # ⏳ PENDING — Type compatibility matrix, member resolution
     tag_refs.py                  # ⏳ PENDING — extract_tag_refs (RLL + ST dispatch)
 
-  checks/                        # ⏳ PENDING — One pure function per E/W code
-    e001_undefined_tag.py
-    ...
+  checks/                        # ✅ DONE — all 15 checks
+    __init__.py
+    opcodes.py                   #     Shared opcode catalog (150+ opcodes)
+    tag_refs.py                  #     Shared tag reference extraction (RLL + ST)
+    e001_undefined_tag.py        # ✅ 44 tests
+    e002_type_mismatch.py        # ✅ 8 tests
+    e003_missing_aoi.py          # ✅ 6 tests
+    e004_invalid_jsr.py          # ✅ 6 tests
+    e005_invalid_member.py       # ✅ 5 tests
+    e006_array_bounds.py         # ✅ 7 tests
+    e007_duplicate_tag.py        # ✅ 3 tests
+    e008_aoi_circular.py         # ✅ 3 tests
+    e009_wrong_operand_count.py  # ✅ 7 tests
+    e010_cross_scope.py          # ✅ 4 tests
+    w001_unused_tag.py           # ✅ 4 tests
+    w002_afi_rung.py             # ✅ 10 tests
+    w003_output_never_driven.py  # ✅ 6 tests
+    w004_timer_pre.py            # ✅ 6 tests
+    w005_shadowed_tag.py         # ✅ 5 tests
 
-  pipeline/                      # ✅ PARTIAL — rung_parser + st_parser done, rest pending
-    analyze.py                   #     Compose all checks via flow()
-    routine_router.py            #     Dispatch by Routine.type → RLL/ST parser
-    rung_parser.py               # ✅   Lark grammar + transformer → Result[list[ParsedRung]]
-    st_parser.py                 # ✅   Lark grammar + transformer → Result[StProgram]
+  pipeline/                      # ✅ DONE — rung_parser + st_parser + symbols + analyze
+    __init__.py
+    analyze.py                   #     Compose all checks via flow(), register() decorator, 8 tests
+    routine_router.py            #     Dispatch by Routine.type → RLL/ST parser, 11 tests
+    symbols.py                   #     SymbolTable + build_symbol_table, 11 tests
+    rung_parser.py               # ✅   Lark grammar + transformer → Result[list[ParsedRung]], 27 tests
+    st_parser.py                 # ✅   Lark grammar + transformer → Result[StProgram], 35 tests
 
   infrastructure/                # ⏳ PENDING
     adapter.py                   #     ElementTree + l5x → domain models
     mcp_server.py                #     FastMCP server exposing MCP tools
 
-tests/                           # Test folder mirrors src/ structure
+tests/                           # Test folder mirrors src/ structure (329 tests)
   conftest.py                    # Path fixtures
   test_data_inventory.py         # Sanity checks on test data
   domain/                        # ✅ DONE — mirrors src/l5x_lint/domain/
-  pipeline/                      # ✅ PARTIAL — see test_rung_parser.py, test_st_parser.py
+  checks/                        # ✅ DONE — 124 tests across 15 check files
+  pipeline/                      # ✅ DONE — see test_rung_parser.py (27), test_st_parser.py (35), test_routine_router.py (11), test_symbols.py (11), test_analyze.py (8)
     test_rung_parser.py          #     27 tests: parsing, branches, error handling
     test_st_parser.py            #     35 tests: assignments, if/for/while/repeat, calls, JSR, expressions, precedence, error handling
     test_models.py               #     TagPath, Location, Tag, DataType, Routine, ...

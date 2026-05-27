@@ -1,0 +1,24 @@
+from l5x_lint.domain.diagnostics import Diagnostic
+from l5x_lint.domain.errors import W005
+from l5x_lint.domain.models import Location, Routine
+from l5x_lint.pipeline.analyze import register
+from l5x_lint.pipeline.symbols import SymbolTable
+
+
+@register
+def w005_shadowed_tag(
+    _routine: Routine, symbols: SymbolTable, _loc: Location,
+) -> list[Diagnostic]:
+    result: list[Diagnostic] = []
+    for prog_name, tags in symbols.program_tags.items():
+        for tag_name in tags:
+            if tag_name in symbols.controller_tags:
+                result.append(
+                    Diagnostic(
+                        code=W005.code,
+                        severity=W005.severity,
+                        location=Location(program=prog_name, routine=""),
+                        message=W005(name=tag_name, hidden_by=tag_name).message,
+                    )
+                )
+    return result

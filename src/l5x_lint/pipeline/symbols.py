@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 
 from returns.maybe import Maybe, Nothing, Some
 
-from l5x_lint.domain.models import Controller, DataType, Tag
+from l5x_lint.domain.models import AOI, Controller, DataType, Tag
 
 
 @dataclass
@@ -11,6 +11,9 @@ class SymbolTable:
     program_tags: dict[str, dict[str, Tag]] = field(default_factory=dict)
     aoi_tags: dict[str, dict[str, Tag]] = field(default_factory=dict)
     data_types: dict[str, DataType] = field(default_factory=dict)
+    routine_names: set[str] = field(default_factory=set)
+    aoi_names: set[str] = field(default_factory=set)
+    aoi_list: list[AOI] = field(default_factory=list)
 
     def resolve(self, name: str, program: str | None = None) -> Maybe[Tag]:
         if program and program in self.program_tags:
@@ -22,6 +25,12 @@ class SymbolTable:
             if name in tags:
                 return Some(tags[name])
         return Nothing
+
+    def tag_in_other_program(self, name: str, current_program: str) -> bool:
+        for prog_name, tags in self.program_tags.items():
+            if prog_name != current_program and name in tags:
+                return True
+        return False
 
 
 def build_symbol_table(controller: Controller) -> SymbolTable:
@@ -48,9 +57,19 @@ def build_symbol_table(controller: Controller) -> SymbolTable:
     for dt in controller.data_types:
         data_types[dt.name] = dt
 
+    routine_names: set[str] = set()
+    for prog in controller.programs:
+        for r in prog.routines:
+            routine_names.add(r.name)
+
+    aoi_names = {aoi.name for aoi in controller.aois}
+
     return SymbolTable(
         controller_tags=controller_tags,
         program_tags=program_tags,
         aoi_tags=aoi_tags,
         data_types=data_types,
+        routine_names=routine_names,
+        aoi_names=aoi_names,
+        aoi_list=list(controller.aois),
     )
