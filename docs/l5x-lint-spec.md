@@ -1171,10 +1171,11 @@ Transport: `Streamable HTTP` for agent integration. `stdio` for local CLI.
 | **Lark ST Grammar** | 90% | IEC 61131-3 EBNF is well-defined; Lark handles it naturally. Rockwell dialect is a strict subset (lowercase keywords, positional args, JSR). Infers 15/15 checks identically to RLL — tag refs are tag refs regardless of syntax. |
 | **Routine Type Router** | 95% | Simple `match` on `Routine.type` string. FBD/SFC are XML-only, skipped by text parsers. No complexity. |
 | **Type System Data** | 85% | ~120 instruction rules from 1756-rm084 + l5x2c + acd cross-reference. Data-entry effort, but well-defined format reduces error |
-| **15 Checks (E001-W005)** | 100% | All 15 checks implemented and tested (329 total tests). Simple checks (E004/E007/W005) done first, medium (E005/E006/E009/E010/W003/W001) next, complex (E002/E003/E008/W004) last. E008 uses DFS for cycle detection. W004 flags any timer used with TON/TOF/RTO (full PRE parsing requires l5x tag value access). |
-| **MCP Server** | 95% | FastMCP API is documented and simple; 4 tools only |
-| **Test Data** | 85% | 14 valid + 14 invalid files exist. L5Sharp provides 33+ more untapped files (FBD.L5X, SFC.L5X, ST.L5X, LotOfTags.L5X). ~5 custom rung files needed for instruction coverage gaps. Need ST-specific valid/invalid files. |
-| **Edge Case Coverage** | 80% | RLL spike covered nested branches, wildcards, comm tags. ST plan covers loops, conditionals, JSR. Gaps: safety tags, produced/consumed tags, module-scoped tags, string manipulation instructions. |
+| **15 Checks (E001-W005)** | 100% | All 15 checks implemented and tested (336 tests). E008 uses DFS for cycle detection. W004 flags any timer used with TON/TOF/RTO (full PRE parsing requires l5x tag value access). |
+| **CLI** | 100% | validate subcommand with human-readable and --json output, 7 tests |
+| **MCP Server** | 100% | FastMCP with validate_l5x tool over stdio transport, 5 tests |
+| **Test Data** | 85% | 8 valid + 14 invalid files exist. L5Sharp provides 33+ more untapped files (FBD.L5X, SFC.L5X, ST.L5X, LotOfTags.L5X). Need ST-specific valid/invalid files. |
+| **Edge Case Coverage** | 80% | RLL coverage includes nested branches, wildcards, comm tags. ST covers loops, conditionals, JSR. Gaps: safety tags, produced/consumed tags, module-scoped tags, string manipulation instructions. |
 
 ### Remaining Risks
 
@@ -1230,10 +1231,7 @@ uvx ruff format .                 # Format
 ## MCP Tools Exposed
 
 ```
-validate_l5x(l5x_xml: str) → AnalysisResult
-check_tag_references(l5x_xml: str) → list[TagRefError]
-get_cross_references(l5x_xml: str, tag_name: str) → CrossRefResult
-suggest_fixes(diagnostic: Diagnostic) → list[FixSuggestion]
+validate_l5x(file_path: str) → str           # JSON diagnostics for the file at path
 ```
 
 ---
@@ -1246,72 +1244,58 @@ l5x_lint/
     __init__.py                  #     Re-exports all public types
     models.py                    #     Tag, DataType, Routine, TagPath, Location
     diagnostics.py               #     Diagnostic, AnalysisResult, FixSuggestion
-    errors.py                    #     LintError (15 self-describing variants with .code, .severity, .message, .description)
+    errors.py                    #     LintError (15 variants with .code, .severity, .message, .description)
     rll_models.py                #     ParsedRung, Instruction, Operand
     st_models.py                 #     StProgram, StStatement, StExpression AST
-    symbol_table.py              # ⏳ PENDING — SymbolTable, Scope (pure query methods)
-    type_system.py               # ⏳ PENDING — Type compatibility matrix, member resolution
-    tag_refs.py                  # ⏳ PENDING — extract_tag_refs (RLL + ST dispatch)
 
   checks/                        # ✅ DONE — all 15 checks
-    __init__.py
-    opcodes.py                   #     Shared opcode catalog (150+ opcodes)
+    __init__.py                  #     Imports all check modules → triggers @register
+    opcodes.py                   #     Shared opcode catalog (150+ opcodes, operand counts)
     tag_refs.py                  #     Shared tag reference extraction (RLL + ST)
-    e001_undefined_tag.py        # ✅ 44 tests
-    e002_type_mismatch.py        # ✅ 8 tests
-    e003_missing_aoi.py          # ✅ 6 tests
-    e004_invalid_jsr.py          # ✅ 6 tests
-    e005_invalid_member.py       # ✅ 5 tests
-    e006_array_bounds.py         # ✅ 7 tests
-    e007_duplicate_tag.py        # ✅ 3 tests
-    e008_aoi_circular.py         # ✅ 3 tests
-    e009_wrong_operand_count.py  # ✅ 7 tests
-    e010_cross_scope.py          # ✅ 4 tests
-    w001_unused_tag.py           # ✅ 4 tests
-    w002_afi_rung.py             # ✅ 10 tests
-    w003_output_never_driven.py  # ✅ 6 tests
-    w004_timer_pre.py            # ✅ 6 tests
-    w005_shadowed_tag.py         # ✅ 5 tests
+    e001_undefined_tag.py        #     44 tests
+    e002_type_mismatch.py        #     8 tests
+    e003_missing_aoi.py          #     6 tests
+    e004_invalid_jsr.py          #     6 tests
+    e005_invalid_member.py       #     5 tests
+    e006_array_bounds.py         #     7 tests
+    e007_duplicate_tag.py        #     3 tests
+    e008_aoi_circular.py         #     3 tests
+    e009_wrong_operand_count.py  #     7 tests
+    e010_cross_scope.py          #     4 tests
+    w001_unused_tag.py           #     4 tests
+    w002_afi_rung.py             #     10 tests
+    w003_output_never_driven.py  #     6 tests
+    w004_timer_pre.py            #     6 tests
+    w005_shadowed_tag.py         #     5 tests
 
   pipeline/                      # ✅ DONE — rung_parser + st_parser + symbols + analyze
     __init__.py
-    analyze.py                   #     Compose all checks via flow(), register() decorator, 8 tests
+    analyze.py                   #     analyze() orchestration, register() + _registry, 8 tests
     routine_router.py            #     Dispatch by Routine.type → RLL/ST parser, 11 tests
     symbols.py                   #     SymbolTable + build_symbol_table, 11 tests
-    rung_parser.py               # ✅   Lark grammar + transformer → Result[list[ParsedRung]], 27 tests
-    st_parser.py                 # ✅   Lark grammar + transformer → Result[StProgram], 35 tests
+    rung_parser.py               #     Lark grammar + transformer → Result[list[ParsedRung]], 27 tests
+    st_parser.py                 #     Lark grammar + transformer → Result[StProgram], 35 tests
 
-  infrastructure/                # ⏳ PENDING
-    adapter.py                   #     ElementTree + l5x → domain models
-    mcp_server.py                #     FastMCP server exposing MCP tools
+  infrastructure/                # ✅ DONE
+    adapter.py                   #     parse_l5x(): ElementTree → domain models, @safe
+    parsers/                     #     Schema-version-specific parser implementations
 
-tests/                           # Test folder mirrors src/ structure (329 tests)
+  presentation/                  # ✅ DONE
+    __init__.py
+    cli.py                       #     validate subcommand (human + JSON output), 7 tests
+    mcp_server.py                #     FastMCP server exposing validate_l5x tool, 5 tests
+
+tests/                           # Test folder mirrors src/ (341 tests)
   conftest.py                    # Path fixtures
   test_data_inventory.py         # Sanity checks on test data
-  domain/                        # ✅ DONE — mirrors src/l5x_lint/domain/
-  checks/                        # ✅ DONE — 124 tests across 15 check files
-  pipeline/                      # ✅ DONE — see test_rung_parser.py (27), test_st_parser.py (35), test_routine_router.py (11), test_symbols.py (11), test_analyze.py (8)
-    test_rung_parser.py          #     27 tests: parsing, branches, error handling
-    test_st_parser.py            #     35 tests: assignments, if/for/while/repeat, calls, JSR, expressions, precedence, error handling
-    test_models.py               #     TagPath, Location, Tag, DataType, Routine, ...
-    test_diagnostics.py          #     Diagnostic, AnalysisResult, FixSuggestion
-    test_errors.py               #     All 15 LintError variants, .code .severity .message .description
-    test_rll_models.py           #     ParsedRung, Instruction, Operand
-    test_st_models.py            #     StProgram, StStatement, StExpression AST
-  data/valid/                    # Baseline L5X files
-    projects/Simple.L5X, Test.L5X, Empty.L5X, ACDTestsWithAOI.L5X, ex1.L5X
-    routines/Main.L5X, ST.L5X, FBD.L5X, SFC.L5X, Rung1_from_Main.L5X
-    instructions/aoi_Test.L5X, Message_Rung.L5X, Rung0_from_Main.L5X
-    types/SimpleType.L5X, ComplexType.L5X, ArrayType.L5X
-    large/LotOfTags.L5X              # 3.1MB, 10K tags — stress test
-    # +5 custom rung files (see Custom Test Data below)
-  data/invalid/                  # 14 broken L5X files (one per code)
-  data/custom/                   # Hand-crafted files targeting specific coverage gaps
-    rungs_math.L5X               # ADD/SUB/MUL/DIV, all variants
-    rungs_compare.L5X            # LES/NEQ/LEQ/GEQ/EQU/GRT
-    rungs_prog_control.L5X       # JMP/LBL/MCR/JSR with params
-    rungs_process.L5X            # SCL/PID/TON/TOF/RTO with real operands
-    st_aoi_logic.L5X             # AOI with ST routine body
+  domain/                        # ✅ mirrors src/l5x_lint/domain/
+  checks/                        # ✅ 124 tests across 15 check files
+  pipeline/                      # ✅ 92 tests across 5 test files
+  presentation/                  # ✅ mirroring src/l5x_lint/presentation/
+    test_cli.py                  #     7 tests: valid/invalid files, JSON output, error handling
+    test_mcp_server.py           #     5 tests: diagnostics flow, error handling, tool registration
+  data/valid/                    # 8 valid L5X project files
+  data/invalid/                  # 14 broken L5X files (one per E/W code)
 ```
 
 ---
@@ -1319,8 +1303,8 @@ tests/                           # Test folder mirrors src/ structure (329 tests
 ## Integration Context
 
 ```
-Agent → l5x-forge:  generate_routine(...) → l5x_xml
-Agent → l5x-lint:   validate_l5x(l5x_xml) → diagnostics
+Agent → l5x-forge:  generate_routine(...) → L5X file
+Agent → l5x-lint:   validate_l5x(file_path) → JSON diagnostics
 Agent → l5x-forge:  fix_errors(xml, diagnostics) → corrected xml
 Agent → l5x-sim:    load + simulate + assert
 ```
@@ -1339,8 +1323,8 @@ can discover and invoke it over stdio or HTTP.
 | Method | Command | Use Case |
 |--------|---------|----------|
 | **pip install (from source)** | `uv pip install -e .` | Dev, local testing |
-| **pip install (from PyPI)** | `uv pip install l5x-lint` | CI/CD, production |
-| **uvx (ephemeral)** | `uvx l5x-lint` | One-shot runs, no install needed |
+| **pip install (from PyPI)** | `uv pip install l5x-lint[mcp]` | MCP server deployment |
+| **pip install (from PyPI)** | `uv pip install l5x-lint` | CLI-only usage |
 | **Docker image** | `docker run l5x-lint ...` | Sandboxed/isolated environments |
 
 ### Primary Deployment: MCP Server via stdio
@@ -1348,11 +1332,11 @@ can discover and invoke it over stdio or HTTP.
 The simplest deployment — **no ports, no daemons, no Docker.**
 
 ```powershell
-# Install once
-uv pip install l5x-lint
+# Requires mcp extra
+uv pip install l5x-lint[mcp]
 
 # Run as MCP server (stdio transport)
-python -m l5x_lint serve
+l5x-lint-mcp
 ```
 
 The MCP host (Claude Desktop, VS Code, etc.) configures it like any other MCP tool:
@@ -1361,45 +1345,29 @@ The MCP host (Claude Desktop, VS Code, etc.) configures it like any other MCP to
 {
   "mcpServers": {
     "l5x-lint": {
-      "command": "uvx",
-      "args": ["l5x-lint"]
+      "command": "l5x-lint-mcp"
     }
   }
 }
 ```
 
-`uvx l5x-lint` downloads and runs on the fly — no install step.
 The MCP host spawns the process, pipes stdin/stdout, and auto-discovers
-the `validate_l5x`, `check_tag_references`, `get_cross_references`, and
-`suggest_fixes` tools via the MCP ListTools handshake.
+the `validate_l5x` tool via the MCP ListTools handshake.
 
-### Secondary Deployment: MCP Server via HTTP
-
-For remote agent access (e.g., an agent running on a different machine):
+### Secondary Deployment: CLI Direct Invocation
 
 ```powershell
-python -m l5x_lint serve --transport http --port 8080
-```
-
-The MCP host connects to `http://host:8080/` using Streamable HTTP transport.
-This is useful when the PLC toolchain runs on a dedicated build server and
-agents connect remotely.
-
-### Tertiary Deployment: CLI Direct Invocation
-
-```powershell
-# Validate a single file
+# Validate a single file (human-readable)
 python -m l5x_lint validate program.L5X
 
-# Validate from stdin
-cat program.L5X | python -m l5x_lint validate -
+# Validate a single file (JSON output)
+python -m l5x_lint validate program.L5X --json
 
-# Validate from agent-generated XML string
-python -m l5x_lint validate --xml "<RSLogix5000Content>...</RSLogix5000Content>"
+# Also available via the script entry point:
+l5x-lint validate program.L5X
 ```
 
-Prints structured JSON to stdout. Useful for shell scripts, CI pipelines,
-and pre-commit hooks.
+Prints structured JSON (with `--json`) or a human-readable table to stdout.
 
 ### Docker (Optional)
 
@@ -1415,7 +1383,7 @@ ENTRYPOINT ["uvx", "l5x-lint"]
 
 ```powershell
 docker build -t l5x-lint .
-docker run -i l5x-lint validate - < program.L5X
+docker run -i l5x-lint validate program.L5X
 ```
 
 ### CI/CD Integration
@@ -1427,7 +1395,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: uvx l5x-lint validate --xml "$(cat exports/*.L5X)"
+      - run: l5x-lint validate exports/*.L5X
 ```
 
 The linter exits non-zero if any errors are found, making it suitable
@@ -1437,12 +1405,11 @@ for gating merges.
 
 | Scenario | Transport | Command |
 |----------|-----------|---------|
-| Claude Desktop | stdio | `uvx l5x-lint` |
-| VS Code | stdio | `uvx l5x-lint` |
-| Remote agent (LAN) | HTTP | `python -m l5x_lint serve --transport http` |
-| CI pipeline | CLI | `python -m l5x_lint validate file.L5X` |
-| pre-commit hook | CLI | `python -m l5x_lint validate --stdin` |
-| Docker sandbox | CLI | `docker run -i l5x-lint validate -` |
+| Claude Desktop | stdio | `l5x-lint-mcp` |
+| VS Code | stdio | `l5x-lint-mcp` |
+| CI pipeline | CLI | `l5x-lint validate file.L5X` |
+| pre-commit hook | CLI | `l5x-lint validate file.L5X --json` |
+| Docker sandbox | CLI | `docker run -i l5x-lint validate file.L5X` |
 
-No compilation. No containers required. A single `uvx` invocation from
-any MCP host is the intended primary path.
+No compilation. No containers required. The `l5x-lint-mcp` entry point
+from any MCP host is the intended primary path.
