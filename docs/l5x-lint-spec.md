@@ -1242,12 +1242,11 @@ l5x_lint/
     e001_undefined_tag.py
     ...
 
-  pipeline/                      # ✅ PARTIAL — rung_parser done, rest pending
+  pipeline/                      # ✅ PARTIAL — rung_parser + st_parser done, rest pending
     analyze.py                   #     Compose all checks via flow()
     routine_router.py            #     Dispatch by Routine.type → RLL/ST parser
     rung_parser.py               # ✅   Lark grammar + transformer → Result[list[ParsedRung]]
-    st_grammar.py                #     Lark grammar for IEC 61131-1 ST + Rockwell dialect
-    st_parser.py                 #     Lark transformer + parse_st() → StProgram
+    st_parser.py                 # ✅   Lark grammar + transformer → Result[StProgram]
 
   infrastructure/                # ⏳ PENDING
     adapter.py                   #     ElementTree + l5x → domain models
@@ -1257,8 +1256,9 @@ tests/                           # Test folder mirrors src/ structure
   conftest.py                    # Path fixtures
   test_data_inventory.py         # Sanity checks on test data
   domain/                        # ✅ DONE — mirrors src/l5x_lint/domain/
-  pipeline/                      # ✅ PARTIAL — see test_rung_parser.py
+  pipeline/                      # ✅ PARTIAL — see test_rung_parser.py, test_st_parser.py
     test_rung_parser.py          #     27 tests: parsing, branches, error handling
+    test_st_parser.py            #     35 tests: assignments, if/for/while/repeat, calls, JSR, expressions, precedence, error handling
     test_models.py               #     TagPath, Location, Tag, DataType, Routine, ...
     test_diagnostics.py          #     Diagnostic, AnalysisResult, FixSuggestion
     test_errors.py               #     All 15 LintError variants, .code .severity .message .description
