@@ -1,3 +1,5 @@
+from returns.pipeline import flow
+from returns.pointfree import bind
 from returns.result import Failure, Result, Success
 
 from l5x_lint.domain.errors import LintInternalError
@@ -6,26 +8,36 @@ from l5x_lint.domain.rll_models import ParsedRung
 from l5x_lint.domain.st_models import StProgram
 from l5x_lint.pipeline import rung_parser, st_parser
 
-_UNSUPPORTED = frozenset({"FBD", "SFC", "FUNCTION", "FUNCTION_BLOCK"})
+_ROUTABLE = frozenset({"RLL", "ST"})
 
 
 def route_routines(controller: Controller) -> Result[Controller, LintInternalError]:
+    return flow(
+        Success(controller),
+        bind(_parse_all_routines),
+    )
+
+
+def _parse_all_routines(
+    controller: Controller,
+) -> Result[Controller, LintInternalError]:
     for prog in controller.programs:
         for r in prog.routines:
-            if not r.cdata:
+            if not r.cdata or r.type not in _ROUTABLE:
                 continue
-            if r.type in _UNSUPPORTED:
-                continue
-            result = _parse_by_type(r.type, r.cdata)
+            parsed = _parse_by_type(r.type, r.cdata)
+            result = parsed.map(lambda v: _assign(r, r.type, v))
             match result:
-                case Success(value):
-                    if r.type == "RLL":
-                        r.rll_rungs = value
-                    elif r.type == "ST":
-                        r.st_body = value
                 case Failure():
                     return Failure(result.failure)
     return Success(controller)
+
+
+def _assign(routine, type_, value):
+    if type_ == "RLL":
+        routine.rll_rungs = value
+    elif type_ == "ST":
+        routine.st_body = value
 
 
 _Routable = list[ParsedRung] | StProgram

@@ -1,6 +1,8 @@
 from collections.abc import Callable
 
-from returns.result import Failure, Result, Success
+from returns.pipeline import flow
+from returns.pointfree import bind
+from returns.result import Result, Success
 
 from l5x_lint.domain.diagnostics import AnalysisResult, Diagnostic
 from l5x_lint.domain.errors import LintInternalError
@@ -19,13 +21,14 @@ def register(check: CheckFn) -> CheckFn:
 
 
 def analyze(controller: Controller) -> Result[AnalysisResult, LintInternalError]:
-    route_result = route_routines(controller)
-    match route_result:
-        case Failure(err):
-            return Failure(err)
-        case Success():
-            pass
+    return flow(
+        Success(controller),
+        bind(route_routines),
+        bind(_run_checks),
+    )
 
+
+def _run_checks(controller: Controller) -> Result[AnalysisResult, LintInternalError]:
     symbols = build_symbol_table(controller)
     diagnostics: list[Diagnostic] = []
 
