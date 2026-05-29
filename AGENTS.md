@@ -37,30 +37,36 @@ uvx ruff format --check .         # Check formatting (CI)
 
 Rules: `pyproject.toml` under `[tool.ruff]` if needed, defaults otherwise.
 
-## Functional Patterns (returns library)
+## Railway Programming Rules
 
 ```python
-from returns.result import Result, Success, Failure, safe
+from returns.result import Result, Success, Failure
 from returns.maybe import Maybe, Some, Nothing
 from returns.pipeline import flow
 from returns.pointfree import bind
 from l5x_lint.domain.errors import LintInternalError
 
-# Result for fallible operations — always use LintInternalError as error param
-def resolve(name: str) -> Result[Tag, LintInternalError]:
-    match self.lookup(name):
-        case Nothing: return Failure(SymbolTableError(...))
-        case Some(tag): return Success(tag)
+# 1. Error param MUST be LintInternalError, never raw Exception
+def resolve(name: str) -> Result[Tag, LintInternalError]: ...
 
-# flow for linear pipelines
-result = flow(input, step1, bind(step2), bind(step3))
+# 2. Never .value_or(None) — match Some/Nothing instead
+match symbols.resolve(name, prog):
+    case Nothing: return Failure(...)
+    case Some(tag): ...
 
-# @safe converts exceptions → Failure automatically
-@safe
-def parse(xml: str) -> L5XProject: ...
+# 3. Prefer flow + bind over manual match passthrough
+def analyze(c) -> Result[AnalysisResult, LintInternalError]:
+    return flow(Success(c), bind(route_routines), bind(_run_checks))
 
-# Maybe instead of None
-def lookup(self, name: str) -> Maybe[Tag]: ...
+# 4. Failure MUST wrap a domain error, not the raw exception
+except UnexpectedInput as e:
+    return Failure(STParseError(text=text, position=e.pos_in_stream))
+
+# 5. Every try in a Result-returning fn maps exceptions to domain errors
+try:
+    return Success(_parser.parse(text))
+except UnexpectedInput as e:
+    return Failure(STParseError(text=text, position=e.pos_in_stream))
 ```
 
 # Known Issues
