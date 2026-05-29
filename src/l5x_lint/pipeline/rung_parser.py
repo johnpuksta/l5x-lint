@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 from lark import Lark, Transformer, UnexpectedInput
 from returns.result import Failure, Result, Success
 
+from l5x_lint.domain.errors import RLLParseError
 from l5x_lint.domain.rll_models import Instruction, Operand, ParsedRung
 
 _GRAMMAR = r"""
@@ -164,7 +165,7 @@ _transformer = _RLLTransformer()
 _parser = Lark(_GRAMMAR, parser="lalr", transformer=_transformer)
 
 
-def parse(text: str) -> Result[list[ParsedRung], Exception]:
+def parse(text: str) -> Result[list[ParsedRung], RLLParseError]:
     text = text.strip()
     if not text:
         return Success([])
@@ -177,4 +178,4 @@ def parse(text: str) -> Result[list[ParsedRung], Exception]:
             r.number = i
         return Success(rungs)
     except UnexpectedInput as e:
-        return Failure(e)
+        return Failure(RLLParseError(text=text, position=e.pos_in_stream))

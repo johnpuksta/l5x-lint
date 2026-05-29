@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+from returns.result import Failure, Result, Success
+
+from l5x_lint.domain.errors import LintInternalError, SoftwareRevisionError
 from l5x_lint.infrastructure.parsers.base import L5XParser
 from l5x_lint.infrastructure.parsers.v38 import L5XParserV38
 
@@ -8,18 +11,14 @@ _PARSER_REGISTRY: dict[int, type[L5XParser]] = {
 }
 
 
-def create_parser(software_revision: str, schema_revision: str) -> L5XParser:
-    """Return the appropriate parser for the given software revision.
-
-    Dispatches on the major version of ``SoftwareRevision`` (e.g. ``"36.00"``
-    → major 36 → base parser). Falls back to the base parser for unknown or
-    unparseable revision strings.
-    """
+def create_parser(
+    software_revision: str, schema_revision: str
+) -> Result[L5XParser, LintInternalError]:
     major = 0
     try:
         major = int(software_revision.split(".")[0])
     except (ValueError, IndexError):
-        pass
+        return Failure(SoftwareRevisionError(revision=software_revision))
 
     cls = _PARSER_REGISTRY.get(major, L5XParser)
-    return cls(software_revision, schema_revision)
+    return Success(cls(software_revision, schema_revision))

@@ -1,6 +1,7 @@
 from lark import Lark, Transformer, UnexpectedInput
 from returns.result import Failure, Result, Success
 
+from l5x_lint.domain.errors import STParseError
 from l5x_lint.domain.models import TagPath, TagPathSegment
 from l5x_lint.domain.st_models import (
     StAssignment,
@@ -497,7 +498,7 @@ _transformer = _StTransformer()
 _parser = Lark(_GRAMMAR, parser="lalr", transformer=_transformer)
 
 
-def parse(text: str) -> Result[StProgram, Exception]:
+def parse(text: str) -> Result[StProgram, STParseError]:
     text = text.strip()
     if not text:
         return Success(StProgram())
@@ -505,4 +506,4 @@ def parse(text: str) -> Result[StProgram, Exception]:
         result = _parser.parse(text)
         return Success(result)
     except UnexpectedInput as e:
-        return Failure(e)
+        return Failure(STParseError(text=text, position=e.pos_in_stream))

@@ -384,35 +384,35 @@ def test_parse_v38_modules():
 
 
 def test_parser_factory_returns_base_for_v32():
-    parser = create_parser("32.00", "1.0")
+    parser = create_parser("32.00", "1.0").unwrap()
     assert isinstance(parser, L5XParser)
     assert not isinstance(parser, L5XParserV38)
 
 
 def test_parser_factory_returns_base_for_v36():
-    parser = create_parser("36.00", "1.0")
+    parser = create_parser("36.00", "1.0").unwrap()
     assert isinstance(parser, L5XParser)
     assert not isinstance(parser, L5XParserV38)
 
 
 def test_parser_factory_returns_v38_for_v38():
-    parser = create_parser("38.00", "1.0")
+    parser = create_parser("38.00", "1.0").unwrap()
     assert isinstance(parser, L5XParserV38)
 
 
 def test_parser_factory_returns_base_for_unknown():
-    parser = create_parser("99.99", "1.0")
+    parser = create_parser("99.99", "1.0").unwrap()
     assert isinstance(parser, L5XParser)
     assert not isinstance(parser, L5XParserV38)
 
 
-def test_parser_factory_returns_base_for_empty_string():
-    parser = create_parser("", "1.0")
-    assert isinstance(parser, L5XParser)
+def test_parser_factory_fails_for_empty_string():
+    result = create_parser("", "1.0")
+    assert isinstance(result, Failure)
 
 
 def test_parser_stores_revision_metadata():
-    parser = create_parser("36.00", "1.0")
+    parser = create_parser("36.00", "1.0").unwrap()
     assert parser.software_revision == "36.00"
     assert parser.schema_revision == "1.0"
     path = VALID_DIR / "projects" / "v38_minimal.L5X"
