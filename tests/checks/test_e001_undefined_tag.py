@@ -1,10 +1,10 @@
+from l5x_lint.checks._codes import E001
 from l5x_lint.checks.e001_undefined_tag import (
     _check_rll,
     _check_st,
     _extract_base,
     e001_undefined_tag,
 )
-from l5x_lint.domain.errors import E001
 from l5x_lint.domain.models import (
     Controller,
     Location,

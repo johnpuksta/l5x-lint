@@ -1,7 +1,7 @@
 import re
 
+from l5x_lint.checks._codes import E001
 from l5x_lint.domain.diagnostics import Diagnostic
-from l5x_lint.domain.errors import E001
 from l5x_lint.domain.models import Location, Routine
 from l5x_lint.domain.st_models import (
     StAssignment,

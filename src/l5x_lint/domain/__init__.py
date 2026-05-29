@@ -1,5 +1,4 @@
-from l5x_lint.domain.diagnostics import AnalysisResult, Diagnostic, FixSuggestion
-from l5x_lint.domain.errors import (
+from l5x_lint.checks._codes import (
     E001,
     E002,
     E003,
@@ -17,6 +16,7 @@ from l5x_lint.domain.errors import (
     W005,
     LintError,
 )
+from l5x_lint.domain.diagnostics import AnalysisResult, Diagnostic, FixSuggestion
 from l5x_lint.domain.models import (
     AOI,
     Controller,

@@ -1,4 +1,4 @@
-from l5x_lint.domain.errors import (
+from l5x_lint.checks._codes import (
     E001,
     E002,
     E003,
