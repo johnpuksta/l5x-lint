@@ -1,5 +1,7 @@
 import re
 
+from returns.maybe import Some
+
 from l5x_lint.checks._codes import E005
 from l5x_lint.checks.tag_refs import extract_base
 from l5x_lint.domain.diagnostics import Diagnostic
@@ -43,23 +45,22 @@ def _check_operand(value, symbols, loc, result, rung_num=None):
     if base_name is None:
         return
     member_name = m.group(1)
-    resolved = symbols.resolve(base_name, loc.program).value_or(None)
-    if resolved is None:
-        return
-    dt = symbols.data_types.get(resolved.data_type)
-    if dt is None:
-        return
-    if not any(mem.name == member_name for mem in dt.members):
-        result.append(
-            Diagnostic(
-                code=E005.code,
-                severity=E005.severity,
-                location=Location(
-                    program=loc.program, routine=loc.routine, rung=rung_num
-                ),
-                message=E005(path=base_name, member=member_name).message,
-            )
-        )
+    match symbols.resolve(base_name, loc.program):
+        case Some(tag):
+            dt = symbols.data_types.get(tag.data_type)
+            if dt is None:
+                return
+            if not any(mem.name == member_name for mem in dt.members):
+                result.append(
+                    Diagnostic(
+                        code=E005.code,
+                        severity=E005.severity,
+                        location=Location(
+                            program=loc.program, routine=loc.routine, rung=rung_num
+                        ),
+                        message=E005(path=base_name, member=member_name).message,
+                    )
+                )
 
 
 def _check_st(body, symbols, loc, result):
@@ -93,18 +94,17 @@ def _check_expr_members(expr, symbols, loc, result):
 
 
 def _check_member(base_name, member_name, symbols, loc, result):
-    resolved = symbols.resolve(base_name, loc.program).value_or(None)
-    if resolved is None:
-        return
-    dt = symbols.data_types.get(resolved.data_type)
-    if dt is None:
-        return
-    if not any(mem.name == member_name for mem in dt.members):
-        result.append(
-            Diagnostic(
-                code=E005.code,
-                severity=E005.severity,
-                location=loc,
-                message=E005(path=base_name, member=member_name).message,
-            )
-        )
+    match symbols.resolve(base_name, loc.program):
+        case Some(tag):
+            dt = symbols.data_types.get(tag.data_type)
+            if dt is None:
+                return
+            if not any(mem.name == member_name for mem in dt.members):
+                result.append(
+                    Diagnostic(
+                        code=E005.code,
+                        severity=E005.severity,
+                        location=loc,
+                        message=E005(path=base_name, member=member_name).message,
+                    )
+                )

@@ -1,3 +1,5 @@
+from returns.maybe import Some
+
 from l5x_lint.checks._codes import E002
 from l5x_lint.checks.opcodes import INSTRUCTION_TYPES
 from l5x_lint.domain.diagnostics import Diagnostic
@@ -30,18 +32,23 @@ def _check_rll(instructions, symbols, loc, rung_num, result):
             for idx, expected_type in expected_types.items():
                 if idx < len(inst.operands):
                     tag_name = inst.operands[idx].value
-                    resolved = symbols.resolve(tag_name, loc.program).value_or(None)
-                    if resolved is not None and resolved.data_type.upper() != expected_type:  # noqa: E501
-                        result.append(
-                            Diagnostic(
-                                code=E002.code,
-                                severity=E002.severity,
-                                location=Location(
-                                    program=loc.program, routine=loc.routine, rung=rung_num  # noqa: E501
-                                ),
-                                message=E002(expected=expected_type, actual=resolved.data_type).message,  # noqa: E501
+                    match symbols.resolve(tag_name, loc.program):
+                        case Some(tag) if tag.data_type.upper() != expected_type:
+                            result.append(
+                                Diagnostic(
+                                    code=E002.code,
+                                    severity=E002.severity,
+                                    location=Location(
+                                        program=loc.program,
+                                        routine=loc.routine,
+                                        rung=rung_num,
+                                    ),
+                                    message=E002(
+                                        expected=expected_type,
+                                        actual=tag.data_type,
+                                    ).message,
+                                )
                             )
-                        )
         if inst.branch:
             for path in inst.branch:
                 _check_rll(path, symbols, loc, rung_num, result)
@@ -66,13 +73,13 @@ def _check_st_arg(expr, expected_type, symbols, loc, result):
     tag_name = expr.path.segments[0].name if expr.path.segments else ""
     if not tag_name:
         return
-    resolved = symbols.resolve(tag_name, loc.program).value_or(None)
-    if resolved is not None and resolved.data_type.upper() != expected_type:
-        result.append(
-            Diagnostic(
-                code=E002.code,
-                severity=E002.severity,
-                location=loc,
-                message=E002(expected=expected_type, actual=resolved.data_type).message,
+    match symbols.resolve(tag_name, loc.program):
+        case Some(tag) if tag.data_type.upper() != expected_type:
+            result.append(
+                Diagnostic(
+                    code=E002.code,
+                    severity=E002.severity,
+                    location=loc,
+                    message=E002(expected=expected_type, actual=tag.data_type).message,
+                )
             )
-        )

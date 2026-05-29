@@ -1,5 +1,7 @@
 import re
 
+from returns.maybe import Nothing
+
 from l5x_lint.checks._codes import E001
 from l5x_lint.domain.diagnostics import Diagnostic
 from l5x_lint.domain.models import Location, Routine
@@ -51,19 +53,20 @@ def _check_rll_instructions(
             operands = operands[1:]
         for op in operands:
             base = _extract_base(op.value)
-            if base is not None and symbols.resolve(
-                base, loc.program
-            ).value_or(None) is None:
-                result.append(
-                    Diagnostic(
-                        code=E001.code,
-                        severity=E001.severity,
-                        location=Location(
-                            program=loc.program, routine=loc.routine, rung=rung_num
-                        ),
-                        message=E001(name=base).message,
+            if base is None:
+                continue
+            match symbols.resolve(base, loc.program):
+                case x if x is Nothing:
+                    result.append(
+                        Diagnostic(
+                            code=E001.code,
+                            severity=E001.severity,
+                            location=Location(
+                                program=loc.program, routine=loc.routine, rung=rung_num
+                            ),
+                            message=E001(name=base).message,
+                        )
                     )
-                )
         if inst.branch:
             for branch_path in inst.branch:
                 _check_rll_instructions(branch_path, symbols, loc, rung_num, result)
@@ -164,15 +167,16 @@ def _check_st(routine: Routine, symbols: SymbolTable, loc: Location) -> _DiagLis
         tags.extend(_stmt_tags(stmt))
     result: list[Diagnostic] = []
     for name in tags:
-        if symbols.resolve(name, loc.program).value_or(None) is None:
-            result.append(
-                Diagnostic(
-                    code=E001.code,
-                    severity=E001.severity,
-                    location=loc,
-                    message=E001(name=name).message,
+        match symbols.resolve(name, loc.program):
+            case x if x is Nothing:
+                result.append(
+                    Diagnostic(
+                        code=E001.code,
+                        severity=E001.severity,
+                        location=loc,
+                        message=E001(name=name).message,
+                    )
                 )
-            )
     return result
 
 

@@ -1,5 +1,7 @@
 import re
 
+from returns.maybe import Some
+
 from l5x_lint.checks._codes import E006
 from l5x_lint.checks.tag_refs import extract_base
 from l5x_lint.domain.diagnostics import Diagnostic
@@ -43,22 +45,22 @@ def _check_operand(value, symbols, loc, result, rung_num=None):
     base_name = extract_base(value)
     if base_name is None:
         return
-    resolved = symbols.resolve(base_name, loc.program).value_or(None)
-    if resolved is None:
-        return
-    if resolved.dimensions:
-        size = resolved.dimensions[0]
-        if index >= size:
-            result.append(
-                Diagnostic(
-                    code=E006.code,
-                    severity=E006.severity,
-                    location=Location(
-                        program=loc.program, routine=loc.routine, rung=rung_num
-                    ),
-                    message=E006(name=base_name, index=index, size=size).message,
+    match symbols.resolve(base_name, loc.program):
+        case Some(tag):
+            if not tag.dimensions:
+                return
+            size = tag.dimensions[0]
+            if index >= size:
+                result.append(
+                    Diagnostic(
+                        code=E006.code,
+                        severity=E006.severity,
+                        location=Location(
+                            program=loc.program, routine=loc.routine, rung=rung_num
+                        ),
+                        message=E006(name=base_name, index=index, size=size).message,
+                    )
                 )
-            )
 
 
 def _check_st(body, symbols, loc, result):
@@ -89,17 +91,17 @@ def _check_st_exprs(node, symbols, loc, _line, result):
 def _check_index(  # noqa: E501
     name: str, index: int, symbols: SymbolTable, loc: Location, result: list,
 ) -> None:
-    resolved = symbols.resolve(name, loc.program).value_or(None)
-    if resolved is None:
-        return
-    if resolved.dimensions:
-        size = resolved.dimensions[0]
-        if index >= size:
-            result.append(
-                Diagnostic(
-                    code=E006.code,
-                    severity=E006.severity,
-                    location=loc,
-                    message=E006(name=name, index=index, size=size).message,
+    match symbols.resolve(name, loc.program):
+        case Some(tag):
+            if not tag.dimensions:
+                return
+            size = tag.dimensions[0]
+            if index >= size:
+                result.append(
+                    Diagnostic(
+                        code=E006.code,
+                        severity=E006.severity,
+                        location=loc,
+                        message=E006(name=name, index=index, size=size).message,
+                    )
                 )
-            )
