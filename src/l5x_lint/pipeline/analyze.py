@@ -2,10 +2,10 @@ from collections.abc import Callable
 
 from returns.pipeline import flow
 from returns.pointfree import bind
-from returns.result import Result, Success
+from returns.result import Failure, Result, Success
 
 from l5x_lint.domain.diagnostics import AnalysisResult, Diagnostic
-from l5x_lint.domain.errors import LintInternalError
+from l5x_lint.domain.errors import CheckExecutionError, LintInternalError
 from l5x_lint.domain.models import Controller, Location, Routine
 from l5x_lint.pipeline.routine_router import route_routines
 from l5x_lint.pipeline.symbols import SymbolTable, build_symbol_table
@@ -36,7 +36,12 @@ def _run_checks(controller: Controller) -> Result[AnalysisResult, LintInternalEr
         for r in prog.routines:
             loc = Location(program=prog.name, routine=r.name)
             for check in _registry:
-                diagnostics.extend(check(r, symbols, loc))
+                try:
+                    diagnostics.extend(check(r, symbols, loc))
+                except Exception as e:
+                    return Failure(CheckExecutionError(
+                        check=check.__name__, detail=str(e),
+                    ))
 
     errors = sum(1 for d in diagnostics if d.severity == "error")
     warnings = sum(1 for d in diagnostics if d.severity == "warning")

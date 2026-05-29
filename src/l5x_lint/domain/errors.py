@@ -40,8 +40,15 @@ class SoftwareRevisionError:
     revision: str
 
 
+@dataclass
+class CheckExecutionError:
+    check: str
+    detail: str
+
+
 LintInternalError = (
     L5XStructureError | RLLParseError | STParseError
     | UnsupportedRoutineError | SymbolTableError
     | AdapterArgumentError | SoftwareRevisionError
+    | CheckExecutionError
 )
