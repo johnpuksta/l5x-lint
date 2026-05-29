@@ -17,6 +17,16 @@ from l5x_lint.checks._codes import (
     LintError,
 )
 from l5x_lint.domain.diagnostics import AnalysisResult, Diagnostic, FixSuggestion
+from l5x_lint.domain.errors import (
+    AdapterArgumentError,
+    L5XStructureError,
+    LintInternalError,
+    RLLParseError,
+    SoftwareRevisionError,
+    STParseError,
+    SymbolTableError,
+    UnsupportedRoutineError,
+)
 from l5x_lint.domain.models import (
     AOI,
     Controller,
@@ -74,6 +84,14 @@ __all__ = [
     "E006", "E007", "E008", "E009", "E010",
     "W001", "W002", "W003", "W004", "W005",
     "LintError",
+    "LintInternalError",
+    "L5XStructureError",
+    "RLLParseError",
+    "STParseError",
+    "UnsupportedRoutineError",
+    "SymbolTableError",
+    "AdapterArgumentError",
+    "SoftwareRevisionError",
     "ParsedRung",
     "Instruction",
     "Operand",

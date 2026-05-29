@@ -7,7 +7,8 @@ Every module in `src/l5x_lint/` has a corresponding test file at the same relati
 ```
 src/l5x_lint/domain/models.py         →  tests/domain/test_models.py
 src/l5x_lint/domain/diagnostics.py    →  tests/domain/test_diagnostics.py
-src/l5x_lint/domain/errors.py         →  tests/domain/test_errors.py
+src/l5x_lint/domain/errors.py         →  tests/domain/test_errors.py  (internal railway errors)
+src/l5x_lint/checks/_codes.py         →  tests/domain/test_errors.py  (diagnostic codes)
 src/l5x_lint/checks/e001_foo.py       →  tests/checks/test_e001_foo.py
 ```
 
@@ -43,11 +44,12 @@ from returns.result import Result, Success, Failure, safe
 from returns.maybe import Maybe, Some, Nothing
 from returns.pipeline import flow
 from returns.pointfree import bind
+from l5x_lint.domain.errors import LintInternalError
 
-# Result for fallible operations
-def resolve(name: str) -> Result[Tag, LintError]:
+# Result for fallible operations — always use LintInternalError as error param
+def resolve(name: str) -> Result[Tag, LintInternalError]:
     match self.lookup(name):
-        case Nothing: return Failure(LintError(...))
+        case Nothing: return Failure(SymbolTableError(...))
         case Some(tag): return Success(tag)
 
 # flow for linear pipelines
