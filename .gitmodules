@@ -13,3 +13,12 @@
 [submodule "references/l5x-schema"]
 	path = references/l5x-schema
 	url = https://github.com/benmusson/l5x-schema.git
+[submodule "references/ironplc"]
+	path = references/ironplc
+	url = https://github.com/ironplc/ironplc.git
+[submodule "references/rusty"]
+	path = references/rusty
+	url = https://github.com/PLC-lang/rusty.git
+[submodule "references/trust-platform"]
+	path = references/trust-platform
+	url = https://github.com/johannesPettersson80/trust-platform.git
