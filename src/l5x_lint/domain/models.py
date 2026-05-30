@@ -61,6 +61,7 @@ class Tag:
     description: str = ""
     initial_values: int | None = None
     constant: bool = False
+    has_initial_value: bool = False
 
 
 @dataclass

@@ -559,13 +559,80 @@ class ES002(LintErrorBase):
     line: int
 
 
+@dataclass
+class EC014(LintErrorBase):
+    code: ClassVar[str] = "EC014"
+    severity: ClassVar[str] = "error"
+    message_template: ClassVar[str] = (
+        "Constant tag '{name}' has no initializer value"
+    )
+    description: ClassVar[str] = (
+        "A CONSTANT tag must have an initializer value. "
+        "Constant tags without initial values are unresolved."
+    )
+    name: str
+
+
+@dataclass
+class EC016(LintErrorBase):
+    code: ClassVar[str] = "EC016"
+    severity: ClassVar[str] = "error"
+    message_template: ClassVar[str] = (
+        "Invalid array dimension {dim} for tag '{name}'"
+    )
+    description: ClassVar[str] = (
+        "Array dimension must be a positive integer. "
+        "Zero or negative dimensions are not valid."
+    )
+    name: str
+    dim: int
+
+
+@dataclass
+class EC018(LintErrorBase):
+    code: ClassVar[str] = "EC018"
+    severity: ClassVar[str] = "error"
+    message_template: ClassVar[str] = "{detail}"
+    description: ClassVar[str] = (
+        "The controller has no programs, or a program has no routines."
+    )
+    detail: str
+
+
+@dataclass
+class WC107(LintErrorBase):
+    code: ClassVar[str] = "WC107"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = "Empty branch body in {construct}"
+    description: ClassVar[str] = (
+        "A conditional branch (IF, CASE, elsif) contains no statements. "
+        "This may indicate incomplete logic."
+    )
+    construct: str
+
+
+@dataclass
+class WC108(LintErrorBase):
+    code: ClassVar[str] = "WC108"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = (
+        "Deprecated instruction '{opcode}' at line {line}"
+    )
+    description: ClassVar[str] = (
+        "The instruction used is deprecated in the current Logix version."
+    )
+    opcode: str
+    line: int
+
+
 LintError = (
     EC001 | EC002 | EC003 | EC004 | EC005
     | EC006 | EC007 | EC008 | ER009 | EC010
-    | EC011 | EC012 | EC013 | EC015 | EC017
+    | EC011 | EC012 | EC013 | EC014 | EC015
+    | EC016 | EC017 | EC018
     | ER013 | ER014
     | WC001 | WR002 | WR003 | WR004 | WC005
-    | WC103 | WC106
+    | WC103 | WC106 | WC107 | WC108
     | WR005 | WR006 | WR007
     | WS101 | WS102 | WS104 | WS105 | WS107
     | WS108 | WS109 | WS110 | WS113

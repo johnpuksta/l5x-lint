@@ -129,6 +129,7 @@ class L5XParser:
     ) -> Tag:
         init_count = None
         data_el = el.find("Data")
+        has_init = data_el is not None
         if data_el is not None and data_el.get("Format") == "Decorated":
             array_el = data_el.find("Array")
             if array_el is not None:
@@ -142,6 +143,7 @@ class L5XParser:
             description=_get_description(el),
             initial_values=init_count,
             constant=el.get("Constant", "false") == "true",
+            has_initial_value=has_init,
         )
 
     def parse_routines(self, routines_el: ET.Element | None) -> list[Routine]:
