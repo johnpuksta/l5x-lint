@@ -1,4 +1,4 @@
-# IEC 61131-3 OSS Analysis — Phase 3 Feature Proposals for l5x-lint
+# IEC 61131-3 OSS Analysis — Implementation Plan for l5x-lint
 
 **Research Date:** June 2026
 **Submodule Roots:** `references/trust-platform/`, `references/rusty/`, `references/ironplc/`
@@ -224,9 +224,18 @@ Each FB has typed fields (Input/Output) with offsets. Registration in `TypeEnvir
 
 ---
 
-## Phase 3 Feature Proposals
+## Implementation Plan
 
-Proposals are ordered by priority and mapped to the specific source patterns that inspired them.
+This is the single plan. Everything after this section is reference material
+(code examples, architecture definitions, OSS code indexes).
+
+The plan has 3 rounds executed in order:
+
+| Round | What | Outcome |
+|-------|------|---------|
+| 1 | Prefix scheme + migration | Define `{E\|W}{C\|R\|S\|F}{NNN}` scheme, rename 15 existing codes, restructure into `cross/`/`rll/`/`st/` |
+| 2 | Type resolver + all new checks (~34) | Build `resolve_type()` first, then all checks from the registry in one pass (EC011, WS101, ER013, etc.) |
+| 3 | Plumbing features | Config system, related info, sub-checker delegation, dialect system |
 
 ---
 
@@ -235,10 +244,10 @@ Proposals are ordered by priority and mapped to the specific source patterns tha
 Every new check must be validated with both **ST** and **RLL** neutral text.
 The Reference column links to the OSS repo test that inspired the check.
 
-### W101 — Floating-Point Equality
+### WS101 — Floating-Point Equality
 
 ```iecst
-// ST: REAL equality comparison (triggers W101)
+// ST: REAL equality comparison (triggers WS101)
 PROGRAM Test
 VAR
     r : REAL;
@@ -249,7 +258,7 @@ END_PROGRAM
 ```
 
 ```iecst
-// ST: LREAL inequality comparison (triggers W101)
+// ST: LREAL inequality comparison (triggers WS101)
 PROGRAM Test
 VAR
     lr : LREAL;
@@ -272,22 +281,22 @@ END_PROGRAM
 ```
 
 ```iecst
-// RLL: CPT with REAL comparison (triggers W101)
+// RLL: CPT with REAL comparison (triggers WS101)
 CPT(Flag, Motor_Speed = 100.5);
 ```
 
 ```iecst
-// RLL: GRT/LES on REAL (triggers W101)
+// RLL: GRT/LES on REAL (triggers WS101)
 GRT(Motor_Speed, 99.9)OTE(HighSpeed);
 ```
 
 **Reference:** truST `crates/trust-hir/tests/semantic_type_checking/basics_and_warnings.rs` lines 457-469
-**File to create:** `tests/data/invalid/W101_float_equality.L5X`
+**File to create:** `tests/data/invalid/WS101_float_equality.L5X`
 
-### W102 — Division by Literal Zero
+### WS102 — Division by Literal Zero
 
 ```iecst
-// ST: Division by literal zero (triggers W102)
+// ST: Division by literal zero (triggers WS102)
 PROGRAM Test
 VAR
     x : DINT;
@@ -298,7 +307,7 @@ END_PROGRAM
 ```
 
 ```iecst
-// ST: MOD with literal zero (triggers W102)
+// ST: MOD with literal zero (triggers WS102)
 PROGRAM Test
 VAR
     x : DINT;
@@ -309,7 +318,7 @@ END_PROGRAM
 ```
 
 ```iecst
-// ST: Parenthesized zero (triggers W102)
+// ST: Parenthesized zero (triggers WS102)
 PROGRAM Test
 VAR
     x : DINT;
@@ -332,17 +341,17 @@ END_PROGRAM
 ```
 
 ```iecst
-// RLL: CPT with division by zero (triggers W102)
+// RLL: CPT with division by zero (triggers WS102)
 CPT(Dest, A / 0);
 ```
 
 **Reference:** RuSTy `src/validation/tests/statement_validation_tests.rs` lines 2783-2942
-**File to create:** `tests/data/invalid/W102_div_by_zero.L5X`
+**File to create:** `tests/data/invalid/WS102_div_by_zero.L5X`
 
-### W103 — Cyclomatic Complexity
+### WC103 — Cyclomatic Complexity
 
 ```iecst
-// ST: 15+ branching points (triggers W103 at threshold 15)
+// ST: 15+ branching points (triggers WC103 at threshold 15)
 PROGRAM Test
 VAR
     x : DINT;
@@ -367,7 +376,7 @@ END_PROGRAM
 ```
 
 ```iecst
-// RLL: Rung with 15+ branches (triggers W103)
+// RLL: Rung with 15+ branches (triggers WC103)
 XIC(A)OTE(Z);
 XIO(B)OTE(Z);
 XIC(C)OTE(Z);
@@ -387,12 +396,12 @@ XIO(P)OTE(Z);
 ```
 
 **Reference:** truST `crates/trust-hir/tests/semantic_type_checking/basics_and_warnings.rs` lines 281-297
-**File to create:** `tests/data/invalid/W103_complexity.L5X`
+**File to create:** `tests/data/invalid/WC103_complexity.L5X`
 
-### E011 — Reserved Name Collision
+### EC011 — Reserved Name Collision
 
 ```iecst
-// ST: AOI named TON shadows built-in (triggers E011)
+// ST: AOI named TON shadows built-in (triggers EC011)
 FUNCTION_BLOCK TON
 VAR_INPUT
     value : INT;
@@ -401,7 +410,7 @@ END_FUNCTION_BLOCK
 ```
 
 ```iecst
-// ST: AOI named CTU shadows built-in (triggers E011)
+// ST: AOI named CTU shadows built-in (triggers EC011)
 FUNCTION_BLOCK CTU
 VAR_INPUT
     value : INT;
@@ -419,24 +428,24 @@ END_FUNCTION_BLOCK
 ```
 
 ```iecst
-// RLL: Custom AOI call with built-in name (triggers E011)
+// RLL: Custom AOI call with built-in name (triggers EC011)
 My_TON(MyTimer, ?, ?);
 ```
 
 **Implementation note:** The reserved name list must match `_BUILTIN_OPCODES` in `checks/opcodes.py` plus Rockwell's built-in type names (TON, TOF, CTU, CTD, etc.).
 **Reference:** IronPLC `compiler/analyzer/src/rule_stdlib_type_redefinition.rs` lines 78-132
-**File to create:** `tests/data/invalid/E011_reserved_name.L5X`
+**File to create:** `tests/data/invalid/EC011_reserved_name.L5X`
 
-### E012 — Array Initializer Element Count Mismatch
+### EC012 — Array Initializer Element Count Mismatch
 
 ```iecst
-// ST: Array type with 5 elements, initialized with 3 (triggers E012)
+// ST: Array type with 5 elements, initialized with 3 (triggers EC012)
 TYPE MyArray : ARRAY[1..5] OF INT := [1, 2, 3];
 END_TYPE
 ```
 
 ```iecst
-// ST: Array variable with 10 elements, initialized with 3 (triggers E012)
+// ST: Array variable with 10 elements, initialized with 3 (triggers EC012)
 PROGRAM Test
 VAR
     arr : ARRAY[1..10] OF INT := [1, 2, 3];
@@ -453,13 +462,14 @@ END_VAR
 END_PROGRAM
 ```
 
+**Note:** The neutral text above shows IEC 61131-3 ST syntax for illustration. In L5X, array values are stored in XML `<Data Format="Decorated"><Array>...</Array></Data>` elements (see §4.1 Reference). The actual test L5X file will have a `<Tag>` with `<Data>` containing fewer `<Element>` children than the declared `Dimensions`. The check counts `<Element>` children vs the product of the tag's dimension sizes.
 **Reference:** RuSTy `src/validation/tests/array_validation_test.rs` lines 820-848, `tests/lit/single/init/array_partial_init_warning_type_and_var.st`
-**File to create:** `tests/data/invalid/E012_array_init_count.L5X`
+**File to create:** `tests/data/invalid/EC012_array_init_count.L5X`
 
-### W104 — Non-BOOL Condition
+### WS104 — Non-BOOL Condition
 
 ```iecst
-// ST: IF with DINT condition (triggers W104)
+// ST: IF with DINT condition (triggers WS104)
 PROGRAM Test
 VAR
     x : DINT;
@@ -472,7 +482,7 @@ END_PROGRAM
 ```
 
 ```iecst
-// ST: WHILE with DINT condition (triggers W104)
+// ST: WHILE with DINT condition (triggers WS104)
 PROGRAM Test
 VAR
     x : DINT;
@@ -511,16 +521,16 @@ END_PROGRAM
 ```
 
 ```iecst
-// RLL: XIC/XIO always use BOOL, so W104 is ST-only
+// RLL: XIC/XIO always use BOOL, so WS104 is ST-only
 ```
 
 **Reference:** RuSTy `src/validation/tests/statement_validation_tests.rs` lines 2109-2186
-**File to create:** `tests/data/invalid/W104_non_bool_condition.L5X`
+**File to create:** `tests/data/invalid/WS104_non_bool_condition.L5X`
 
-### W105 — Implicit Downcast
+### WS105 — Implicit Downcast
 
 ```iecst
-// ST: Assign LINT to DINT (triggers W105)
+// ST: Assign LINT to DINT (triggers WS105)
 PROGRAM Test
 VAR
     narrow : DINT;
@@ -531,7 +541,7 @@ END_PROGRAM
 ```
 
 ```iecst
-// ST: Assign REAL to DINT (triggers W105)
+// ST: Assign REAL to DINT (triggers WS105)
 PROGRAM Test
 VAR
     int_val : DINT;
@@ -564,17 +574,17 @@ END_PROGRAM
 ```
 
 ```iecst
-// RLL: MOV from REAL to DINT (triggers W105)
+// RLL: MOV from REAL to DINT (triggers WS105)
 MOV(RealVal, DintDest);
 ```
 
 **Reference:** RuSTy `src/validation/tests/variable_validation_tests.rs` lines 1647-1695, `statement_validation_tests.rs` lines 1542-1720
-**File to create:** `tests/data/invalid/W105_implicit_downcast.L5X`
+**File to create:** `tests/data/invalid/WS105_implicit_downcast.L5X`
 
-### W106 — Unused POU
+### WC106 — Unused POU
 
 ```iecst
-// ST: Unreferenced function block (triggers W106)
+// ST: Unreferenced function block (triggers WC106)
 FUNCTION_BLOCK UnusedFb
 VAR_INPUT
     x : DINT;
@@ -591,16 +601,16 @@ END_PROGRAM
 ```
 
 ```iecst
-// RLL: Unreferenced routine (triggers W106 — routine in L5X that's never JSR'd)
+// RLL: Unreferenced routine (triggers WC106 — routine in L5X that's never JSR'd)
 ```
 
 **Reference:** truST `crates/trust-hir/tests/semantic_type_checking/basics_and_warnings.rs` lines 301-309
-**File to create:** `tests/data/invalid/W106_unused_pou.L5X`
+**File to create:** `tests/data/invalid/WC106_unused_pou.L5X`
 
-### W107 — Missing ELSE
+### WS107 — Missing ELSE
 
 ```iecst
-// ST: IF without ELSE (triggers W107)
+// ST: IF without ELSE (triggers WS107)
 PROGRAM Test
 VAR
     x : DINT;
@@ -626,7 +636,7 @@ END_PROGRAM
 ```
 
 ```iecst
-// ST: CASE without ELSE (triggers W107)
+// ST: CASE without ELSE (triggers WS107)
 PROGRAM Test
 VAR
     x : DINT;
@@ -654,83 +664,164 @@ END_PROGRAM
 ```
 
 **Reference:** truST `crates/trust-hir/tests/semantic_type_checking/control_flow_and_calls.rs` lines 191-231
-**File to create:** `tests/data/invalid/W107_missing_else.L5X`
+**File to create:** `tests/data/invalid/WS107_missing_else.L5X`
 
 ---
 
-### Implementation Steps Per Check
+#### Round 1: Prefix Migration (rename only, no behavior change)
 
-Each new check follows this recipe:
+Rename all 15 existing codes and restructure into format-based subdirectories.
+This is purely mechanical — nothing changes about what each check detects.
 
-| Step | What | Test Pattern |
-|------|------|-------------|
-| 1 | Create `errors.py` variant | Add dataclass with `code`, `severity`, `message_template`, `description` |
-| 2 | Add to `LintError` union type | Append `\|` to the union |
-| 3 | Create check function | `@register` def in `checks/wNNN_name.py` |
-| 4 | Create invalid L5X test file | `tests/data/invalid/WNNN_name.L5X` with CDATA triggering the check |
-| 5 | Create valid L5X test file (no-fire) | `tests/data/valid/` — same structure with no trigger |
-| 6 | Create unit test | `tests/checks/test_wNNN_name.py` — test invalid triggers, valid no-fire |
-| 7 | Update integration test | Add to parametrized test in `tests/test_integration.py` |
-| 8 | Update opcodes/builtins if needed | For E011, extend `_BUILTIN_OPCODES` in `checks/opcodes.py` |
+| Step | What | How | Status |
+|------|------|-----|--------|
+| 1 | Create dirs | `mkdir src/l5x_lint/checks/{cross,rll,st} tests/checks/{cross,rll,st}` | ✅ Done |
+| 2 | Add `__init__.py` per subdir | Each imports its check modules | ✅ Done |
+| 3 | Rename `_codes.py` dataclasses | `E001→EC001, E002→EC002, ..., W005→WC005` | ✅ Done |
+| 4 | Move + rename 15 check files | Per table below (git mv preserves history) | ✅ Done |
+| 5 | Update imports in moved files | `from l5x_lint.checks._codes import EC001` | ✅ Done |
+| 6 | Update `checks/__init__.py` | Replace flat imports with subdirectory imports | ✅ Done |
+| 7 | Move + rename 15 test files and test data files | `tests/checks/e001*.py` → `tests/checks/cross/test_ec001*.py`; `tests/data/invalid/E001_*.L5X` → `EC001_*.L5X`, etc. | ✅ Done |
+| 8 | Update `tests/__init__.py` paths | Point to new test file locations | ⬜ N/A (no `tests/__init__.py` exists) |
+| 9 | Update `AGENTS.md` test mirror section | Show new folder layout | ✅ Done |
+| 10 | Run `uv run pytest tests/ -v` | All pass | ✅ Done — 347/347 |
+
+File move table:
+
+| From | To |
+|------|----|
+| `checks/e001_undefined_tag.py` | `checks/cross/ec001_undefined_tag.py` |
+| `checks/e002_type_mismatch.py` | `checks/cross/ec002_type_mismatch.py` |
+| `checks/e003_missing_aoi.py` | `checks/cross/ec003_missing_aoi.py` |
+| `checks/e004_invalid_jsr.py` | `checks/cross/ec004_invalid_subroutine.py` |
+| `checks/e005_invalid_member.py` | `checks/cross/ec005_invalid_member.py` |
+| `checks/e006_array_bounds.py` | `checks/cross/ec006_array_bounds.py` |
+| `checks/e007_duplicate_tag.py` | `checks/cross/ec007_duplicate_tag.py` |
+| `checks/e008_aoi_circular.py` | `checks/cross/ec008_aoi_circular_dep.py` |
+| `checks/e009_wrong_operand_count.py` | `checks/rll/er009_wrong_operand_count.py` |
+| `checks/e010_cross_scope.py` | `checks/cross/ec010_cross_scope_violation.py` |
+| `checks/w001_unused_tag.py` | `checks/cross/wc001_unused_tag.py` |
+| `checks/w002_afi_rung.py` | `checks/rll/wr002_afi_rung.py` |
+| `checks/w003_output_never_driven.py` | `checks/rll/wr003_output_never_driven.py` |
+| `checks/w004_timer_pre.py` | `checks/rll/wr004_timer_pre.py` |
+| `checks/w005_shadowed_tag.py` | `checks/cross/wc005_shadowed_tag.py` |
+| `tests/checks/test_e001*.py` | `tests/checks/cross/test_ec001*.py` |
+| `tests/checks/test_e009*.py` | `tests/checks/rll/test_er009*.py` |
+| `tests/checks/test_w001*.py` | `tests/checks/cross/test_wc001*.py` |
+| `tests/checks/test_w002*.py` | `tests/checks/rll/test_wr002*.py` |
+| `tests/domain/test_errors.py` | split: `tests/checks/cross/test_codes.py` + `tests/domain/test_errors.py` |
 
 ---
 
-### P3.1 Diagnostic Config System (High Priority)
+#### Round 2: Type Resolver + All New Checks (~34)
+
+After Round 1, the new subdirectory structure exists. First build the type resolver,
+then add every new check from the registry (§4.4) using the template below.
+
+**Step 0 — Prerequisite infrastructure:**
+
+| Sub-step | What | File | Effort |
+|----------|------|------|--------|
+| 0a | Add `resolve_type(tag_name, program) -> DataType` to SymbolTable | `pipeline/symbols.py` | 1h |
+| 0b | Add `expression_type(expr, program, symbols) -> str | None` helper | `checks/_types.py` | 1h |
+| 0c | Unit tests for type resolution | `tests/pipeline/test_symbols.py` | 0.5h |
+| 0d | Add `initial_values` field to `Tag`; parse `<Data Format="Decorated">` → `<Array>` → `<Element>` count in parser | `domain/models.py` + `infrastructure/parsers/base.py` | 1.5h |
+
+See Reference Material for code examples.
+
+**Priority checks (9):** ⚡ = type resolver  ✦ = domain model/parser extension  ⚠ = needs control flow awareness
+
+| Order | Code | Check | Est. Effort |
+|-------|------|-------|-------------|
+| 2a | EC011 | Reserved name collision | Small |
+| 2b | WS101 | Float equality ⚡ | Small |
+| 2c | WS102 | Div by literal zero | Small |
+| 2d | WC103 | Cyclomatic complexity | Small |
+| 2e | WS105 | Implicit downcast ⚡ | Medium |
+| 2f | WS107 | Missing ELSE | Small |
+| 2g | WS104 | Non-BOOL condition ⚡ | Small |
+| 2h | WC106 | Unused POU | Medium |
+| 2i | EC012 | Array init count ✦ | Medium |
+
+**Extended candidates (25+):**
+
+| Order | Code | Check | Source | Est. Effort |
+|-------|------|-------|--------|-------------|
+| 2j | ER013 | Invalid JMP target | RuSTy E018 | Small |
+| 2k | ER014 | OTL without OTU | Logix-specific | Small |
+| 2l | EC015 | Invalid/undeclared data type | RuSTy E052 | Small |
+| 2m | WS110 | Dead code after RETURN ⚠ | truST W003 | Small |
+| 2n | EC017 | Constant modification | truST E302 | Small |
+| 2o | EC013 | Duplicate JMP label | RuSTy E018 | Small |
+| 2p | WR006 | SUS in production | Logix-specific | Tiny |
+| 2q | WR005 | NOP present | Logix-specific | Tiny |
+| 2r | WR007 | Inputs only, no output | Logix-specific | Small |
+| 2s | WS108 | Statement with no effect | RuSTy E023 | Small |
+| 2t | WS113 | AND_THEN/OR_ELSE non-BOOL | RuSTy E133 | Small |
+| 2u | WS109 | FOR loop var assign | RuSTy E065 | Small |
+| 2v | ES001 | Invalid expression op | truST E202 | Medium |
+| 2w | ES002 | Duplicate CASE value | RuSTy E054 | Small |
+| 2x–2z | Remaining from §4.4 tables | various | — |
+
+Template for each new check:
+
+| Step | What | File |
+|------|------|------|
+| 0 | Extend domain model / parser if check needs new data (e.g., EC012 needs `<Data>` parsing) | `domain/models.py` + `infrastructure/parsers/base.py` |
+| 1 | Add dataclass with new prefix | `checks/_codes.py` |
+| 2 | Add to `LintError` union | `checks/_codes.py` |
+| 3 | Create check function (`@register`) | `checks/{cross,rll,st}/ecNNN_name.py` |
+| 4 | Import it in subdir `__init__.py` | `checks/{cross,rll,st}/__init__.py` |
+| 5 | Create invalid L5X test data | `tests/data/invalid/EC011_reserved_name.L5X` |
+| 6 | Create valid L5X test data | `tests/data/valid/EC011_reserved_name.L5X` |
+| 7 | Create unit test | `tests/checks/{cross,rll,st}/test_ec011_reserved_name.py` |
+| 8 | Add to parametrized integration test | `tests/test_integration.py` |
+| 9 | Update opcodes if needed | `checks/opcodes.py` (for EC011) |
+| 10 | `uv run pytest tests/ -v` | All pass |
+
+---
+
+#### Round 3: Plumbing Features
+
+| Order | Feature | Source | Effort |
+|-------|---------|--------|--------|
+| 3a | Config system | truST + RuSTy | Medium |
+| 3b | Related info + hints | truST | Medium |
+| 3c | Sub-checker delegation | truST | Large (do at ~25 checks) |
+| 3d | Dialect system | IronPLC | Large |
+---
+
+## Reference Material — Code Examples & Architecture Definitions
+
+These code examples are referenced by the Implementation Plan above. They are not separate proposals.
+
+### Config System — Code Example (referenced by Round 3a)
 
 **Source patterns:** truST `DiagnosticSettings` + RuSTy `DiagnosticsConfiguration` + IronPLC `CompilerOptions`
-
-l5x-lint currently has hardcoded severities (E=error, W=warning). Users and agents
-need configurable severity per project.
 
 ```python
 @dataclass
 class LintConfig:
-    """Per-workspace lint configuration. Loaded from l5x-lint.toml in project root."""
-    # --- Warning category toggles ---
-    warn_unused: bool = True            # W001
-    warn_unreachable: bool = True       # W002
-    warn_output_never_driven: bool = True  # W003
-    warn_timer_pre: bool = True         # W004
-    warn_shadowed: bool = True          # W005
-    warn_numeric_hazards: bool = False  # W101, W102 (new)
-    warn_complexity: bool = False       # W103 (new)
-
-    # --- Per-code severity overrides ---
+    warn_unused: bool = True
+    warn_unreachable: bool = True
+    warn_output_never_driven: bool = True
+    warn_timer_pre: bool = True
+    warn_shadowed: bool = True
+    warn_numeric_hazards: bool = False
+    warn_complexity: bool = False
     severity_overrides: dict[str, str] = field(default_factory=dict)
-    #   e.g., {"W001": "error", "E001": "warning"}
-
-    # --- Rule pack presets ---
     rule_pack: str | None = None
-    #   "safety"      → promote W004, W005 to error
-    #   "rockwell"    → Rockwell/Studio 5000 defaults
-    #   "iec-61131-3" → strict IEC standard
-
-    # --- Vendor dialect ---
     dialect: str = "rockwell"
-    #   "rockwell"    → lowercase keywords, positional args, JSR
-    #   "iec-61131-3" → uppercase keywords, named args
-    #   "codesys"     → CodeSys dialect
-    #   "twincat"     → Beckhoff TwinCAT dialect
 
     def apply_rule_pack(self) -> None:
         match self.rule_pack:
             case "safety":
                 self.severity_overrides.update({"W004": "error", "W005": "error"})
-                self.warn_numeric_hazards = True
-                self.warn_unreachable = True
-            case "rockwell":
-                self.warn_numeric_hazards = False
-            case "iec-61131-3":
-                self.warn_output_never_driven = True
-                self.warn_complexity = True
-
-    @classmethod
-    def from_toml(cls, path: Path) -> "LintConfig":
-        """Load from l5x-lint.toml. Missing keys use defaults."""
-        ...
+                self.warn_numeric_hazards = True; self.warn_unreachable = True
+            case "rockwell":    self.warn_numeric_hazards = False
+            case "iec-61131-3": self.warn_output_never_driven = True; self.warn_complexity = True
 
     def diagnostic_allowed(self, code: str, severity: str) -> bool:
-        """Filter pipeline: map code to category toggle."""
         match code:
             case "W001": return self.warn_unused
             case "W002": return self.warn_unreachable
@@ -739,185 +830,67 @@ class LintConfig:
             case "W005": return self.warn_shadowed
             case "W101" | "W102": return self.warn_numeric_hazards
             case "W103": return self.warn_complexity
-            case _: return True  # errors always shown
+            case _: return True
 
     def resolve_severity(self, code: str, default_severity: str) -> str:
         return self.severity_overrides.get(code, default_severity)
 ```
 
-**Config file format (`l5x-lint.toml`):**
+### Type Resolver (Round 2 prerequisite)
 
-```toml
-[diagnostics]
-warn_unused = true
-warn_unreachable = true
-warn_numeric_hazards = true
-rule_pack = "safety"
-
-[diagnostics.severity_overrides]
-W001 = "error"
-E001 = "warning"
-
-[dialect]
-name = "rockwell"
-```
-
-**Pipeline integration:**
+**Purpose:** Enable checks that need tag/expression data types (WS101, WS104, WS105).
 
 ```python
-# In pipeline/analyze.py
-def analyze(project: L5XProject, config: LintConfig | None = None) -> AnalysisResult:
-    config = config or LintConfig()
-    diagnostics = flow(
-        project,
-        build_symbol_tables,
-        bind(parse_all_routine_content),
-        bind(lambda p: run_all_checks(p, config)),
-    )
-    # Apply filter pipeline
-    diagnostics = [
-        d for d in diagnostics
-        if config.diagnostic_allowed(d.code, d.severity)
-    ]
-    # Apply severity overrides
-    for d in diagnostics:
-        d.severity = config.resolve_severity(d.code, d.severity)
-    return AnalysisResult.from_diagnostics(diagnostics)
+# pipeline/symbols.py — add to SymbolTable
+def resolve_type(self, name: str, program: str | None = None) -> DataType | None:
+    match self.resolve(name, program):
+        case Some(tag):
+            return self.data_types.get(tag.data_type)
+        case _:
+            return None
+
+def resolve_member_type(self, base_type: str, member: str) -> DataType | None:
+    dt = self.data_types.get(base_type)
+    if dt is None:
+        return None
+    for m in dt.members:
+        if m.name == member:
+            return self.data_types.get(m.data_type)
+    return None
 ```
-
----
-
-### P3.2 New Checks from OSS Analysis
-
-**Source patterns:** truST W008-W014, RuSTy E043/E127/E133, IronPLC P4015
 
 ```python
-# errors.py — New LintError variants
+# checks/_types.py — expression type resolution
+from l5x_lint.domain.st_models import StBinaryOp, StLiteral, StTagRef
 
-# Block-level numeric hazard warnings
-@dataclass
-class W101(LintErrorBase):
-    code: ClassVar[str] = "W101"
-    severity: ClassVar[str] = "warning"
-    message_template: ClassVar[str] = "Floating-point equality comparison involves '{name}' (REAL/LREAL)"
-    description: ClassVar[str] = "Floating-point equality/inequality is hazardous due to precision. Consider using an epsilon comparison."
-    name: str
+def expression_type(expr, program: str, symbols: SymbolTable) -> str | None:
+    match expr:
+        case StTagRef() if expr.path.segments:
+            return _tag_ref_type(expr.path.segments, program, symbols)
+        case StLiteral(value=int()):
+            return "DINT"
+        case StLiteral(value=float()):
+            return "REAL"
+        case StLiteral(value=bool()):
+            return "BOOL"
+        case StCall(name=name):
+            return _call_return_type(name, symbols)
+    return None
 
-@dataclass
-class W102(LintErrorBase):
-    code: ClassVar[str] = "W102"
-    severity: ClassVar[str] = "warning"
-    message_template: ClassVar[str] = "Division or modulo by literal zero in expression"
-    description: ClassVar[str] = "Dividing or taking modulo by zero causes a runtime fault."
-    routine: str; line: int
-
-# Cyclomatic complexity warning — truST W008 analog
-@dataclass
-class W103(LintErrorBase):
-    code: ClassVar[str] = "W103"
-    severity: ClassVar[str] = "warning"
-    message_template: ClassVar[str] = "Routine '{routine}' has cyclomatic complexity {complexity} (threshold: {threshold})"
-    description: ClassVar[str] = "High complexity makes logic hard to verify. Consider splitting into sub-routines."
-    routine: str; complexity: int; threshold: int = 15
-
-# Reserved name collision — IronPLC P4015 analog
-@dataclass
-class E011(LintErrorBase):
-    code: ClassVar[str] = "E011"
-    severity: ClassVar[str] = "error"
-    message_template: ClassVar[str] = "User-defined tag/AOI '{name}' shadows built-in instruction name"
-    description: ClassVar[str] = "Tag or AOI name collides with a built-in Logix instruction (TON, CTU, MOV, etc.)."
-    name: str
-
-# Array initializer element count mismatch — RuSTy E043/E127 analog
-@dataclass
-class E012(LintErrorBase):
-    code: ClassVar[str] = "E012"
-    severity: ClassVar[str] = "error"
-    message_template: ClassVar[str] = "Array '{name}': initializer has {actual} elements but dimension expects {expected}"
-    description: ClassVar[str] = "Array tag initializer element count does not match declared dimension."
-    name: str; expected: int; actual: int
-    severity: ClassVar[str] = "error"
-
-# Condition type check — RuSTy E094/E096 analog
-@dataclass
-class W104(LintErrorBase):
-    code: ClassVar[str] = "W104"
-    severity: ClassVar[str] = "warning"
-    message_template: ClassVar[str] = "IF/WHILE condition uses non-BOOL type '{actual}' in routine '{routine}'"
-    description: ClassVar[str] = "IF and WHILE conditions should evaluate to BOOL. Non-BOOL conditions are always true if non-zero."
-    routine: str; actual: str
-
-# Implicit downcast — RuSTy E067 analog
-@dataclass
-class W105(LintErrorBase):
-    code: ClassVar[str] = "W105"
-    severity: ClassVar[str] = "warning"
-    message_template: ClassVar[str] = "Implicit downcast from '{source_type}' to '{target_type}' in assignment to '{name}'"
-    description: ClassVar[str] = "Assigning a wider type to a narrower type may truncate. Logix allows this implicitly."
-    name: str; source_type: str; target_type: str
-
-# Unused POU (program/routine) — truST W009 analog
-@dataclass
-class W106(LintErrorBase):
-    code: ClassVar[str] = "W106"
-    severity: ClassVar[str] = "warning"
-    message_template: ClassVar[str] = "Program/routine '{name}' is never referenced"
-    description: ClassVar[str] = "Unreferenced program or routine. MainRoutine is always considered referenced."
-    name: str
-
-# Missing ELSE on conditional — truST W004 analog
-@dataclass
-class W107(LintErrorBase):
-    code: ClassVar[str] = "W107"
-    severity: ClassVar[str] = "warning"
-    message_template: ClassVar[str] = "IF statement in routine '{routine}' has no ELSE clause"
-    description: ClassVar[str] = "IF without ELSE may leave outputs in unknown state. Consider adding ELSE."
-    routine: str; line: int
+def _tag_ref_type(segments, program, symbols) -> str | None:
+    base = symbols.resolve_type(segments[0].name, program)
+    if base is None:
+        return None
+    current = base.name
+    for seg in segments[1:]:
+        dt = symbols.resolve_member_type(current, seg.name)
+        if dt is None:
+            return None
+        current = dt.name
+    return current
 ```
 
-**Updated LintError union:**
-
-```python
-LintError = E001 | E002 | E003 | E004 | E005 | E006 | E007 | E008 | E009 | E010 | E011 | E012 | \
-            W001 | W002 | W003 | W004 | W005 | W101 | W102 | W103 | W104 | W105 | W106 | W107
-```
-
-**Full check table (updated):**
-
-```
-ERRORS (block simulation):
-  E001  Undefined tag reference           XIC(Moter_Run) — tag doesn't exist          ✅
-  E002  Type mismatch                     TON(MyDINT,...) — DINT ≠ TIMER              ✅
-  E003  Missing AOI definition            Calling My_AOI, not defined                 ✅
-  E004  Invalid JSR target                JSR(NoSuchRoutine,0)                        ✅
-  E005  Invalid UDT member access         Tag.NonExistent                             ✅
-  E006  Array index out of bounds         Arr[10] on Arr[10] (0-indexed)              ✅
-  E007  Duplicate tag name in scope                                                   ✅
-  E008  AOI circular dependency           AOI_A → AOI_B → AOI_A                      ✅
-  E009  Wrong operand count               XIC() with no args                          ✅
-  E010  Cross-scope tag violation         Program tag used in another program         ✅
-  E011  Reserved name collision           AOI named "TON" shadows built-in            🔷 NEW
-  E012  Array init element count          Arr[5] initialized with 3 values             🔷 NEW
-
-WARNINGS (allow simulation):
-  W001  Unused tag declared                                                           ✅
-  W002  Unreachable rung                  AFI as first instruction                    ✅
-  W003  Output never driven               Used in XIC, never in OTE/OTL/OTU          ✅
-  W004  Timer PRE never set               TON with PRE still 0                       ✅
-  W005  Shadowed tag name                 Prog tag hides ctrl tag                    ✅
-  W101  Floating-point equality           REAL = REAL comparison                       🔷 NEW
-  W102  Division by literal zero          DIV(x, 0) = y                                🔷 NEW
-  W103  Cyclomatic complexity             Routine with 20 branches                     🔷 NEW
-  W104  Non-BOOL condition                IF MyDINT instead of IF MyBOOL              🔷 NEW
-  W105  Implicit downcast                 DINT → SINT truncation                      🔷 NEW
-  W106  Unused POU                        Unreferenced program/routine                🔷 NEW
-  W107  Missing ELSE                      IF without ELSE clause                      🔷 NEW
-```
-
----
-
-### P3.3 Diagnostic Enhancement (Related Info + Hints)
+### Diagnostic Enhancement (Related Info + Hints)
 
 **Source pattern:** truST `Diagnostic::with_related()` + "Did you mean?" + syntax habit hints
 
@@ -935,95 +908,45 @@ class Diagnostic:
     message: str
     hint: str | None = None
     fix_suggestion: str | None = None
-    related: list[RelatedInfo] = field(default_factory=list)   # 🔷 NEW
-    sub_diagnostics: list[Diagnostic] = field(default_factory=list)  # 🔷 NEW
-    iec_reference: str | None = None                            # 🔷 NEW
+    related: list[RelatedInfo] = field(default_factory=list)
+    sub_diagnostics: list[Diagnostic] = field(default_factory=list)
+    iec_reference: str | None = None
 
 def suggest_did_you_mean(name: str, known_names: list[str]) -> str | None:
-    """Levenshtein-based suggestion with adaptive threshold."""
-    candidates = [
-        (n, levenshtein(name.lower(), n.lower()))
-        for n in known_names
-    ]
+    candidates = [(n, levenshtein(name.lower(), n.lower())) for n in known_names]
     candidates.sort(key=lambda x: x[1])
     best_dist = candidates[0][1] if candidates else 99
-    if best_dist <= 2:
-        return f"Did you mean '{candidates[0][0]}'?"
-    if best_dist <= 4:
-        matches = [n for n, d in candidates if d == best_dist]
-        return f"Did you mean '{matches[0]}'?"
+    if best_dist <= 2:  return f"Did you mean '{candidates[0][0]}'?"
+    if best_dist <= 4:  return f"Did you mean '{candidates[0][0]}'?"
     return None
 
 def syntax_habit_hints(message: str) -> str | None:
-    """Detect C-style syntax habits in ST code and suggest IEC equivalents."""
-    hints = {
-        "==": "Use '=' for equality comparison in ST (not '==')",
-        "!=": "Use '<>' for inequality in ST (not '!=')",
-        "&&": "Use 'AND' for logical AND in ST (not '&&')",
-        "||": "Use 'OR' for logical OR in ST (not '||')",
-        "{": "ST uses '(* *)' or '//' for comments, not '{ }'",
-    }
+    hints = {"==": "Use '=' in ST","!=": "Use '<>' in ST","&&": "Use 'AND'","||": "Use 'OR'","{": "Use '(* *)'"}
     for pattern, hint in hints.items():
-        if pattern in message:
-            return hint
+        if pattern in message: return hint
     return None
 ```
 
-**Usage in checks:**
-
-```python
-def e007_duplicate_tag(project, symbols, loc) -> list[Diagnostic]:
-    diags = []
-    seen: dict[str, Tag] = {}
-    for tag in project.all_tags():
-        prev = seen.get(tag.name)
-        if prev:
-            diags.append(Diagnostic(
-                "E007", "error",
-                Location(program=tag.scope, ...),
-                f"Duplicate tag '{tag.name}'",
-                related=[RelatedInfo(
-                    Location(program=prev.scope, ...),
-                    "Previously declared here"
-                )],
-            ))
-        seen[tag.name] = tag
-    return diags
-```
-
----
-
-### P3.4 Sub-Checker Delegation Architecture (Medium Priority)
+### Sub-Checker Delegation Architecture
 
 **Source pattern:** truST `ExprChecker`/`StmtChecker`/`CallChecker` delegation
 
-As the check surface grows beyond 20+ checks, partition the monolithic `run_all_checks`
-into domain-specific sub-checkers:
-
 ```python
-# checks/checker.py
 class ExprChecker:
-    """Expression-level checks: type compatibility, operands, literals."""
-    def check_binary_op(self, expr: StBinaryOp, symbols: SymbolTable) -> list[Diagnostic]: ...
-    def check_call(self, expr: StCall, symbols: SymbolTable) -> list[Diagnostic]: ...
-    def check_literal(self, expr: StLiteral) -> list[Diagnostic]: ...
+    def check_binary_op(self, expr, symbols): ...
+    def check_call(self, expr, symbols): ...
 
 class StmtChecker:
-    """Statement-level checks: assignments, control flow, jumps."""
-    def check_assignment(self, stmt: StAssignment, symbols: SymbolTable) -> list[Diagnostic]: ...
-    def check_if(self, stmt: StIf) -> list[Diagnostic]: ...
-    def check_for(self, stmt: StFor) -> list[Diagnostic]: ...
+    def check_assignment(self, stmt, symbols): ...
+    def check_if(self, stmt): ...
 
 class DeclChecker:
-    """Declaration-level checks: symbols, types, scopes."""
-    def check_tag(self, tag: Tag, symbols: SymbolTable) -> list[Diagnostic]: ...
-    def check_data_type(self, dt: DataType) -> list[Diagnostic]: ...
-    def check_aoi(self, aoi: AOI, symbols: SymbolTable) -> list[Diagnostic]: ...
+    def check_tag(self, tag, symbols): ...
+    def check_data_type(self, dt): ...
+    def check_aoi(self, aoi, symbols): ...
 ```
 
----
-
-### P3.5 Dialect System (Medium Priority)
+### Dialect System
 
 **Source pattern:** IronPLC `--dialect` + `CompilerOptions`
 
@@ -1032,79 +955,403 @@ class DeclChecker:
 class DialectConfig:
     name: str
     allow_keywords_case_insensitive: bool = True
-    allow_positional_args: bool = True      # Rockwell style
-    allow_jsr: bool = True                   # Rockwell-specific JSR
-    allow_wildcard_operands: bool = True     # ? for TON/TOF PRE/ACC
-    allow_type_punning: bool = True          # implicit DINT := BOOL
-    allow_c_style_comments: bool = True      # // line comments
-    allow_cross_family_widening: bool = True # Rockwell: any numeric → any numeric
+    allow_positional_args: bool = True
+    allow_jsr: bool = True
+    allow_wildcard_operands: bool = True
+    allow_type_punning: bool = True
+    allow_c_style_comments: bool = True
+    allow_cross_family_widening: bool = True
 
-DIALECT_PRESETS: dict[str, DialectConfig] = {
-    "rockwell": DialectConfig(
-        name="rockwell",
-        allow_keywords_case_insensitive=True,
-        allow_positional_args=True,
-        allow_jsr=True,
-        allow_wildcard_operands=True,
-        allow_type_punning=True,
-        allow_c_style_comments=True,
-    ),
-    "iec-61131-3": DialectConfig(
-        name="iec-61131-3",
-        allow_keywords_case_insensitive=False,
-        allow_positional_args=False,
-        allow_jsr=False,
-        allow_wildcard_operands=False,
-        allow_type_punning=False,
-        allow_c_style_comments=False,
-    ),
-    "codesys": DialectConfig(
-        name="codesys",
-        allow_keywords_case_insensitive=False,
-        allow_positional_args=True,
-        allow_jsr=False,
-        allow_wildcard_operands=True,
-        allow_type_punning=True,
-        allow_c_style_comments=True,
-    ),
+DIALECT_PRESETS = {
+    "rockwell": DialectConfig(name="rockwell", allow_keywords_case_insensitive=True, allow_positional_args=True, allow_jsr=True, allow_wildcard_operands=True, allow_type_punning=True, allow_c_style_comments=True),
+    "iec-61131-3": DialectConfig(name="iec-61131-3", allow_keywords_case_insensitive=False, allow_positional_args=False, allow_jsr=False, allow_wildcard_operands=False, allow_type_punning=False, allow_c_style_comments=False),
+    "codesys": DialectConfig(name="codesys", allow_keywords_case_insensitive=False, allow_positional_args=True, allow_jsr=False, allow_wildcard_operands=True, allow_type_punning=True, allow_c_style_comments=True),
 }
 ```
 
----
-
-## Updated Module Structure (Phase 3 Additions)
+### Updated Module Structure (Round 3 additions)
 
 ```
 l5x_lint/
-  domain/                        # ✅ DONE
-    ...
+  domain/
     diagnostics.py               #     + RelatedInfo, sub_diagnostics, iec_reference
-    errors.py                    #     + E011, E012, W101-W107 (12 new variants)
-
-  checks/                        # ✅ DONE (15 checks) + 🔷 NEW (6 checks)
-    ...
-    e011_reserved_name.py        #     P4015 analog: user name vs built-in instruction
-    e012_array_init_count.py     #     Array initializer element count mismatch
-    w101_float_equality.py       #     REAL = REAL comparison warning
-    w102_div_by_zero.py          #     Division/modulo by literal zero
-    w103_complexity.py           #     Cyclomatic complexity threshold
-    w104_non_bool_condition.py   #     IF/WHILE condition type check
-    w105_implicit_downcast.py    #     Wide-to-narrow assignment truncation
-    w106_unused_pou.py           #     Unreferenced program/routine
-    w107_missing_else.py         #     IF without ELSE clause
-
+    errors.py                    #     LintInternalError union — unchanged
+  checks/
+    _codes.py                    #     + EC011, EC012, WS101-WS107, WC103, WC106
+    e011_reserved_name.py
+    e012_array_init_count.py
+    w101_float_equality.py
+    w102_div_by_zero.py
+    w103_complexity.py
+    w104_non_bool_condition.py
+    w105_implicit_downcast.py
+    w106_unused_pou.py
+    w107_missing_else.py
   pipeline/
-    ...
     config.py                    # 🔷 NEW — LintConfig, DialectConfig, severity overrides
     filter.py                    # 🔷 NEW — Diagnostic filter + override pipeline
-
-  infrastructure/
-    ...
-
   presentation/
     cli.py                       #     + --diagnostic-config, --dialect flags
     mcp_server.py                #     + config tool for agents
 ```
+
+---
+
+## Phase 4: Full Code Registry
+
+The prefix scheme (`{E|W}{C|R|S|F}{NNN}`) and folder structure are defined in
+Round 1 of the Implementation Plan above. This section contains the complete
+registry of all applicable codes and the index of non-applicable OSS codes.
+
+### 4.1 Folder Structure (Reference)
+
+```
+src/l5x_lint/checks/
+  __init__.py              # Import all check modules for @register side-effects
+  _codes.py                # All error/warning code dataclasses + LintError union
+  _registry.py             # @register decorator, CheckFn type, check iteration
+  cross/                   # Cross-format checks (EC/WC series)
+    __init__.py
+    ec001_undefined_tag.py
+    ec002_type_mismatch.py
+    ec003_missing_aoi.py
+    ec004_invalid_subroutine.py      # JSR/JXR targets
+    ec005_invalid_member.py          # UDT field access
+    ec006_array_bounds.py
+    ec007_duplicate_tag.py
+    ec008_aoi_circular_dep.py
+    ec009_wrong_operand_count.py
+    ec010_cross_scope_violation.py
+    ec011_reserved_name.py
+    ec012_array_init_count.py
+    ...
+    wc001_unused_tag.py
+    wc005_shadowed_tag.py
+    wc103_cyclomatic_complexity.py
+    wc106_unused_pou.py
+    ...
+  rll/                     # RLL-specific checks (ER/WR series)
+    __init__.py
+    ...
+    wr002_afi_rung.py
+    wr003_output_never_driven.py
+    wr004_timer_pre.py
+    ...
+  st/                      # ST-specific checks (ES/WS series)
+    __init__.py
+    ...
+    ws101_float_equality.py
+    ws102_div_by_zero.py
+    ws104_non_bool_condition.py
+    ws105_implicit_downcast.py
+    ws107_missing_else.py
+    ...
+```
+
+Tests mirror the source layout:
+
+```
+tests/checks/
+  cross/
+    test_ec001_undefined_tag.py
+    ...
+  rll/
+    test_wr002_afi_rung.py
+    ...
+  st/
+    test_ws101_float_equality.py
+    ...
+  test_check_integration.py   # Parametrized smoke test for all checks
+```
+
+### 4.3 Code Migration — Current to New
+
+| Current | New | Severity | Format | Name | Status |
+|---------|-----|----------|--------|------|--------|
+| E001 | EC001 | error | cross | Undefined tag reference | ✅ existing |
+| E002 | EC002 | error | cross | Type mismatch | ✅ existing |
+| E003 | EC003 | error | cross | Missing AOI definition | ✅ existing |
+| E004 | EC004 | error | cross | Invalid subroutine target (JSR/JXR) | ✅ existing |
+| E005 | EC005 | error | cross | Invalid UDT member access | ✅ existing |
+| E006 | EC006 | error | cross | Array index out of bounds | ✅ existing |
+| E007 | EC007 | error | cross | Duplicate tag name in scope | ✅ existing |
+| E008 | EC008 | error | cross | AOI circular dependency | ✅ existing |
+| E009 | ER009 | error | RLL | Wrong operand count for opcode | ✅ existing |
+| E010 | EC010 | error | cross | Cross-scope tag violation | ✅ existing |
+| E011 | EC011 | error | cross | Reserved name collision | 🔷 proposed |
+| E012 | EC012 | error | cross | Array initializer element count mismatch | 🔷 proposed |
+| W001 | WC001 | warning | cross | Unused tag declared | ✅ existing |
+| W002 | WR002 | warning | RLL | Unreachable rung (AFI first) | ✅ existing |
+| W003 | WR003 | warning | RLL | Output never driven | ✅ existing |
+| W004 | WR004 | warning | RLL | Timer PRE never set | ✅ existing |
+| W005 | WC005 | warning | cross | Shadowed tag name | ✅ existing |
+| W101 | WS101 | warning | ST | Floating-point equality comparison | 🔷 proposed |
+| W102 | WS102 | warning | ST | Division or modulo by literal zero | 🔷 proposed |
+| W103 | WC103 | warning | cross | Cyclomatic complexity | 🔷 proposed |
+| W104 | WS104 | warning | ST | Non-BOOL IF/WHILE condition | 🔷 proposed |
+| W105 | WS105 | warning | ST | Implicit downcast in assignment | 🔷 proposed |
+| W106 | WC106 | warning | cross | Unused POU | 🔷 proposed |
+| W107 | WS107 | warning | ST | Missing ELSE clause on IF/CASE | 🔷 proposed |
+| — | ER013 | error | RLL | Invalid JMP target label | 🟡 candidate |
+| — | ER014 | error | RLL | OTL without OTU (unbalanced latch) | 🟡 candidate |
+| — | WS121 | warning | ST | Statement with no effect | 🟡 candidate |
+| — | WC122 | warning | cross | Empty routine body | 🟡 candidate |
+| — | WS123 | warning | ST | Literal overflow for target type | 🟡 candidate |
+| ... | ... (see full registry below) | | | | |
+
+### 4.4 Complete Error/Warning Code Registry
+
+Every diagnostic code from the three analyzed OSS repos, mapped to l5x-lint's prefix scheme.
+Codes are grouped by applicability. `—` in the l5x-lint column means the check does not apply to Logix L5X/L5K (reason given).
+
+#### Cross-Format Errors (EC001+)
+
+| l5x-lint | Name | Format | OSS Source(s) | OSS Code(s) | Description | L5X Test Example | Prio |
+|----------|------|--------|---------------|-------------|-------------|-------------------|------|
+| EC001 | Undefined tag reference | cross | truST, RuSTy, IronPLC | truST E101, RuSTy E048, IronPLC P4001 | Tag referenced in rung/ST but not declared in any scope | `XIC(DoesNotExist)OTE(Out)` | H |
+| EC002 | Type mismatch | cross | truST, RuSTy, IronPLC | truST E201, RuSTy E031/E037/E051, IronPLC P4012 | Operand/expression type incompatible with expected type | `TON(MyDINT,?,?,?)` | H |
+| EC003 | Missing AOI definition | cross | truST, IronPLC | truST E103, IronPLC P4015 | Called instruction not in built-in opcodes and no matching AOI def | `MyUndefinedAOI(Arg1,Arg2)` | H |
+| EC004 | Invalid subroutine target | cross | RuSTy, IronPLC | RuSTy E048, IronPLC P4021 | JSR/JXR targets a routine that doesn't exist in any program | `JSR(NoSuchRoutine,0)` | H |
+| EC005 | Invalid UDT member access | cross | truST, RuSTy, IronPLC | truST E107, RuSTy E048, IronPLC P2001 | Tag member path refers to nonexistent UDT field | `MyTag.NonExistentField` | H |
+| EC006 | Array index out of bounds | cross | truST, RuSTy, IronPLC | truST E303, RuSTy E053/E058/E097, IronPLC P2013 | Array index exceeds declared dimension | `MyArr[10]` on `ARRAY[0..9]` | H |
+| EC007 | Duplicate tag name in scope | cross | truST, RuSTy, IronPLC | truST E104/E108, RuSTy E004/E021, IronPLC P2007 | Two tags with same name in same scope | Two `MyTag : DINT` in same scope | H |
+| EC008 | AOI circular dependency | cross | truST, RuSTy | truST E305, RuSTy E121 | AOIs form a recursive call chain | AOI_A→AOI_B→AOI_A | H |
+| EC009 | Wrong operand count | cross | truST, RuSTy, IronPLC | truST E204, RuSTy E032, IronPLC P4025 | Opcode/call given wrong number of operands/args | `XIC()` (0 of 1 operands) | H |
+| EC010 | Cross-scope tag violation | cross | truST, RuSTy | truST E101, RuSTy E028/E099 | Program-scoped tag accessed from different program | Program_A.MyTag in Program_B | H |
+| EC011 | Reserved name collision | cross | RuSTy, IronPLC | RuSTy E138, IronPLC P4015 | User-defined name shadows built-in instruction/type | AOI named `TON` | H |
+| EC012 | Array init element count | cross | RuSTy | RuSTy E043/E127 | Initializer element count ≠ array dimension | `ARRAY[1..5]:=[1,2,3]` | M |
+| EC013 | Duplicate label (JMP target) | cross | RuSTy | RuSTy E018 | Two JMP/LBL instructions share the same label | `LBL(Mark); LBL(Mark)` | M |
+| EC014 | Unresolved constant expression | cross | RuSTy | RuSTy E033 | CONSTANT initializer references non-constant values | `CONST X : DINT := Y` where Y is not CONSTANT | L |
+| EC015 | Invalid/undeclared data type | cross | RuSTy, IronPLC | RuSTy E052, IronPLC P2008 | Tag declared with a type that doesn't exist | `MyTag : NonExistentType` | H |
+| EC016 | Invalid array range declaration | cross | RuSTy | RuSTy E008/E097 | Array range bounds are malformed or non-integer | `ARRAY[a..z]` with non-integer bounds | M |
+| EC017 | Modification of constant tag | cross | truST, RuSTy | truST E302, RuSTy E036 | Assignment to a CONSTANT-declared tag | `MyConst := 5` where MyConst is CONSTANT | M |
+| EC018 | Empty project or POU | cross | truST, IronPLC | truST W009, IronPLC P9002 | Controller has no programs or a program has no routines | Empty Routine element | L |
+
+#### Cross-Format Warnings (WC001+)
+
+| l5x-lint | Name | Format | OSS Source(s) | OSS Code(s) | Description | L5X Test Example | Prio |
+|----------|------|--------|---------------|-------------|-------------|-------------------|------|
+| WC001 | Unused tag declared | cross | truST | truST W001 | Tag is declared but never read or written | `MyTag : DINT` never used | H |
+| WC005 | Shadowed tag name | cross | truST | truST W006 | Program tag hides controller-scoped tag with same name | Ctrl.MyTag + Prog.MyTag | H |
+| WC103 | Cyclomatic complexity | cross | truST | truST W008 | Routine has ≥15 branching points (IFs, CASEs, branches) | 16 IF statements in one routine | M |
+| WC106 | Unused program/routine | cross | truST | truST W009 | Program/routine is never referenced by JSR or configured as Main | `MyProgram` with no calls to it | M |
+| WC107 | Empty IF/CASE body | cross | RuSTy | RuSTy E090 | Conditional branch contains no statements | `IF x THEN END_IF` | L |
+| WC108 | Deprecated instruction used | cross | truST | truST W007 | Instruction is deprecated in current Logix version | Reserved for future | L |
+
+#### RLL-Specific Errors (ER001+)
+
+| l5x-lint | Name | Format | OSS Source(s) | OSS Code(s) | Description | L5X Test Example | Prio |
+|----------|------|--------|---------------|-------------|-------------|-------------------|------|
+| ER009 | Wrong operand count for opcode | RLL | truST, RuSTy, IronPLC | truST E204, RuSTy E032, IronPLC P4025 | RLL opcode called with wrong number of operands | `XIC()` (needs 1) | H |
+| ER013 | Invalid JMP target label | RLL | RuSTy, IronPLC | RuSTy E018, IronPLC P4021 | JMP to label that has no matching LBL in the routine | `JMP(GoneLabel)` with no `LBL(GoneLabel)` | H |
+| ER014 | OTL without OTU (unbalanced latch) | RLL | — | — (Logix-specific) | OTL output is never unlatched by a corresponding OTU | `OTL(MyBit)` but no `OTU(MyBit)` in any rung | M |
+| ER015 | MCR zone without matching BST/BND | RLL | — | — (Logix-specific) | MCR instruction without beginning/end branch markers | `MCR()` alone with no matching MCR | L |
+| ER016 | FAL/FSC with incomplete operands | RLL | — | — (Logix-specific) | File instruction missing required mode/control/destination | `FAL()` with 0 args | M |
+
+#### RLL-Specific Warnings (WR001+)
+
+| l5x-lint | Name | Format | OSS Source(s) | OSS Code(s) | Description | L5X Test Example | Prio |
+|----------|------|--------|---------------|-------------|-------------|-------------------|------|
+| WR002 | Unreachable rung (AFI first) | RLL | — | — (Logix-specific) | Rung begins with AFI, all following rungs are dead too | `AFI()` as first instruction | H |
+| WR003 | Output never driven | RLL | truST | truST W003 (varies) | Tag used only in XIC/XIO, never in OTE/OTL/OTU | `XIC(MyTag)` in 10 rungs, no `OTE(MyTag)` | H |
+| WR004 | Timer PRE never set (zero) | RLL | truST | truST W003 (varies) | Timer preset is 0, so timer will never time out | `TON(MyTimer,?,0)` | H |
+| WR005 | NOP instruction present | RLL | — | — (Logix-specific) | NOP instructions are no-ops that indicate dead code | `NOP()` in rung | L |
+| WR006 | SUS instruction present in production | RLL | — | — (Logix-specific) | SUS instruction is a debug breakpoint, should not be in production | `SUS(MyStr)` | L |
+| WR007 | Rung with inputs only, no output | RLL | — | — (Logix-specific) | Rung has XIC/XIO but no OTE/OTL/OTU or other output | `XIC(A)XIO(B)` — no output | L |
+| WR008 | COP/CPS overlapping source/dest | RLL | — | — (Logix-specific) | Copy instruction where source and destination overlap | `COP(MyArr[0],MyArr[1],10)` | L |
+| WR009 | GSV/SSV invalid object class | RLL | — | — (Logix-specific) | GSV/SSV references unknown object class | `GSV(InvalidClass,??,?)` | M |
+
+#### ST-Specific Errors (ES001+)
+
+| l5x-lint | Name | Format | OSS Source(s) | OSS Code(s) | Description | L5X Test Example | Prio |
+|----------|------|--------|---------------|-------------|-------------|-------------------|------|
+| ES001 | Invalid expression operation | ST | truST, RuSTy | truST E202, RuSTy E066 | Operation not valid for the operand types (e.g., string + DINT) | `result := "abc" + 5;` | M |
+| ES002 | CASE with duplicate value | ST | RuSTy | RuSTy E054 | CASE statement has two branches with same selector value | `CASE x OF 1: a:=1; 1: a:=2; END_CASE` | M |
+| ES003 | FOR loop with out-of-range bounds | ST | RuSTy | RuSTy E065/E097 | FOR loop start/end/repeat values outside valid range | `FOR i:=0 TO 9999999999 DO ... END_FOR` | L |
+| ES004 | Invalid escape sequence in string | ST | RuSTy | RuSTy E124 | String literal contains unrecognized escape sequence | `s := "hello\xJ";` | L |
+| ES005 | Non-constant array boundary | ST | RuSTy | RuSTy E117 | Array declaration uses non-constant expression for bound | `ARRAY[n..m]` where n,m are variables | L |
+
+#### ST-Specific Warnings (WS001+)
+
+| l5x-lint | Name | Format | OSS Source(s) | OSS Code(s) | Description | L5X Test Example | Prio |
+|----------|------|--------|---------------|-------------|-------------|-------------------|------|
+| WS101 | Floating-point equality comparison | ST | truST | truST W013 | REAL/LREAL values compared with = or <> | `IF r = 0.3 THEN` | H |
+| WS102 | Division/modulo by literal zero | ST | truST | truST W014, RuSTy E123 | Division or MOD by literal zero | `result := x / 0;` | H |
+| WS104 | Non-BOOL condition in IF/WHILE | ST | RuSTy | RuSTy E094/E096 | IF/WHILE condition is DINT/REAL, not BOOL | `IF myDINT THEN` | L |
+| WS105 | Implicit downcast in assignment | ST | RuSTy, truST | RuSTy E067, truST W005 | Assigning wider type to narrower type truncates | `narrowDINT := wideLINT` | M |
+| WS107 | Missing ELSE clause | ST | truST | truST W004 | IF or CASE without ELSE branch | `IF x > 0 THEN y:=1; END_IF` | L |
+| WS108 | Statement with no effect | ST | RuSTy | RuSTy E023/E060 | Expression statement that does nothing (just a value) | `x + 1;` alone as statement | L |
+| WS109 | Assignment to FOR loop variable | ST | RuSTy | RuSTy E065 | Modifying loop counter inside FOR loop body | `FOR i:=1 TO 10 DO i:=i+1; END_FOR` | L |
+| WS110 | Return/EXIT followed by dead code | ST | truST | truST W003 | Statements after RETURN or EXIT are unreachable | `RETURN; x := 1;` | M |
+| WS111 | Literal overflow for target type | ST | RuSTy | RuSTy E053/E039 | Integer/real literal exceeds range of destination type | `smallSINT := 999;` (SINT max 127) | L |
+| WS112 | Empty CASE branch body | ST | RuSTy | RuSTy E090 | CASE branch contains no statements | `CASE x OF 1: ; 2: y:=1; END_CASE` | L |
+| WS113 | AND_THEN/OR_ELSE with non-BOOL operand | ST | RuSTy | RuSTy E133 | Short-circuit operator used with non-BOOL type | `x AND_THEN y` where x is DINT | L |
+| WS114 | Implicit cast in mixed-type expression | ST | RuSTy, truST | RuSTy E067, truST W005 | Mixed numeric types in expression (DINT+REAL) get implicit cast | `result := dintVal + realVal;` | L |
+
+---
+
+### 4.5 Non-Applicable OSS Code Index
+
+Codes from OSS repos that do not map to Logix L5X/L5K, grouped by reason.
+Based on Rockwell documentation: 1756-PM018I (IEC 61131-3 Compliance, March 2022)
+and 1756-PM007 (Structured Text Programming Manual).
+These are listed here for completeness and to prevent repeated analysis.
+
+**Note on reference/by-reference semantics:** Logix InOut AOI parameters are
+passed by reference (per 1756-PM018I §42.10a). There is no standalone
+`REFERENCE TO <type>` declaration or `REF=` assignment syntax, but RuSTy
+checks around by-reference assignment (`E042`, `E049`) have partial analogues
+in InOut parameter usage. They are noted below with "🟡 partial" instead of N/A
+where applicable.
+
+#### truST Platform — Non-Applicable
+
+| Code(s) | Name | Category | Reason N/A in Logix |
+|---------|------|----------|---------------------|
+| E001-E003 | UnexpectedToken, MissingToken, UnclosedBlock | Syntax | Handled by Lark parser at parse-failure boundary; reported as STParseError/RLLParseError, not user-facing diagnostic codes |
+| E102 | UndefinedType | Type | Merged into EC015 (invalid/undeclared data type) |
+| E103 | UndefinedFunction | Name resolution | Logix AOIs don't have return values; merged into EC003 (missing AOI definition) |
+| E105 | CannotResolve | Name | Merged into EC001 (undefined tag) |
+| E106 | InvalidIdentifier | Name | Handled by Lark parser rejection of invalid identifiers |
+| E202 | InvalidOperation | Type | Niche — non-BITWISE operation on BOOL, etc. Low value for Logix |
+| E203 | IncompatibleAssignment | Type | Merged into EC002 (type mismatch) |
+| E205 | InvalidArgumentType | Type | Merged into EC002 (type mismatch) |
+| E206 | MissingReturn | Control flow | Functions don't exist in Logix ST; AOIs can't have return values |
+| E207 | InvalidReturnType | Control flow | Same as above — no function return types |
+| E301 | InvalidAssignmentTarget | Control flow | Merged into EC017 (constant modification) |
+| E304 | OutOfRange | Type | Merged into EC006 (array bounds) |
+| E306-E307 | InvalidTaskConfig, UnknownTask | Configuration | Logix has no ST-level task configuration in L5X |
+| W002 | UnusedParameter | Declaration | Low value — AOI parameters are often template-wired |
+| W005 | ImplicitConversion | Type | Merged into WS105 (implicit downcast) |
+| W007 | Deprecated | Style | Reserved for future WC108 |
+| W010 | NondeterministicTimeDate | Environment | Edge case — GET_DATE_TIME() etc. not common in Logix ST |
+| W011 | NondeterministicIo | Environment | I/O mapping is external to logic |
+| W012 | SharedGlobalTaskHazard | Concurrency | Logix has no ST-level task model |
+| I001 | Simplification | Style | Hint — merges into WS108 (statement with no effect) |
+| I002 | StyleSuggestion | Style | Hint — style preferences out of scope for v1 |
+
+#### RuSTy — Non-Applicable
+
+| Code(s) | Name | Category | Reason N/A in Logix |
+|---------|------|----------|---------------------|
+| E001 | General Error | Catch-all | Internal — not a user-facing check |
+| E002 | General IO Error | IO | Pipeline-level failure, not a diagnostic check |
+| E003 | Parameter Error | CLI | Not about L5X content |
+| E005 | Generic LLVM Error | Codegen | LLVM codegen doesn't exist in l5x-lint |
+| E006-E007, E009-E012, E026-E030 | Parser errors (missing/ unexpected tokens, mismatched parens, invalid literals) | Lexer/Parser | Handled by Lark at parse boundary; reported as pipeline errors, not diagnostics |
+| E013-E016 | Style warnings (underscores, parens type, pointer non-standard, return default) | Style | Low-value IEC style preferences; pointer warnings N/A |
+| E017-E019, E020, E025 | Class restrictions (implementations, IN_OUT, return type) | POU/Class | Logix has no ST class concept |
+| E022 | Missing action container | POU | Logix ST has no action containers |
+| E024 | Invalid pragma location | Preprocessor | Logix ST has no pragmas |
+| E033-E035 | Constant resolution errors | Constants | Merged into EC014 |
+| E038 | Missing type | Type | Merged into EC015 |
+| E040 | Non-standard enum variant | Enum | Logix has no IEC enums (uses UDTs instead) |
+| E041 | Invalid variable initializer | Declaration | Merged into EC012 / type mismatch |
+| E042 | Assignment to reference | Reference | 🟡 Partial — Logix InOut parameters ARE by-reference (1756-PM018I §42). No standalone REFERENCE TO type, but AOI InOut assignment checks could adapt this |
+| E044-E047 | VLA (variable-length array) errors | VLA | Logix doesn't support VLAs |
+| E049 | Illegal reference access | Reference | 🟡 Partial — same as E042, by-reference InOut means illegal access checks could apply to InOut parameters |
+| E050 | Expression not assignable | Assignment | Merged into ES001 |
+| E055-E059 | Direct access errors (%I/%Q) | Hardware | Logix addresses differently; %-notation not used in ST |
+| E060 | Direct access with % | Info | Same as above — N/A |
+| E061-E063 | Expected literal, Invalid/Unknown Nature | Pragma | Logix ST has no Nature pragmas |
+| E064 | Unresolved generic | Generic | Logix has no generics |
+| E068-E070 | Pointer/reference deref, address-of | Pointer | 🟡 Partial — InOut passes by reference (no explicit dereference syntax). ADR/REF operators not in Logix ST. Deref of InOut params may have analogue |
+| E071-E089 | Codegen/LLVM errors | Codegen | LLVM codegen N/A |
+| E091 | *not described* | — | Not clearly applicable |
+| E092 | Info-level diagnostic | Info | Low priority |
+| E093 | Warning-level diagnostic | Warning | Not clearly applicable |
+| E095 | Action call without () | Call | Logix ST action calls N/A |
+| E098 | Invalid REF= assignment | Reference | N/A — Logix has no REF= assignment syntax. InOut by-reference is configured via the AOI parameter editor, not in ST syntax |
+| E099-E109 | VAR_CONFIG / template variable / hardware binding | Hardware config | Logix handles hardware binding in I/O configuration, not ST |
+| E110-E114, E118 | Interface implementation errors | Interface | Logix has no interface concept in ST |
+| E115-E116 | Property in unsupported POU | Property | Logix has no ST properties |
+| E119-E120 | THIS/SUPER keyword | Keyword | Logix ST doesn't support THIS/SUPER |
+| E122 | Invalid enum base type | Enum | Logix has no IEC enums |
+| E124 | Invalid escape sequence | Literal | Merged into ES004 |
+| E125-E126, E129 | Interface polymorphism | Interface | Logix has no interface concept |
+| E128 | Invalid nested property assignment | Property | Logix has no ST properties |
+| E130 | Array size exceeds limit | Array | Merged into EC006 |
+| E131 | Positional + named arg collision | Call | Low value — Logix doesn't use named arguments in ST calls |
+| E132 | Mixing implicit/explicit call params | Call | Low value |
+| E134 | Invalid --hwmap-file argument | CLI | CLI validation, not L5X content |
+| E135 | => on non-output parameter | Call | 🟡 Partial — Logix AOI calls use positional args, but `=>` (formal call) IS supported for AOIs. Low value |
+| E136 | Incomplete hardware address | Hardware | N/A — hardware binding is not ST-level |
+| E137 | FB-level VAR_TEMP from METHOD | POU | Logix has no method concept |
+| E139 | Linker invocation failed | Build | Build tooling, not L5X content |
+| E140 | `:=` on output parameter | Call | 🟡 Partial — Logix AOI calls support `:=` for output parameters in formal call syntax. Low value for RLL (positional) but applicable to ST AOI calls |
+
+#### Logix-Specific Limitations Not in Any OSS Repo
+
+These are real Logix ST constraints documented in 1756-PM007 and 1756-PM018I
+that no OSS repo checks (because they target Codesys/TwinCAT, where these
+limits don't exist):
+
+| Constraint | Documented In | Description | Check Candidate |
+|------------|--------------|-------------|-----------------|
+| No REPEAT loop | 1756-PM007 Ch.1 | `REPEAT ... UNTIL ... END_REPEAT` not available | WS115 |
+| No GOTO statement | 1756-PM007 Ch.1 | `GOTO` not available in Logix ST | WS116 |
+| No IEC ENUM types | 1756-PM018I §72 | CASE selectors must be integer literals, not enum names | — |
+| OR/XOR limit | TechNote 64904 | Max 6 OR/XOR operators per expression | WS117 |
+| CASE constant restriction | 1756-PM001 | CASE selectors cannot be constants or tags, only immediate integers | WS118 |
+| `SIN`/`COS`/`SORT` etc. are instructions not functions | 1756-PM007 | Math functions use instruction syntax, not `FUNC(args)` | — |
+| Non-retentive assignment `S:=` | 1756-PM007 | Tag is reset to 0 on entering Run mode or SFC step transition | — |
+
+#### IronPLC — Non-Applicable
+
+| Code(s) | Name | Category | Reason N/A in Logix |
+|---------|------|----------|---------------------|
+| P0001-P0007 | Syntax/XML errors (OpenComment, SyntaxError, UnexpectedToken, CStyleComment, UnexpectedElement, XmlMalformed, XmlSchemaViolation) | Lexer/XML | Lark handles syntax; schema validation is separate; C-style comments allowed in Logix |
+| P0008 | SfcMissingInitialStep | SFC | SFC out of scope for v1 |
+| P0009 | TwinCatMalformed | TwinCAT | Logix uses L5X, not TwinCAT XML |
+| P0010 | Std2013Feature | Standard | IEC 2013 features not relevant to Logix |
+| P0011 | EmptyVarBlock | Declaration | Low value — merged into general empty POU check |
+| P2002-P2006 | Subrange/Enum errors (subrange, enum duplicate, enum undeclared, enum recursive, enum value not defined) | Type | Logix uses UDTs, not IEC subranges/enums |
+| P2009-P2012 | Parent enum / incomplete type / wrong type / cycle errors | Type | Logix UDT model is different |
+| P2014-P2036 | Type declaration errors (duplicate member types, init value types, string length, array of arrays, etc.) | Type | Logix-specific type handling is different; merged into EC002/EC006 |
+| P4002-P4011, P4013-P4014 | Scope/semantic errors (various POUs, duplicate POU, etc.) | Scope | Merged into EC010/EC007 |
+| P4016-P4020 | Various semantic checks | Semantic | Logix doesn't have VAR RETAIN / VAR CONSTANT in the same way |
+| P4022-P4033 | Reference/array/scope errors | Various | Overlaps with existing cross-format codes |
+| P6001-P6008 | I/O / filesystem errors | IO | Not L5X content |
+| P8001 | MCP input validation | CLI | Tooling, not diagnostics |
+| P9001 | UnsupportedStdLibType | Library | Merged into EC015 |
+| P9003 | XmlBodyTypeNotSupported | Format | Merged into EC019 (unsupported body type) |
+| P9998-P9999 | Internal/NotImplemented | Internal | Not user-facing |
+
+---
+
+### 4.6 Implementation Priority
+
+| Round | Code | Check | Effort | Impact | Source |
+|-------|------|-------|--------|--------|--------|
+| 1 | — | Prefix scheme definition + migration | Medium | Medium | — |
+| 2a | EC011 | Reserved name collision | Small | High | RuSTy E138, IronPLC P4015 |
+| 2b | WS101 | Float equality | Small | Medium | truST W013 |
+| 2c | WS102 | Div by literal zero | Small | Medium | truST W014, RuSTy E123 |
+| 2d | WC103 | Cyclomatic complexity | Small | Medium | truST W008 |
+| 2e | WS105 | Implicit downcast | Medium | Medium | RuSTy E067, truST W005 |
+| 2f | WS107 | Missing ELSE | Small | Low | truST W004 |
+| 2g | WS104 | Non-BOOL condition | Small | Low | RuSTy E094/E096 |
+| 2h | EC012 | Array init count | Medium | Low | RuSTy E043/E127 |
+| 2i | WC106 | Unused POU | Medium | Medium | truST W009 |
+| 2j | ER013 | Invalid JMP target | Small | Medium | RuSTy E018 |
+| 2k | ER014 | OTL without OTU | Medium | Medium | Logix-specific |
+| 2l | EC015 | Invalid/undeclared data type | Small | High | RuSTy E052, IronPLC P2008 |
+| 2m | WS110 | Dead code after RETURN | Small | Low-medium | truST W003 |
+| 2n | EC017 | Constant modification | Small | Medium | truST E302, RuSTy E036 |
+| 2o | EC013 | Duplicate JMP label | Small | Medium | RuSTy E018 |
+| 2p | WR006 | SUS instruction in production | Small | Low | Logix-specific |
+| 2q | WR005 | NOP instruction present | Tiny | Low | Logix-specific |
+| 2r | WR007 | Rung with inputs only | Small | Low | Logix-specific |
+| 2s | WS108 | Statement with no effect | Small | Low | RuSTy E023 |
+| 2t | WS113 | AND_THEN/OR_ELSE with non-BOOL | Small | Low | RuSTy E133 |
+| 2u | WS109 | FOR loop var assignment | Small | Low | RuSTy E065 |
+| 2v | ES001 | Invalid expression operation | Medium | Medium | truST E202, RuSTy E066 |
+| 2w | ES002 | Duplicate CASE value | Small | Medium | RuSTy E054 |
+| — | 2x–2z | Remaining candidates from §4.4 tables | various | — | — |
+| 3a | — | Config system | Medium | High | truST + RuSTy |
+| 3b | — | Related info + hints | Medium | High | truST |
+| 3c | — | Sub-checker delegation | Large | Medium | truST |
+| 3d | — | Dialect system | Large | High | IronPLC |
 
 ---
 
@@ -1122,21 +1369,4 @@ l5x_lint/
 | **`PLC-lang/rusty`** | **Array validation patterns + condition type checking + reserved keyword validation + diagnostic severity config JSON + region-based error recovery** |
 | **`ironplc/ironplc`** | **Dialect system + multi-source format dispatch + built-in FB registry + reserved name collision (P4015) + problem code CSV registry + token-level pre-validation** |
 
----
 
-## Phase 3 Implementation Priority
-
-| Feature | Effort | Impact | Source |
-|---------|--------|--------|--------|
-| **Diagnostic config (P3.1)** | Medium | High — enables agent tuning, CI gating by severity | truST + RuSTy |
-| **Numeric hazard checks (W101/W102)** | Small | Medium — catches runtime faults statically | truST |
-| **Complexity warning (W103)** | Small | Medium — guides routine factoring | truST |
-| **Reserved name collision (E011)** | Small | High — prevents subtle shadowing bugs | IronPLC |
-| **Implicit downcast (W105)** | Medium | Medium — catches truncation bugs | RuSTy |
-| **Missing ELSE (W107)** | Small | Low-medium — style/defensive | truST |
-| **Condition type check (W104)** | Small | Low — edge case in Logix | RuSTy |
-| **Array init count (E012)** | Medium | Low-medium — array init is rare in Logix | RuSTy |
-| **Unused POU (W106)** | Medium | Medium — useful for dead code | truST |
-| **Related info + hints (P3.3)** | Medium | High — better agent diagnostics | truST |
-| **Dialect system (P3.5)** | Large | High — enables non-Rockwell use | IronPLC |
-| **Sub-checker delegation (P3.4)** | Large | Medium — pays off at 25+ checks | truST |

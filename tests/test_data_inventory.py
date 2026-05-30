@@ -10,8 +10,8 @@ def test_valid_files_exist():
 
 def test_invalid_files_exist():
     files = list(INVALID_DIR.glob("*.L5X"))
-    expected = {"E001", "E002", "E003", "E004", "E005", "E006", "E007", "E009", "E010",
-                "W001", "W002", "W003", "W004", "W005"}
+    expected = {"EC001", "EC002", "EC003", "EC004", "EC005", "EC006",
+                "EC007", "ER009", "EC010", "WC001", "WR002", "WR003", "WR004", "WC005"}
     found = {f.stem.split("_")[0] for f in files}
     missing = expected - found
     assert not missing, f"Missing test files for codes: {missing}"

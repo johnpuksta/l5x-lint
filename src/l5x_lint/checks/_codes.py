@@ -16,8 +16,8 @@ class LintErrorBase:
 
 
 @dataclass
-class E001(LintErrorBase):
-    code: ClassVar[str] = "E001"
+class EC001(LintErrorBase):
+    code: ClassVar[str] = "EC001"
     severity: ClassVar[str] = "error"
     message_template: ClassVar[str] = "Undefined tag reference '{name}'"
     description: ClassVar[str] = (
@@ -28,8 +28,8 @@ class E001(LintErrorBase):
 
 
 @dataclass
-class E002(LintErrorBase):
-    code: ClassVar[str] = "E002"
+class EC002(LintErrorBase):
+    code: ClassVar[str] = "EC002"
     severity: ClassVar[str] = "error"
     message_template: ClassVar[str] = (
         "Type mismatch: expected '{expected}', got '{actual}'"
@@ -43,8 +43,8 @@ class E002(LintErrorBase):
 
 
 @dataclass
-class E003(LintErrorBase):
-    code: ClassVar[str] = "E003"
+class EC003(LintErrorBase):
+    code: ClassVar[str] = "EC003"
     severity: ClassVar[str] = "error"
     message_template: ClassVar[str] = "Missing AOI definition '{name}'"
     description: ClassVar[str] = (
@@ -55,8 +55,8 @@ class E003(LintErrorBase):
 
 
 @dataclass
-class E004(LintErrorBase):
-    code: ClassVar[str] = "E004"
+class EC004(LintErrorBase):
+    code: ClassVar[str] = "EC004"
     severity: ClassVar[str] = "error"
     message_template: ClassVar[str] = (
         "Invalid JSR target: routine '{routine}' not found"
@@ -69,8 +69,8 @@ class E004(LintErrorBase):
 
 
 @dataclass
-class E005(LintErrorBase):
-    code: ClassVar[str] = "E005"
+class EC005(LintErrorBase):
+    code: ClassVar[str] = "EC005"
     severity: ClassVar[str] = "error"
     message_template: ClassVar[str] = (
         "Invalid UDT member access: '{path}.{member}' does not exist"
@@ -84,8 +84,8 @@ class E005(LintErrorBase):
 
 
 @dataclass
-class E006(LintErrorBase):
-    code: ClassVar[str] = "E006"
+class EC006(LintErrorBase):
+    code: ClassVar[str] = "EC006"
     severity: ClassVar[str] = "error"
     message_template: ClassVar[str] = (
         "Array index out of bounds: '{name}[{index}]' exceeds size {size}"
@@ -100,8 +100,8 @@ class E006(LintErrorBase):
 
 
 @dataclass
-class E007(LintErrorBase):
-    code: ClassVar[str] = "E007"
+class EC007(LintErrorBase):
+    code: ClassVar[str] = "EC007"
     severity: ClassVar[str] = "error"
     message_template: ClassVar[str] = "Duplicate tag name '{name}' in scope '{scope}'"
     description: ClassVar[str] = (
@@ -113,8 +113,8 @@ class E007(LintErrorBase):
 
 
 @dataclass
-class E008(LintErrorBase):
-    code: ClassVar[str] = "E008"
+class EC008(LintErrorBase):
+    code: ClassVar[str] = "EC008"
     severity: ClassVar[str] = "error"
     message_template: ClassVar[str] = "AOI circular dependency: {chain}"
     description: ClassVar[str] = (
@@ -129,8 +129,8 @@ class E008(LintErrorBase):
 
 
 @dataclass
-class E009(LintErrorBase):
-    code: ClassVar[str] = "E009"
+class ER009(LintErrorBase):
+    code: ClassVar[str] = "ER009"
     severity: ClassVar[str] = "error"
     message_template: ClassVar[str] = (
         "Wrong operand count for {opcode}: expected {expected}, got {actual}"
@@ -145,8 +145,8 @@ class E009(LintErrorBase):
 
 
 @dataclass
-class E010(LintErrorBase):
-    code: ClassVar[str] = "E010"
+class EC010(LintErrorBase):
+    code: ClassVar[str] = "EC010"
     severity: ClassVar[str] = "error"
     message_template: ClassVar[str] = (
         "Cross-scope tag violation: '{name}' accessed from "
@@ -162,8 +162,8 @@ class E010(LintErrorBase):
 
 
 @dataclass
-class W001(LintErrorBase):
-    code: ClassVar[str] = "W001"
+class WC001(LintErrorBase):
+    code: ClassVar[str] = "WC001"
     severity: ClassVar[str] = "warning"
     message_template: ClassVar[str] = (
         "Unused tag '{name}' declared but never referenced"
@@ -176,8 +176,8 @@ class W001(LintErrorBase):
 
 
 @dataclass
-class W002(LintErrorBase):
-    code: ClassVar[str] = "W002"
+class WR002(LintErrorBase):
+    code: ClassVar[str] = "WR002"
     severity: ClassVar[str] = "warning"
     message_template: ClassVar[str] = (
         "Unreachable rung {rung}: first instruction is AFI"
@@ -191,8 +191,8 @@ class W002(LintErrorBase):
 
 
 @dataclass
-class W003(LintErrorBase):
-    code: ClassVar[str] = "W003"
+class WR003(LintErrorBase):
+    code: ClassVar[str] = "WR003"
     severity: ClassVar[str] = "warning"
     message_template: ClassVar[str] = (
         "Output '{name}' is never driven (used in input only)"
@@ -206,8 +206,8 @@ class W003(LintErrorBase):
 
 
 @dataclass
-class W004(LintErrorBase):
-    code: ClassVar[str] = "W004"
+class WR004(LintErrorBase):
+    code: ClassVar[str] = "WR004"
     severity: ClassVar[str] = "warning"
     message_template: ClassVar[str] = "Timer '{name}' PRE is never set (still 0)"
     description: ClassVar[str] = (
@@ -218,8 +218,8 @@ class W004(LintErrorBase):
 
 
 @dataclass
-class W005(LintErrorBase):
-    code: ClassVar[str] = "W005"
+class WC005(LintErrorBase):
+    code: ClassVar[str] = "WC005"
     severity: ClassVar[str] = "warning"
     message_template: ClassVar[str] = "Tag '{name}' is shadowed by '{hidden_by}'"
     description: ClassVar[str] = (
@@ -232,7 +232,7 @@ class W005(LintErrorBase):
 
 
 LintError = (
-    E001 | E002 | E003 | E004 | E005
-    | E006 | E007 | E008 | E009 | E010
-    | W001 | W002 | W003 | W004 | W005
+    EC001 | EC002 | EC003 | EC004 | EC005
+    | EC006 | EC007 | EC008 | ER009 | EC010
+    | WC001 | WR002 | WR003 | WR004 | WC005
 )
