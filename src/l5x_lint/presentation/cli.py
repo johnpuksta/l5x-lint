@@ -9,6 +9,7 @@ import l5x_lint.checks  # noqa: F401 — registers all check functions
 from l5x_lint.domain.diagnostics import Diagnostic
 from l5x_lint.infrastructure.adapter import parse_l5x
 from l5x_lint.pipeline.analyze import analyze
+from l5x_lint.pipeline.config import LintConfig, apply_severity_overrides, apply_warning_toggles
 
 
 def _diagnostic_to_dict(d: Diagnostic) -> dict:
@@ -27,7 +28,17 @@ def _diagnostic_to_dict(d: Diagnostic) -> dict:
     }
 
 
-def validate(path: Path, json_output: bool = False) -> int:
+def _build_config(args: argparse.Namespace) -> LintConfig | None:
+    if not any([args.rule_pack, args.enable_warning, args.disable_warning, args.severity_override]):
+        return None
+    config = LintConfig(rule_pack=args.rule_pack or "none")
+    config.apply_rule_pack()
+    apply_warning_toggles(config, disable=args.disable_warning, enable=args.enable_warning)
+    apply_severity_overrides(config, args.severity_override)
+    return config
+
+
+def validate(path: Path, json_output: bool = False, config: LintConfig | None = None) -> int:
     result = parse_l5x(path)
     match result:
         case Failure(err):
@@ -36,7 +47,7 @@ def validate(path: Path, json_output: bool = False) -> int:
         case Success(project):
             pass
 
-    analysis = analyze(project.controller)
+    analysis = analyze(project.controller, config=config)
     match analysis:
         case Failure(err):
             print(f"Analysis error: {err}", file=sys.stderr)
@@ -80,9 +91,20 @@ def main() -> None:
     val = sub.add_parser("validate", help="Validate an L5X file")
     val.add_argument("file", type=Path, help="Path to .L5X file")
     val.add_argument("--json", action="store_true", help="JSON output")
+    val.add_argument("--rule-pack", choices=["none", "safety", "rockwell", "iec-61131-3"],
+                     default="none", help="Apply diagnostic rule pack preset")
+    val.add_argument("--enable-warning", action="append", choices=["numeric", "complexity"],
+                     help="Enable a warning category that is off by default")
+    val.add_argument("--disable-warning", action="append",
+                     choices=["unused", "unreachable", "output", "timer", "shadowed",
+                              "numeric", "complexity", "conversion", "missing-else"],
+                     help="Disable a warning category")
+    val.add_argument("--severity-override", action="append",
+                     help="Override severity: code=severity (e.g. WS101=error, WR004=off)")
 
     args = parser.parse_args()
     if args.command == "validate":
-        sys.exit(validate(args.file, json_output=args.json))
+        config = _build_config(args)
+        sys.exit(validate(args.file, json_output=args.json, config=config))
     parser.print_help()
     sys.exit(1)

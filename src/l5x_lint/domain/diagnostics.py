@@ -4,6 +4,12 @@ from l5x_lint.domain.models import Location
 
 
 @dataclass
+class RelatedInfo:
+    location: Location
+    message: str
+
+
+@dataclass
 class Diagnostic:
     code: str
     severity: str
@@ -11,6 +17,8 @@ class Diagnostic:
     message: str
     hint: str | None = None
     fix_suggestion: str | None = None
+    related: list[RelatedInfo] = field(default_factory=list)
+    iec_reference: str | None = None
 
 
 @dataclass

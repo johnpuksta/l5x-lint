@@ -8,15 +8,15 @@ Every module in `src/l5x_lint/` has a corresponding test file at the same relati
 src/l5x_lint/domain/models.py             →  tests/domain/test_models.py
 src/l5x_lint/domain/diagnostics.py        →  tests/domain/test_diagnostics.py
 src/l5x_lint/domain/errors.py             →  tests/domain/test_errors.py  (internal railway errors)
-src/l5x_lint/checks/_codes.py             →  tests/checks/cross/test_codes.py  (diagnostic codes)
+src/l5x_lint/checks/_codes.py             →  tests/checks/cross/test_codes.py  (all diagnostic codes)
 src/l5x_lint/checks/_types.py             →  (tested via checks that use it)
-src/l5x_lint/checks/cross/ec0{1..12}_*.py →  tests/checks/cross/test_ec0{1..12}_*.py  (12 cross checks)
-src/l5x_lint/checks/cross/wc00{1,5}_*.py  →  tests/checks/cross/test_wc00{1,5}_*.py
-src/l5x_lint/checks/cross/wc103_*.py      →  tests/checks/cross/test_wc103_*.py
-src/l5x_lint/checks/cross/wc106_*.py      →  tests/checks/cross/test_wc106_*.py
-src/l5x_lint/checks/cross/ws10{1,2,5}_*.py→  tests/checks/cross/test_ws10{1,2,5}_*.py
-src/l5x_lint/checks/rll/er009_*.py        →  tests/checks/rll/test_er009_*.py  (4 rll checks)
-src/l5x_lint/checks/st/ws10{4,7}_*.py     →  tests/checks/st/test_ws10{4,7}_*.py  (2 st checks)
+src/l5x_lint/checks/cross/ec*.py          →  tests/checks/cross/test_ec*.py  (15 cross error checks)
+src/l5x_lint/checks/cross/wc*.py          →  tests/checks/cross/test_wc*.py  (4 cross warning checks)
+src/l5x_lint/checks/cross/ws*.py          →  tests/checks/cross/test_ws*.py  (3 cross warning checks WS)
+src/l5x_lint/checks/rll/er*.py            →  tests/checks/rll/test_er*.py  (3 rll error checks)
+src/l5x_lint/checks/rll/wr*.py            →  tests/checks/rll/test_wr*.py  (6 rll warning checks)
+src/l5x_lint/checks/st/ws*.py             →  tests/checks/st/test_ws*.py  (6 st warning checks)
+src/l5x_lint/checks/st/es*.py             →  tests/checks/st/test_es*.py  (2 st error checks)
 ```
 
 # Toolchain

@@ -9,6 +9,7 @@ import l5x_lint.checks  # noqa: F401 — registers all check functions
 from l5x_lint.domain.diagnostics import Diagnostic
 from l5x_lint.infrastructure.adapter import parse_l5x
 from l5x_lint.pipeline.analyze import analyze
+from l5x_lint.pipeline.config import LintConfig, apply_severity_overrides, apply_warning_toggles
 
 try:
     from mcp.server.fastmcp import FastMCP
@@ -30,10 +31,12 @@ def _diagnostic_to_dict(d: Diagnostic) -> dict:
         "message": d.message,
         "hint": d.hint,
         "fix_suggestion": d.fix_suggestion,
+        "related": getattr(d, "related", None),
+        "iec_reference": getattr(d, "iec_reference", None),
     }
 
 
-def _validate(path: Path) -> str:
+def _validate(path: Path, config: LintConfig | None = None) -> str:
     result = parse_l5x(path)
     match result:
         case Failure(err):
@@ -41,7 +44,7 @@ def _validate(path: Path) -> str:
         case Success(project):
             pass
 
-    analysis = analyze(project.controller)
+    analysis = analyze(project.controller, config=config)
     match analysis:
         case Failure(err):
             return json.dumps({"error": f"Analysis error: {err}"})
@@ -56,6 +59,10 @@ def _validate(path: Path) -> str:
     }, indent=2)
 
 
+def _split(s: str | None) -> list[str] | None:
+    return s.split(",") if s else None
+
+
 def create_server() -> FastMCP:
     server = FastMCP(
         "l5x-lint",
@@ -66,7 +73,24 @@ def create_server() -> FastMCP:
         name="validate_l5x",
         description="Validate an L5X PLC program file and return diagnostics as JSON.",
     )
-    def validate_l5x(file_path: str) -> str:
+    def validate_l5x(
+        file_path: str,
+        rule_pack: str = "none",
+        enable_warnings: str | None = None,
+        disable_warnings: str | None = None,
+        severity_overrides: str | None = None,
+    ) -> str:
+        config = LintConfig(rule_pack=rule_pack)
+        config.apply_rule_pack()
+        apply_warning_toggles(config, disable=_split(disable_warnings), enable=_split(enable_warnings))
+        apply_severity_overrides(config, _split(severity_overrides))
+        return _validate(Path(file_path), config=config)
+
+    @server.tool(
+        name="validate_l5x_default",
+        description="Validate an L5X file with default settings (all checks enabled).",
+    )
+    def validate_l5x_default(file_path: str) -> str:
         return _validate(Path(file_path))
 
     return server
