@@ -731,37 +731,36 @@ See Reference Material for code examples.
 
 **Priority checks (9):** ⚡ = type resolver  ✦ = domain model/parser extension  ⚠ = needs control flow awareness
 
-| Order | Code | Check | Est. Effort |
-|-------|------|-------|-------------|
-| 2a | EC011 | Reserved name collision | Small |
-| 2b | WS101 | Float equality ⚡ | Small |
-| 2c | WS102 | Div by literal zero | Small |
-| 2d | WC103 | Cyclomatic complexity | Small |
-| 2e | WS105 | Implicit downcast ⚡ | Medium |
-| 2f | WS107 | Missing ELSE | Small |
-| 2g | WS104 | Non-BOOL condition ⚡ | Small |
-| 2h | WC106 | Unused POU | Medium |
-| 2i | EC012 | Array init count ✦ | Medium |
+| Order | Code | Check | Est. Effort | Status |
+|-------|------|-------|-------------|--------|
+| 2a | EC011 | Reserved name collision | Small | ✅ Done |
+| 2b | WS101 | Float equality ⚡ | Small | ✅ Done |
+| 2c | WS102 | Div by literal zero | Small | ✅ Done |
+| 2d | WC103 | Cyclomatic complexity | Small | ✅ Done |
+| 2e | WS105 | Implicit downcast ⚡ | Medium | ✅ Done |
+| 2f | WS107 | Missing ELSE | Small | ✅ Done |
+| 2g | WS104 | Non-BOOL condition ⚡ | Small | ✅ Done |
+| 2h | WC106 | Unused POU | Medium | ✅ Done |
+| 2i | EC012 | Array init count ✦ | Medium | ✅ Done |
 
 **Extended candidates (25+):**
 
-| Order | Code | Check | Source | Est. Effort |
-|-------|------|-------|--------|-------------|
-| 2j | ER013 | Invalid JMP target | RuSTy E018 | Small |
-| 2k | ER014 | OTL without OTU | Logix-specific | Small |
-| 2l | EC015 | Invalid/undeclared data type | RuSTy E052 | Small |
-| 2m | WS110 | Dead code after RETURN ⚠ | truST W003 | Small |
-| 2n | EC017 | Constant modification | truST E302 | Small |
-| 2o | EC013 | Duplicate JMP label | RuSTy E018 | Small |
-| 2p | WR006 | SUS in production | Logix-specific | Tiny |
-| 2q | WR005 | NOP present | Logix-specific | Tiny |
-| 2r | WR007 | Inputs only, no output | Logix-specific | Small |
-| 2s | WS108 | Statement with no effect | RuSTy E023 | Small |
-| 2t | WS113 | AND_THEN/OR_ELSE non-BOOL | RuSTy E133 | Small |
-| 2u | WS109 | FOR loop var assign | RuSTy E065 | Small |
-| 2v | ES001 | Invalid expression op | truST E202 | Medium |
-| 2w | ES002 | Duplicate CASE value | RuSTy E054 | Small |
-| 2x–2z | Remaining from §4.4 tables | various | — |
+| Order | Code | Check | Source | Est. Effort | Status |
+|-------|------|-------|--------|-------------|--------|
+| 2j | ER013 | Invalid JMP target | RuSTy E018 | Small | ✅ Done |
+| 2k | ER014 | OTL without OTU | Logix-specific | Small | ✅ Done |
+| 2l | EC015 | Invalid/undeclared data type | RuSTy E052 | Small | ✅ Done |
+| 2m | WS110 | Dead code after RETURN ⚠ | truST W003 | Small | ✅ Done |
+| 2n | EC017 | Constant modification | truST E302 | Small | ✅ Done |
+| 2o | EC013 | Duplicate JMP label | RuSTy E018 | Small | ✅ Done |
+| 2p | WR006 | SUS in production | Logix-specific | Tiny | ✅ Done |
+| 2q | WR005 | NOP present | Logix-specific | Tiny | ✅ Done |
+| 2r | WR007 | Inputs only, no output | Logix-specific | Small | ✅ Done |
+| 2s | WS108 | Statement with no effect | RuSTy E023 | Small | ✅ Done |
+| 2t | WS113 | AND_THEN/OR_ELSE non-BOOL | RuSTy E133 | Small | ✅ Done |
+| 2u | WS109 | FOR loop var assign | RuSTy E065 | Small | ✅ Done |
+| 2v | ES001 | Invalid expression op | truST E202 | Medium | ✅ Done |
+| 2w | ES002 | Duplicate CASE value | RuSTy E054 | Small | ✅ Done |
 
 Template for each new check:
 
@@ -1078,22 +1077,22 @@ tests/checks/
 | E008 | EC008 | error | cross | AOI circular dependency | ✅ existing |
 | E009 | ER009 | error | RLL | Wrong operand count for opcode | ✅ existing |
 | E010 | EC010 | error | cross | Cross-scope tag violation | ✅ existing |
-| E011 | EC011 | error | cross | Reserved name collision | 🔷 proposed |
-| E012 | EC012 | error | cross | Array initializer element count mismatch | 🔷 proposed |
+| E011 | EC011 | error | cross | Reserved name collision | ✅ done |
+| E012 | EC012 | error | cross | Array initializer element count mismatch | ✅ done |
 | W001 | WC001 | warning | cross | Unused tag declared | ✅ existing |
 | W002 | WR002 | warning | RLL | Unreachable rung (AFI first) | ✅ existing |
 | W003 | WR003 | warning | RLL | Output never driven | ✅ existing |
 | W004 | WR004 | warning | RLL | Timer PRE never set | ✅ existing |
 | W005 | WC005 | warning | cross | Shadowed tag name | ✅ existing |
-| W101 | WS101 | warning | ST | Floating-point equality comparison | 🔷 proposed |
-| W102 | WS102 | warning | ST | Division or modulo by literal zero | 🔷 proposed |
-| W103 | WC103 | warning | cross | Cyclomatic complexity | 🔷 proposed |
-| W104 | WS104 | warning | ST | Non-BOOL IF/WHILE condition | 🔷 proposed |
-| W105 | WS105 | warning | ST | Implicit downcast in assignment | 🔷 proposed |
-| W106 | WC106 | warning | cross | Unused POU | 🔷 proposed |
-| W107 | WS107 | warning | ST | Missing ELSE clause on IF/CASE | 🔷 proposed |
-| — | ER013 | error | RLL | Invalid JMP target label | 🟡 candidate |
-| — | ER014 | error | RLL | OTL without OTU (unbalanced latch) | 🟡 candidate |
+| W101 | WS101 | warning | ST | Floating-point equality comparison | ✅ done |
+| W102 | WS102 | warning | ST | Division or modulo by literal zero | ✅ done |
+| W103 | WC103 | warning | cross | Cyclomatic complexity | ✅ done |
+| W104 | WS104 | warning | ST | Non-BOOL IF/WHILE condition | ✅ done |
+| W105 | WS105 | warning | ST | Implicit downcast in assignment | ✅ done |
+| W106 | WC106 | warning | cross | Unused POU | ✅ done |
+| W107 | WS107 | warning | ST | Missing ELSE clause on IF/CASE | ✅ done |
+| — | ER013 | error | RLL | Invalid JMP target label | ✅ done |
+| — | ER014 | error | RLL | OTL without OTU (unbalanced latch) | ✅ done |
 | — | WS121 | warning | ST | Statement with no effect | 🟡 candidate |
 | — | WC122 | warning | cross | Empty routine body | 🟡 candidate |
 | — | WS123 | warning | ST | Literal overflow for target type | 🟡 candidate |
@@ -1118,13 +1117,13 @@ Codes are grouped by applicability. `—` in the l5x-lint column means the check
 | EC008 | AOI circular dependency | cross | truST, RuSTy | truST E305, RuSTy E121 | AOIs form a recursive call chain | AOI_A→AOI_B→AOI_A | H |
 | EC009 | Wrong operand count | cross | truST, RuSTy, IronPLC | truST E204, RuSTy E032, IronPLC P4025 | Opcode/call given wrong number of operands/args | `XIC()` (0 of 1 operands) | H |
 | EC010 | Cross-scope tag violation | cross | truST, RuSTy | truST E101, RuSTy E028/E099 | Program-scoped tag accessed from different program | Program_A.MyTag in Program_B | H |
-| EC011 | Reserved name collision | cross | RuSTy, IronPLC | RuSTy E138, IronPLC P4015 | User-defined name shadows built-in instruction/type | AOI named `TON` | H |
-| EC012 | Array init element count | cross | RuSTy | RuSTy E043/E127 | Initializer element count ≠ array dimension | `ARRAY[1..5]:=[1,2,3]` | M |
-| EC013 | Duplicate label (JMP target) | cross | RuSTy | RuSTy E018 | Two JMP/LBL instructions share the same label | `LBL(Mark); LBL(Mark)` | M |
+| EC011 | Reserved name collision | cross | RuSTy, IronPLC | RuSTy E138, IronPLC P4015 | User-defined name shadows built-in instruction/type | AOI named `TON` | H | ✅ |
+| EC012 | Array init element count | cross | RuSTy | RuSTy E043/E127 | Initializer element count ≠ array dimension | `ARRAY[1..5]:=[1,2,3]` | M | ✅ |
+| EC013 | Duplicate label (JMP target) | cross | RuSTy | RuSTy E018 | Two JMP/LBL instructions share the same label | `LBL(Mark); LBL(Mark)` | M | ✅ |
 | EC014 | Unresolved constant expression | cross | RuSTy | RuSTy E033 | CONSTANT initializer references non-constant values | `CONST X : DINT := Y` where Y is not CONSTANT | L |
-| EC015 | Invalid/undeclared data type | cross | RuSTy, IronPLC | RuSTy E052, IronPLC P2008 | Tag declared with a type that doesn't exist | `MyTag : NonExistentType` | H |
-| EC016 | Invalid array range declaration | cross | RuSTy | RuSTy E008/E097 | Array range bounds are malformed or non-integer | `ARRAY[a..z]` with non-integer bounds | M |
-| EC017 | Modification of constant tag | cross | truST, RuSTy | truST E302, RuSTy E036 | Assignment to a CONSTANT-declared tag | `MyConst := 5` where MyConst is CONSTANT | M |
+| EC015 | Invalid/undeclared data type | cross | RuSTy, IronPLC | RuSTy E052, IronPLC P2008 | Tag declared with a type that doesn't exist | `MyTag : NonExistentType` | H | ✅ |
+| EC016 | Invalid array range declaration | cross | RuSTy | RuSTy E008/E097 | Array range bounds are malformed or non-integer | `ARRAY[a..z]` with non-integer bounds | M | |
+| EC017 | Modification of constant tag | cross | truST, RuSTy | truST E302, RuSTy E036 | Assignment to a CONSTANT-declared tag | `MyConst := 5` where MyConst is CONSTANT | M | ✅ |
 | EC018 | Empty project or POU | cross | truST, IronPLC | truST W009, IronPLC P9002 | Controller has no programs or a program has no routines | Empty Routine element | L |
 
 #### Cross-Format Warnings (WC001+)
@@ -1143,8 +1142,8 @@ Codes are grouped by applicability. `—` in the l5x-lint column means the check
 | l5x-lint | Name | Format | OSS Source(s) | OSS Code(s) | Description | L5X Test Example | Prio |
 |----------|------|--------|---------------|-------------|-------------|-------------------|------|
 | ER009 | Wrong operand count for opcode | RLL | truST, RuSTy, IronPLC | truST E204, RuSTy E032, IronPLC P4025 | RLL opcode called with wrong number of operands | `XIC()` (needs 1) | H |
-| ER013 | Invalid JMP target label | RLL | RuSTy, IronPLC | RuSTy E018, IronPLC P4021 | JMP to label that has no matching LBL in the routine | `JMP(GoneLabel)` with no `LBL(GoneLabel)` | H |
-| ER014 | OTL without OTU (unbalanced latch) | RLL | — | — (Logix-specific) | OTL output is never unlatched by a corresponding OTU | `OTL(MyBit)` but no `OTU(MyBit)` in any rung | M |
+| ER013 | Invalid JMP target label | RLL | RuSTy, IronPLC | RuSTy E018, IronPLC P4021 | JMP to label that has no matching LBL in the routine | `JMP(GoneLabel)` with no `LBL(GoneLabel)` | H | ✅ |
+| ER014 | OTL without OTU (unbalanced latch) | RLL | — | — (Logix-specific) | OTL output is never unlatched by a corresponding OTU | `OTL(MyBit)` but no `OTU(MyBit)` in any rung | M | ✅ |
 | ER015 | MCR zone without matching BST/BND | RLL | — | — (Logix-specific) | MCR instruction without beginning/end branch markers | `MCR()` alone with no matching MCR | L |
 | ER016 | FAL/FSC with incomplete operands | RLL | — | — (Logix-specific) | File instruction missing required mode/control/destination | `FAL()` with 0 args | M |
 
@@ -1155,9 +1154,9 @@ Codes are grouped by applicability. `—` in the l5x-lint column means the check
 | WR002 | Unreachable rung (AFI first) | RLL | — | — (Logix-specific) | Rung begins with AFI, all following rungs are dead too | `AFI()` as first instruction | H |
 | WR003 | Output never driven | RLL | truST | truST W003 (varies) | Tag used only in XIC/XIO, never in OTE/OTL/OTU | `XIC(MyTag)` in 10 rungs, no `OTE(MyTag)` | H |
 | WR004 | Timer PRE never set (zero) | RLL | truST | truST W003 (varies) | Timer preset is 0, so timer will never time out | `TON(MyTimer,?,0)` | H |
-| WR005 | NOP instruction present | RLL | — | — (Logix-specific) | NOP instructions are no-ops that indicate dead code | `NOP()` in rung | L |
-| WR006 | SUS instruction present in production | RLL | — | — (Logix-specific) | SUS instruction is a debug breakpoint, should not be in production | `SUS(MyStr)` | L |
-| WR007 | Rung with inputs only, no output | RLL | — | — (Logix-specific) | Rung has XIC/XIO but no OTE/OTL/OTU or other output | `XIC(A)XIO(B)` — no output | L |
+| WR005 | NOP instruction present | RLL | — | — (Logix-specific) | NOP instructions are no-ops that indicate dead code | `NOP()` in rung | L | ✅ |
+| WR006 | SUS instruction present in production | RLL | — | — (Logix-specific) | SUS instruction is a debug breakpoint, should not be in production | `SUS(MyStr)` | L | ✅ |
+| WR007 | Rung with inputs only, no output | RLL | — | — (Logix-specific) | Rung has XIC/XIO but no OTE/OTL/OTU or other output | `XIC(A)XIO(B)` — no output | L | ✅ |
 | WR008 | COP/CPS overlapping source/dest | RLL | — | — (Logix-specific) | Copy instruction where source and destination overlap | `COP(MyArr[0],MyArr[1],10)` | L |
 | WR009 | GSV/SSV invalid object class | RLL | — | — (Logix-specific) | GSV/SSV references unknown object class | `GSV(InvalidClass,??,?)` | M |
 
@@ -1165,8 +1164,8 @@ Codes are grouped by applicability. `—` in the l5x-lint column means the check
 
 | l5x-lint | Name | Format | OSS Source(s) | OSS Code(s) | Description | L5X Test Example | Prio |
 |----------|------|--------|---------------|-------------|-------------|-------------------|------|
-| ES001 | Invalid expression operation | ST | truST, RuSTy | truST E202, RuSTy E066 | Operation not valid for the operand types (e.g., string + DINT) | `result := "abc" + 5;` | M |
-| ES002 | CASE with duplicate value | ST | RuSTy | RuSTy E054 | CASE statement has two branches with same selector value | `CASE x OF 1: a:=1; 1: a:=2; END_CASE` | M |
+| ES001 | Invalid expression operation | ST | truST, RuSTy | truST E202, RuSTy E066 | Operation not valid for the operand types (e.g., string + DINT) | `result := "abc" + 5;` | M | ✅ |
+| ES002 | CASE with duplicate value | ST | RuSTy | RuSTy E054 | CASE statement has two branches with same selector value | `CASE x OF 1: a:=1; 1: a:=2; END_CASE` | M | ✅ |
 | ES003 | FOR loop with out-of-range bounds | ST | RuSTy | RuSTy E065/E097 | FOR loop start/end/repeat values outside valid range | `FOR i:=0 TO 9999999999 DO ... END_FOR` | L |
 | ES004 | Invalid escape sequence in string | ST | RuSTy | RuSTy E124 | String literal contains unrecognized escape sequence | `s := "hello\xJ";` | L |
 | ES005 | Non-constant array boundary | ST | RuSTy | RuSTy E117 | Array declaration uses non-constant expression for bound | `ARRAY[n..m]` where n,m are variables | L |
@@ -1175,18 +1174,18 @@ Codes are grouped by applicability. `—` in the l5x-lint column means the check
 
 | l5x-lint | Name | Format | OSS Source(s) | OSS Code(s) | Description | L5X Test Example | Prio |
 |----------|------|--------|---------------|-------------|-------------|-------------------|------|
-| WS101 | Floating-point equality comparison | ST | truST | truST W013 | REAL/LREAL values compared with = or <> | `IF r = 0.3 THEN` | H |
-| WS102 | Division/modulo by literal zero | ST | truST | truST W014, RuSTy E123 | Division or MOD by literal zero | `result := x / 0;` | H |
-| WS104 | Non-BOOL condition in IF/WHILE | ST | RuSTy | RuSTy E094/E096 | IF/WHILE condition is DINT/REAL, not BOOL | `IF myDINT THEN` | L |
-| WS105 | Implicit downcast in assignment | ST | RuSTy, truST | RuSTy E067, truST W005 | Assigning wider type to narrower type truncates | `narrowDINT := wideLINT` | M |
-| WS107 | Missing ELSE clause | ST | truST | truST W004 | IF or CASE without ELSE branch | `IF x > 0 THEN y:=1; END_IF` | L |
-| WS108 | Statement with no effect | ST | RuSTy | RuSTy E023/E060 | Expression statement that does nothing (just a value) | `x + 1;` alone as statement | L |
-| WS109 | Assignment to FOR loop variable | ST | RuSTy | RuSTy E065 | Modifying loop counter inside FOR loop body | `FOR i:=1 TO 10 DO i:=i+1; END_FOR` | L |
-| WS110 | Return/EXIT followed by dead code | ST | truST | truST W003 | Statements after RETURN or EXIT are unreachable | `RETURN; x := 1;` | M |
-| WS111 | Literal overflow for target type | ST | RuSTy | RuSTy E053/E039 | Integer/real literal exceeds range of destination type | `smallSINT := 999;` (SINT max 127) | L |
-| WS112 | Empty CASE branch body | ST | RuSTy | RuSTy E090 | CASE branch contains no statements | `CASE x OF 1: ; 2: y:=1; END_CASE` | L |
-| WS113 | AND_THEN/OR_ELSE with non-BOOL operand | ST | RuSTy | RuSTy E133 | Short-circuit operator used with non-BOOL type | `x AND_THEN y` where x is DINT | L |
-| WS114 | Implicit cast in mixed-type expression | ST | RuSTy, truST | RuSTy E067, truST W005 | Mixed numeric types in expression (DINT+REAL) get implicit cast | `result := dintVal + realVal;` | L |
+| WS101 | Floating-point equality comparison | ST | truST | truST W013 | REAL/LREAL values compared with = or <> | `IF r = 0.3 THEN` | H | ✅ |
+| WS102 | Division/modulo by literal zero | ST | truST | truST W014, RuSTy E123 | Division or MOD by literal zero | `result := x / 0;` | H | ✅ |
+| WS104 | Non-BOOL condition in IF/WHILE | ST | RuSTy | RuSTy E094/E096 | IF/WHILE condition is DINT/REAL, not BOOL | `IF myDINT THEN` | L | ✅ |
+| WS105 | Implicit downcast in assignment | ST | RuSTy, truST | RuSTy E067, truST W005 | Assigning wider type to narrower type truncates | `narrowDINT := wideLINT` | M | ✅ |
+| WS107 | Missing ELSE clause | ST | truST | truST W004 | IF or CASE without ELSE branch | `IF x > 0 THEN y:=1; END_IF` | L | ✅ |
+| WS108 | Statement with no effect | ST | RuSTy | RuSTy E023/E060 | Expression statement that does nothing (just a value) | `x + 1;` alone as statement | L | ✅ |
+| WS109 | Assignment to FOR loop variable | ST | RuSTy | RuSTy E065 | Modifying loop counter inside FOR loop body | `FOR i:=1 TO 10 DO i:=i+1; END_FOR` | L | ✅ |
+| WS110 | Return/EXIT followed by dead code | ST | truST | truST W003 | Statements after RETURN or EXIT are unreachable | `RETURN; x := 1;` | M | ✅ |
+| WS111 | Literal overflow for target type | ST | RuSTy | RuSTy E053/E039 | Integer/real literal exceeds range of destination type | `smallSINT := 999;` (SINT max 127) | L | |
+| WS112 | Empty CASE branch body | ST | RuSTy | RuSTy E090 | CASE branch contains no statements | `CASE x OF 1: ; 2: y:=1; END_CASE` | L | |
+| WS113 | AND_THEN/OR_ELSE with non-BOOL operand | ST | RuSTy | RuSTy E133 | Short-circuit operator used with non-BOOL type | `x AND_THEN y` where x is DINT | L | ✅ |
+| WS114 | Implicit cast in mixed-type expression | ST | RuSTy, truST | RuSTy E067, truST W005 | Mixed numeric types in expression (DINT+REAL) get implicit cast | `result := dintVal + realVal;` | L | |
 
 ---
 

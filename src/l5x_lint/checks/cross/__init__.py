@@ -9,6 +9,9 @@ import l5x_lint.checks.cross.ec008_aoi_circular_dep  # noqa: F401
 import l5x_lint.checks.cross.ec010_cross_scope_violation  # noqa: F401
 import l5x_lint.checks.cross.ec011_reserved_name  # noqa: F401
 import l5x_lint.checks.cross.ec012_array_init_count  # noqa: F401
+import l5x_lint.checks.cross.ec013_duplicate_jmp_label  # noqa: F401
+import l5x_lint.checks.cross.ec015_invalid_data_type  # noqa: F401
+import l5x_lint.checks.cross.ec017_constant_modification  # noqa: F401
 import l5x_lint.checks.cross.wc001_unused_tag  # noqa: F401
 import l5x_lint.checks.cross.wc005_shadowed_tag  # noqa: F401
 import l5x_lint.checks.cross.wc103_cyclomatic_complexity  # noqa: F401

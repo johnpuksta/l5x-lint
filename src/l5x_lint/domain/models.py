@@ -60,6 +60,7 @@ class Tag:
     scope: str = "controller"
     description: str = ""
     initial_values: int | None = None
+    constant: bool = False
 
 
 @dataclass

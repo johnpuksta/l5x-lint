@@ -364,11 +364,210 @@ class WS107(LintErrorBase):
     construct: str
 
 
+
+@dataclass
+class ER013(LintErrorBase):
+    code: ClassVar[str] = "ER013"
+    severity: ClassVar[str] = "error"
+    message_template: ClassVar[str] = "Invalid JMP target: label '{label}' not found"
+    description: ClassVar[str] = (
+        "A JMP instruction references a label that has no "
+        "matching LBL instruction in the routine."
+    )
+    label: str
+
+
+@dataclass
+class ER014(LintErrorBase):
+    code: ClassVar[str] = "ER014"
+    severity: ClassVar[str] = "error"
+    message_template: ClassVar[str] = (
+        "OTL without OTU: '{name}' is latched but never unlatched"
+    )
+    description: ClassVar[str] = (
+        "An OTL instruction sets a tag but no corresponding OTU "
+        "unsets it, which may cause unintended behavior."
+    )
+    name: str
+
+
+@dataclass
+class EC013(LintErrorBase):
+    code: ClassVar[str] = "EC013"
+    severity: ClassVar[str] = "error"
+    message_template: ClassVar[str] = "Duplicate JMP label '{label}'"
+    description: ClassVar[str] = (
+        "Two or more LBL instructions use the same label name "
+        "within the same program."
+    )
+    label: str
+
+
+@dataclass
+class EC015(LintErrorBase):
+    code: ClassVar[str] = "EC015"
+    severity: ClassVar[str] = "error"
+    message_template: ClassVar[str] = (
+        "Invalid/undeclared data type '{data_type}' used by '{tag_name}'"
+    )
+    description: ClassVar[str] = (
+        "A tag is declared with a data type that does not exist "
+        "in the project or as a built-in type."
+    )
+    tag_name: str
+    data_type: str
+
+
+@dataclass
+class EC017(LintErrorBase):
+    code: ClassVar[str] = "EC017"
+    severity: ClassVar[str] = "error"
+    message_template: ClassVar[str] = "Cannot modify constant tag '{name}'"
+    description: ClassVar[str] = (
+        "An assignment targets a CONSTANT tag. Constant tags "
+        "cannot be modified at runtime."
+    )
+    name: str
+
+
+@dataclass
+class WR005(LintErrorBase):
+    code: ClassVar[str] = "WR005"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = "NOP instruction present at rung {rung}"
+    description: ClassVar[str] = (
+        "A NOP (No Operation) instruction is present. NOPs are "
+        "no-ops that indicate dead or debugging code."
+    )
+    rung: int
+
+
+@dataclass
+class WR006(LintErrorBase):
+    code: ClassVar[str] = "WR006"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = (
+        "SUS instruction present at rung {rung} — "
+        "should not be in production"
+    )
+    description: ClassVar[str] = (
+        "A SUS (Suspend) instruction is present. SUS is a debug "
+        "breakpoint that should be removed before production deployment."
+    )
+    rung: int
+
+
+@dataclass
+class WR007(LintErrorBase):
+    code: ClassVar[str] = "WR007"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = (
+        "Rung {rung} has input conditions but no output instruction"
+    )
+    description: ClassVar[str] = (
+        "A rung contains input conditions (XIC, XIO) but no output "
+        "instruction (OTE, OTL, OTU), so it has no effect."
+    )
+    rung: int
+
+
+@dataclass
+class WS108(LintErrorBase):
+    code: ClassVar[str] = "WS108"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = (
+        "Statement with no effect at line {line}"
+    )
+    description: ClassVar[str] = (
+        "An expression statement has no side effects and its "
+        "result is discarded."
+    )
+    line: int
+
+
+@dataclass
+class WS109(LintErrorBase):
+    code: ClassVar[str] = "WS109"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = (
+        "Assignment to FOR loop variable '{name}' at line {line}"
+    )
+    description: ClassVar[str] = (
+        "Modifying the loop counter variable inside a FOR loop "
+        "body can cause unexpected behavior."
+    )
+    name: str
+    line: int
+
+
+@dataclass
+class WS110(LintErrorBase):
+    code: ClassVar[str] = "WS110"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = (
+        "Dead code after {construct} at line {line}"
+    )
+    description: ClassVar[str] = (
+        "Statements after RETURN or EXIT are unreachable and "
+        "will never execute."
+    )
+    construct: str
+    line: int
+
+
+@dataclass
+class WS113(LintErrorBase):
+    code: ClassVar[str] = "WS113"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = (
+        "Non-BOOL operand for {op}: operand is '{actual}'"
+    )
+    description: ClassVar[str] = (
+        "The AND_THEN and OR_ELSE short-circuit operators require "
+        "BOOL operands."
+    )
+    op: str
+    actual: str
+
+
+@dataclass
+class ES001(LintErrorBase):
+    code: ClassVar[str] = "ES001"
+    severity: ClassVar[str] = "error"
+    message_template: ClassVar[str] = (
+        "Invalid expression operation: {left_type} {op} {right_type}"
+    )
+    description: ClassVar[str] = (
+        "An operation is not valid for the operand types "
+        "(e.g., string addition with DINT)."
+    )
+    left_type: str
+    op: str
+    right_type: str
+
+
+@dataclass
+class ES002(LintErrorBase):
+    code: ClassVar[str] = "ES002"
+    severity: ClassVar[str] = "error"
+    message_template: ClassVar[str] = "Duplicate CASE value '{value}' at line {line}"
+    description: ClassVar[str] = (
+        "A CASE statement has two branches with the same selector value. "
+        "The second branch is unreachable."
+    )
+    value: str
+    line: int
+
+
 LintError = (
     EC001 | EC002 | EC003 | EC004 | EC005
     | EC006 | EC007 | EC008 | ER009 | EC010
-    | EC011 | EC012
+    | EC011 | EC012 | EC013 | EC015 | EC017
+    | ER013 | ER014
     | WC001 | WR002 | WR003 | WR004 | WC005
     | WC103 | WC106
+    | WR005 | WR006 | WR007
     | WS101 | WS102 | WS104 | WS105 | WS107
+    | WS108 | WS109 | WS110 | WS113
+    | ES001 | ES002
 )

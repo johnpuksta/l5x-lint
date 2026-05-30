@@ -141,6 +141,7 @@ class L5XParser:
             scope=scope,
             description=_get_description(el),
             initial_values=init_count,
+            constant=el.get("Constant", "false") == "true",
         )
 
     def parse_routines(self, routines_el: ET.Element | None) -> list[Routine]:

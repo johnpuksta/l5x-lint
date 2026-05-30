@@ -10,7 +10,14 @@ from l5x_lint.checks._codes import (
     EC010,
     EC011,
     EC012,
+    EC013,
+    EC015,
+    EC017,
     ER009,
+    ER013,
+    ER014,
+    ES001,
+    ES002,
     WC001,
     WC005,
     WC103,
@@ -18,11 +25,18 @@ from l5x_lint.checks._codes import (
     WR002,
     WR003,
     WR004,
+    WR005,
+    WR006,
+    WR007,
     WS101,
     WS102,
     WS104,
     WS105,
     WS107,
+    WS108,
+    WS109,
+    WS110,
+    WS113,
     LintError,
 )
 
@@ -198,6 +212,97 @@ def test_ws107():
     assert_error_common(e, "WS107", "warning")
 
 
+def test_er013():
+    e = ER013("GoneLabel")
+    assert e.label == "GoneLabel"
+    assert_error_common(e, "ER013", "error")
+
+
+def test_er014():
+    e = ER014("MyBit")
+    assert e.name == "MyBit"
+    assert_error_common(e, "ER014", "error")
+
+
+def test_ec013():
+    e = EC013("Mark")
+    assert e.label == "Mark"
+    assert_error_common(e, "EC013", "error")
+
+
+def test_ec015():
+    e = EC015("MyTag", "NoSuchType")
+    assert e.tag_name == "MyTag"
+    assert e.data_type == "NoSuchType"
+    assert_error_common(e, "EC015", "error")
+
+
+def test_ec017():
+    e = EC017("MyConst")
+    assert e.name == "MyConst"
+    assert_error_common(e, "EC017", "error")
+
+
+def test_wr005():
+    e = WR005(3)
+    assert e.rung == 3
+    assert_error_common(e, "WR005", "warning")
+
+
+def test_wr006():
+    e = WR006(1)
+    assert e.rung == 1
+    assert_error_common(e, "WR006", "warning")
+
+
+def test_wr007():
+    e = WR007(2)
+    assert e.rung == 2
+    assert_error_common(e, "WR007", "warning")
+
+
+def test_ws108():
+    e = WS108(line=5)
+    assert e.line == 5
+    assert_error_common(e, "WS108", "warning")
+
+
+def test_ws109():
+    e = WS109("i", 7)
+    assert e.name == "i"
+    assert e.line == 7
+    assert_error_common(e, "WS109", "warning")
+
+
+def test_ws110():
+    e = WS110("RETURN", 3)
+    assert e.construct == "RETURN"
+    assert e.line == 3
+    assert_error_common(e, "WS110", "warning")
+
+
+def test_ws113():
+    e = WS113("AND_THEN", "DINT")
+    assert e.op == "AND_THEN"
+    assert e.actual == "DINT"
+    assert_error_common(e, "WS113", "warning")
+
+
+def test_es001():
+    e = ES001("STRING", "+", "DINT")
+    assert e.left_type == "STRING"
+    assert e.op == "+"
+    assert e.right_type == "DINT"
+    assert_error_common(e, "ES001", "error")
+
+
+def test_es002():
+    e = ES002("5", 10)
+    assert e.value == "5"
+    assert e.line == 10
+    assert_error_common(e, "ES002", "error")
+
+
 def test_isinstance_union():
     assert isinstance(EC001("x"), LintError)
     assert isinstance(EC002("a", "b"), LintError)
@@ -207,3 +312,17 @@ def test_isinstance_union():
     assert isinstance(WS101("x = 0.1"), LintError)
     assert isinstance(WC103(20), LintError)
     assert isinstance(WS107("IF"), LintError)
+    assert isinstance(ER013("L"), LintError)
+    assert isinstance(ER014("B"), LintError)
+    assert isinstance(EC013("M"), LintError)
+    assert isinstance(EC015("T", "DT"), LintError)
+    assert isinstance(EC017("C"), LintError)
+    assert isinstance(WR005(1), LintError)
+    assert isinstance(WR006(1), LintError)
+    assert isinstance(WR007(1), LintError)
+    assert isinstance(WS108(1), LintError)
+    assert isinstance(WS109("i", 1), LintError)
+    assert isinstance(WS110("R", 1), LintError)
+    assert isinstance(WS113("AND", "BOOL"), LintError)
+    assert isinstance(ES001("S", "+", "D"), LintError)
+    assert isinstance(ES002("5", 1), LintError)
