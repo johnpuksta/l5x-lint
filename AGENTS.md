@@ -19,6 +19,28 @@ src/l5x_lint/checks/st/ws*.py             →  tests/checks/st/test_ws*.py  (6 s
 src/l5x_lint/checks/st/es*.py             →  tests/checks/st/test_es*.py  (2 st error checks)
 ```
 
+# Sub-Checker Walkers
+
+Eliminates duplicated AST traversal (duplicated ~20× for RLL, ~6× for ST):
+
+```python
+from l5x_lint.checks._walkers import StWalker, RllWalker
+from l5x_lint.pipeline.analyze import register
+
+class MyCheck(StWalker):
+    def visit_if(self, node):
+        self.add_diagnostic("WSXXX", "warning", "missing else", line=node.line)
+
+my_check = MyCheck()
+register(my_check)
+```
+
+- **StWalker** — walks ST programs; override `visit_assignment`, `visit_if`, `visit_case`, `visit_for`, `visit_while`, `visit_repeat`, `visit_call`, `visit_jsr`, `visit_exit`, `visit_return`, `visit_binary_op`, `visit_unary_op`, `visit_tag_ref`, `visit_literal`
+- **RllWalker** — walks RLL rungs/instructions (includes branch recursion); override `visit_rung(node)` / `visit_instruction(node)`; `self.rung_num` available
+- `self.add_diagnostic(code, severity, message, line=..., rung=...)` convenience
+- Both match `CheckFn` signature for `register(check_instance)`
+- Default visit methods are no-ops; only override what you need
+
 # Toolchain
 
 ## uv (Package Management)
