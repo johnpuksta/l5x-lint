@@ -24,6 +24,7 @@ class LintConfig:
     warn_missing_else: bool = True
     severity_overrides: dict[str, str] = field(default_factory=dict)
     rule_pack: str = "none"
+    dialect: str = "rockwell"
 
     def apply_rule_pack(self) -> None:
         match self.rule_pack:
@@ -44,6 +45,12 @@ class LintConfig:
                 self.warn_missing_else = True
             case "none":
                 pass
+
+    def apply_dialect_preset(self) -> None:
+        if self.dialect not in ("rockwell", "iec-61131-3", "codesys"):
+            valid = "rockwell, iec-61131-3, codesys"
+            msg = f"Unknown dialect '{self.dialect}'. Valid: {valid}"
+            raise ValueError(msg)
 
     def diagnostic_allowed(self, code: str) -> bool:
         match code:

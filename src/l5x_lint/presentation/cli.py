@@ -29,9 +29,9 @@ def _diagnostic_to_dict(d: Diagnostic) -> dict:
 
 
 def _build_config(args: argparse.Namespace) -> LintConfig | None:
-    if not any([args.rule_pack, args.enable_warning, args.disable_warning, args.severity_override]):
+    if not any([args.rule_pack, args.enable_warning, args.disable_warning, args.severity_override, args.dialect != "rockwell"]):
         return None
-    config = LintConfig(rule_pack=args.rule_pack or "none")
+    config = LintConfig(rule_pack=args.rule_pack or "none", dialect=args.dialect)
     config.apply_rule_pack()
     apply_warning_toggles(config, disable=args.disable_warning, enable=args.enable_warning)
     apply_severity_overrides(config, args.severity_override)
@@ -93,6 +93,8 @@ def main() -> None:
     val.add_argument("--json", action="store_true", help="JSON output")
     val.add_argument("--rule-pack", choices=["none", "safety", "rockwell", "iec-61131-3"],
                      default="none", help="Apply diagnostic rule pack preset")
+    val.add_argument("--dialect", choices=["rockwell", "iec-61131-3", "codesys"],
+                     default="rockwell", help="Select PLC dialect for check behavior")
     val.add_argument("--enable-warning", action="append", choices=["numeric", "complexity"],
                      help="Enable a warning category that is off by default")
     val.add_argument("--disable-warning", action="append",

@@ -41,6 +41,33 @@ register(my_check)
 - Both match `CheckFn` signature for `register(check_instance)`
 - Default visit methods are no-ops; only override what you need
 
+# Dialect System
+
+Seven boolean flags on `DialectConfig` control check behavior across presets:
+
+| Flag | rockwell | iec-61131-3 | codesys |
+|---|---|---|---|
+| `allow_keywords_case_insensitive` | True | False | False |
+| `allow_positional_args` | True | False | True |
+| `allow_jsr` | True | False | False |
+| `allow_wildcard_operands` | True | False | True |
+| `allow_type_punning` | True | False | True |
+| `allow_c_style_comments` | True | False | True |
+| `allow_cross_family_widening` | True | False | True |
+
+Checks access the active dialect via a module-level session:
+
+```python
+from l5x_lint.pipeline.dialect import get_dialect
+
+def visit_something(self, node):
+    if get_dialect().allow_jsr:
+        return  # JSR is normal in Rockwell; skip check
+    ...
+```
+
+The session dialect is set by `analyze()` before running checks (`set_dialect(resolve_dialect(config.dialect))`). Import the module-level `get_dialect()` / `set_dialect()` from `pipeline/dialect.py`.
+
 # Toolchain
 
 ## uv (Package Management)

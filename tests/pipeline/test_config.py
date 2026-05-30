@@ -13,6 +13,7 @@ def test_default_config():
     assert c.warn_implicit_conversion
     assert c.warn_missing_else
     assert c.rule_pack == "none"
+    assert c.dialect == "rockwell"
 
 
 def test_diagnostic_allowed_default():

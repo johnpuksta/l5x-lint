@@ -10,6 +10,7 @@ from l5x_lint.domain.diagnostics import AnalysisResult, Diagnostic
 from l5x_lint.domain.errors import CheckExecutionError, LintInternalError
 from l5x_lint.domain.models import Controller, Location, Routine
 from l5x_lint.pipeline.config import LintConfig
+from l5x_lint.pipeline.dialect import resolve_dialect, set_dialect
 from l5x_lint.pipeline.filter import filter_diagnostics
 from l5x_lint.pipeline.routine_router import route_routines
 from l5x_lint.pipeline.symbols import SymbolTable, build_symbol_table
@@ -30,6 +31,8 @@ def analyze(
 ) -> Result[AnalysisResult, LintInternalError]:
     if config is not None:
         config.apply_rule_pack()
+        config.apply_dialect_preset()
+        set_dialect(resolve_dialect(config.dialect))
     result = flow(
         Success(controller),
         bind(route_routines),

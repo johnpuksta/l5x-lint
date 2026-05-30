@@ -76,11 +76,12 @@ def create_server() -> FastMCP:
     def validate_l5x(
         file_path: str,
         rule_pack: str = "none",
+        dialect: str = "rockwell",
         enable_warnings: str | None = None,
         disable_warnings: str | None = None,
         severity_overrides: str | None = None,
     ) -> str:
-        config = LintConfig(rule_pack=rule_pack)
+        config = LintConfig(rule_pack=rule_pack, dialect=dialect)
         config.apply_rule_pack()
         apply_warning_toggles(config, disable=_split(disable_warnings), enable=_split(enable_warnings))
         apply_severity_overrides(config, _split(severity_overrides))
