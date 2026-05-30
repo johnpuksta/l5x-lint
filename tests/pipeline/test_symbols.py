@@ -1,6 +1,6 @@
 from returns.maybe import Nothing, Some
 
-from l5x_lint.domain.models import AOI, Controller, DataType, Program, Tag
+from l5x_lint.domain.models import AOI, Controller, DataType, Member, Program, Tag
 from l5x_lint.pipeline.symbols import build_symbol_table
 
 
@@ -123,3 +123,79 @@ def test_multiple_programs():
     assert table.resolve("ATag", program="A") is not Nothing
     assert table.resolve("BTag", program="B") is not Nothing
     assert table.resolve("ATag", program="B") is Nothing
+
+
+def test_resolve_type_simple():
+    c = Controller(
+        name="Test",
+        tags=[Tag(name="MyTag", data_type="DINT")],
+        data_types=[DataType(name="DINT", family="NoFamily", class_="")],
+    )
+    table = build_symbol_table(c)
+    dt = table.resolve_type("MyTag")
+    assert dt is not None
+    assert dt.name == "DINT"
+
+
+def test_resolve_type_udt():
+    c = Controller(
+        name="Test",
+        tags=[Tag(name="MyTag", data_type="MyType")],
+        data_types=[
+            DataType(name="MyType", family="NoFamily", class_="",
+                     members=[Member(name="FieldA", data_type="DINT")]),
+            DataType(name="DINT", family="NoFamily", class_=""),
+        ],
+    )
+    table = build_symbol_table(c)
+    dt = table.resolve_type("MyTag")
+    assert dt is not None
+    assert dt.name == "MyType"
+
+
+def test_resolve_type_unknown_tag():
+    c = Controller(name="Test")
+    table = build_symbol_table(c)
+    assert table.resolve_type("NonExistent") is None
+
+
+def test_resolve_type_unknown_data_type():
+    c = Controller(
+        name="Test",
+        tags=[Tag(name="MyTag", data_type="NonExistentType")],
+    )
+    table = build_symbol_table(c)
+    assert table.resolve_type("MyTag") is None
+
+
+def test_resolve_member_type_found():
+    c = Controller(
+        name="Test",
+        data_types=[
+            DataType(name="MyType", family="NoFamily", class_="",
+                     members=[Member(name="FieldA", data_type="DINT")]),
+            DataType(name="DINT", family="NoFamily", class_=""),
+        ],
+    )
+    table = build_symbol_table(c)
+    dt = table.resolve_member_type("MyType", "FieldA")
+    assert dt is not None
+    assert dt.name == "DINT"
+
+
+def test_resolve_member_type_not_found():
+    c = Controller(
+        name="Test",
+        data_types=[
+            DataType(name="MyType", family="NoFamily", class_="",
+                     members=[Member(name="FieldA", data_type="DINT")]),
+        ],
+    )
+    table = build_symbol_table(c)
+    assert table.resolve_member_type("MyType", "NonExistent") is None
+
+
+def test_resolve_member_type_unknown_base():
+    c = Controller(name="Test")
+    table = build_symbol_table(c)
+    assert table.resolve_member_type("UnknownType", "Field") is None

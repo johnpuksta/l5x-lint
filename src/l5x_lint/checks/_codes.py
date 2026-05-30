@@ -231,8 +231,144 @@ class WC005(LintErrorBase):
     hidden_by: str
 
 
+
+
+@dataclass
+class EC011(LintErrorBase):
+    code: ClassVar[str] = "EC011"
+    severity: ClassVar[str] = "error"
+    message_template: ClassVar[str] = "Reserved name collision: '{name}' shadows built-in"
+    description: ClassVar[str] = (
+        "A user-defined POU (AOI, program, function block) has the same "
+        "name as a built-in instruction or type, causing name shadowing."
+    )
+    name: str
+    kind: str = "POU"
+
+
+@dataclass
+class EC012(LintErrorBase):
+    code: ClassVar[str] = "EC012"
+    severity: ClassVar[str] = "error"
+    message_template: ClassVar[str] = (
+        "Array initializer element count mismatch: got {actual}, "
+        "expected {expected}"
+    )
+    description: ClassVar[str] = (
+        "The number of initializer elements in a tag's <Data> does not "
+        "match the declared array dimension product."
+    )
+    name: str
+    expected: int
+    actual: int
+
+
+@dataclass
+class WS101(LintErrorBase):
+    code: ClassVar[str] = "WS101"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = (
+        "Floating-point equality comparison: '{text}' may be unreliable"
+    )
+    description: ClassVar[str] = (
+        "Direct equality (==) or inequality (<>) of REAL/LREAL values "
+        "is unreliable due to floating-point precision. Use a tolerance "
+        "check (ABS(a - b) < 0.0001) instead."
+    )
+    text: str
+
+
+@dataclass
+class WS102(LintErrorBase):
+    code: ClassVar[str] = "WS102"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = "Division by literal zero: {text}"
+    description: ClassVar[str] = (
+        "A division or MOD operation uses a literal zero as divisor. "
+        "This causes a runtime division-by-zero error."
+    )
+    text: str
+
+
+@dataclass
+class WC103(LintErrorBase):
+    code: ClassVar[str] = "WC103"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = (
+        "Cyclomatic complexity {complexity} exceeds threshold {threshold}"
+    )
+    description: ClassVar[str] = (
+        "The routine has too many branching points (IF, CASE, loops, "
+        "XIC/XIO branches). Consider refactoring into smaller routines."
+    )
+    complexity: int
+    threshold: int = 15
+
+
+@dataclass
+class WS104(LintErrorBase):
+    code: ClassVar[str] = "WS104"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = "Non-BOOL condition in {construct}: got '{actual}'"
+    description: ClassVar[str] = (
+        "A control-flow construct (IF, WHILE, UNTIL) uses a condition "
+        "that is not BOOL. Only BOOL expressions are valid conditions."
+    )
+    construct: str
+    actual: str
+
+
+@dataclass
+class WS105(LintErrorBase):
+    code: ClassVar[str] = "WS105"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = (
+        "Implicit downcast in assignment to '{name}': "
+        "'{from_type}' -> '{to_type}' loses precision"
+    )
+    description: ClassVar[str] = (
+        "A value is assigned to a narrower type, causing potential "
+        "precision loss or overflow."
+    )
+    name: str
+    from_type: str
+    to_type: str
+
+
+@dataclass
+class WC106(LintErrorBase):
+    code: ClassVar[str] = "WC106"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = (
+        "Unused POU '{name}' is defined but never referenced"
+    )
+    description: ClassVar[str] = (
+        "A program, AOI, or routine is defined in the project but "
+        "never called or referenced from any other POU."
+    )
+    name: str
+    kind: str = "POU"
+
+
+@dataclass
+class WS107(LintErrorBase):
+    code: ClassVar[str] = "WS107"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = (
+        "Missing ELSE in {construct} — not all branches are covered"
+    )
+    description: ClassVar[str] = (
+        "An IF or CASE statement lacks an ELSE branch, meaning some "
+        "conditions may silently fall through without assignment."
+    )
+    construct: str
+
+
 LintError = (
     EC001 | EC002 | EC003 | EC004 | EC005
     | EC006 | EC007 | EC008 | ER009 | EC010
+    | EC011 | EC012
     | WC001 | WR002 | WR003 | WR004 | WC005
+    | WC103 | WC106
+    | WS101 | WS102 | WS104 | WS105 | WS107
 )

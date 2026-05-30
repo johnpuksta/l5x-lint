@@ -8,12 +8,21 @@ from l5x_lint.checks._codes import (
     EC007,
     EC008,
     EC010,
+    EC011,
+    EC012,
     ER009,
     WC001,
     WC005,
+    WC103,
+    WC106,
     WR002,
     WR003,
     WR004,
+    WS101,
+    WS102,
+    WS104,
+    WS105,
+    WS107,
     LintError,
 )
 
@@ -128,8 +137,73 @@ def test_wc005():
     assert_error_common(e, "WC005", "warning")
 
 
+def test_ec011():
+    e = EC011("TON")
+    assert e.name == "TON"
+    assert_error_common(e, "EC011", "error")
+
+
+def test_ec012():
+    e = EC012("Arr", 10, 3)
+    assert e.name == "Arr"
+    assert e.expected == 10
+    assert e.actual == 3
+    assert_error_common(e, "EC012", "error")
+
+
+def test_ws101():
+    e = WS101("x = 0.1")
+    assert e.text == "x = 0.1"
+    assert_error_common(e, "WS101", "warning")
+
+
+def test_ws102():
+    e = WS102("x / 0")
+    assert e.text == "x / 0"
+    assert_error_common(e, "WS102", "warning")
+
+
+def test_wc103():
+    e = WC103(20, 15)
+    assert e.complexity == 20
+    assert e.threshold == 15
+    assert_error_common(e, "WC103", "warning")
+    assert "20" in e.message
+
+
+def test_ws104():
+    e = WS104("IF", "DINT")
+    assert e.construct == "IF"
+    assert e.actual == "DINT"
+    assert_error_common(e, "WS104", "warning")
+
+
+def test_ws105():
+    e = WS105("narrow", "LINT", "DINT")
+    assert e.name == "narrow"
+    assert e.from_type == "LINT"
+    assert e.to_type == "DINT"
+    assert_error_common(e, "WS105", "warning")
+
+
+def test_wc106():
+    e = WC106("MyUnusedAOI")
+    assert e.name == "MyUnusedAOI"
+    assert_error_common(e, "WC106", "warning")
+
+
+def test_ws107():
+    e = WS107("IF")
+    assert e.construct == "IF"
+    assert_error_common(e, "WS107", "warning")
+
+
 def test_isinstance_union():
     assert isinstance(EC001("x"), LintError)
     assert isinstance(EC002("a", "b"), LintError)
     assert isinstance(WC001("x"), LintError)
     assert isinstance(WC005("x", "y"), LintError)
+    assert isinstance(EC011("TON"), LintError)
+    assert isinstance(WS101("x = 0.1"), LintError)
+    assert isinstance(WC103(20), LintError)
+    assert isinstance(WS107("IF"), LintError)

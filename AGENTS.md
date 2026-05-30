@@ -9,8 +9,14 @@ src/l5x_lint/domain/models.py             →  tests/domain/test_models.py
 src/l5x_lint/domain/diagnostics.py        →  tests/domain/test_diagnostics.py
 src/l5x_lint/domain/errors.py             →  tests/domain/test_errors.py  (internal railway errors)
 src/l5x_lint/checks/_codes.py             →  tests/checks/cross/test_codes.py  (diagnostic codes)
-src/l5x_lint/checks/cross/ec001_*.py      →  tests/checks/cross/test_ec001_*.py  (11 cross checks)
+src/l5x_lint/checks/_types.py             →  (tested via checks that use it)
+src/l5x_lint/checks/cross/ec0{1..12}_*.py →  tests/checks/cross/test_ec0{1..12}_*.py  (12 cross checks)
+src/l5x_lint/checks/cross/wc00{1,5}_*.py  →  tests/checks/cross/test_wc00{1,5}_*.py
+src/l5x_lint/checks/cross/wc103_*.py      →  tests/checks/cross/test_wc103_*.py
+src/l5x_lint/checks/cross/wc106_*.py      →  tests/checks/cross/test_wc106_*.py
+src/l5x_lint/checks/cross/ws10{1,2,5}_*.py→  tests/checks/cross/test_ws10{1,2,5}_*.py
 src/l5x_lint/checks/rll/er009_*.py        →  tests/checks/rll/test_er009_*.py  (4 rll checks)
+src/l5x_lint/checks/st/ws10{4,7}_*.py     →  tests/checks/st/test_ws10{4,7}_*.py  (2 st checks)
 ```
 
 # Toolchain

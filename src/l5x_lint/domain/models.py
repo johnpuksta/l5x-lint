@@ -59,6 +59,7 @@ class Tag:
     dimensions: tuple[int, ...] = ()
     scope: str = "controller"
     description: str = ""
+    initial_values: int | None = None
 
 
 @dataclass

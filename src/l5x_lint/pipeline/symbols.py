@@ -28,6 +28,22 @@ class SymbolTable:
                 return Some(tags[name])
         return Nothing
 
+    def resolve_type(self, name: str, program: str | None = None) -> DataType | None:
+        match self.resolve(name, program):
+            case Some(tag):
+                return self.data_types.get(tag.data_type)
+            case _:
+                return None
+
+    def resolve_member_type(self, base_type: str, member: str) -> DataType | None:
+        dt = self.data_types.get(base_type)
+        if dt is None:
+            return None
+        for m in dt.members:
+            if m.name == member:
+                return self.data_types.get(m.data_type)
+        return None
+
     def tag_in_other_program(self, name: str, current_program: str) -> bool:
         for prog_name, tags in self.program_tags.items():
             if prog_name != current_program and name in tags:

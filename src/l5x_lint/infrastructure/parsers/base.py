@@ -127,12 +127,20 @@ class L5XParser:
         tag_tag: str,
         scope: str,
     ) -> Tag:
+        init_count = None
+        data_el = el.find("Data")
+        if data_el is not None and data_el.get("Format") == "Decorated":
+            array_el = data_el.find("Array")
+            if array_el is not None:
+                elements = array_el.findall("Element")
+                init_count = len(elements)
         return Tag(
             name=el.get("Name", ""),
             data_type=el.get("DataType", ""),
             dimensions=_parse_dimensions(el.get("Dimensions", "")),
             scope=scope,
             description=_get_description(el),
+            initial_values=init_count,
         )
 
     def parse_routines(self, routines_el: ET.Element | None) -> list[Routine]:
