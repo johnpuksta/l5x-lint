@@ -1120,11 +1120,11 @@ Codes are grouped by applicability. `—` in the l5x-lint column means the check
 | EC011 | Reserved name collision | cross | RuSTy, IronPLC | RuSTy E138, IronPLC P4015 | User-defined name shadows built-in instruction/type | AOI named `TON` | H | ✅ |
 | EC012 | Array init element count | cross | RuSTy | RuSTy E043/E127 | Initializer element count ≠ array dimension | `ARRAY[1..5]:=[1,2,3]` | M | ✅ |
 | EC013 | Duplicate label (JMP target) | cross | RuSTy | RuSTy E018 | Two JMP/LBL instructions share the same label | `LBL(Mark); LBL(Mark)` | M | ✅ |
-| EC014 | Unresolved constant expression | cross | RuSTy | RuSTy E033 | CONSTANT initializer references non-constant values | `CONST X : DINT := Y` where Y is not CONSTANT | L |
+| EC014 | Unresolved constant expression | cross | RuSTy | RuSTy E033 | CONSTANT tag initializer missing or references non-constant values | `CONST X : DINT := Y` where Y is not CONSTANT | L | ✅ |
 | EC015 | Invalid/undeclared data type | cross | RuSTy, IronPLC | RuSTy E052, IronPLC P2008 | Tag declared with a type that doesn't exist | `MyTag : NonExistentType` | H | ✅ |
-| EC016 | Invalid array range declaration | cross | RuSTy | RuSTy E008/E097 | Array range bounds are malformed or non-integer | `ARRAY[a..z]` with non-integer bounds | M | |
+| EC016 | Invalid array range declaration | cross | RuSTy | RuSTy E008/E097 | Array dimension is zero or negative | `ARRAY[0..10]` with dimension 0 | M | ✅ |
 | EC017 | Modification of constant tag | cross | truST, RuSTy | truST E302, RuSTy E036 | Assignment to a CONSTANT-declared tag | `MyConst := 5` where MyConst is CONSTANT | M | ✅ |
-| EC018 | Empty project or POU | cross | truST, IronPLC | truST W009, IronPLC P9002 | Controller has no programs or a program has no routines | Empty Routine element | L |
+| EC018 | Empty project or POU | cross | truST, IronPLC | truST W009, IronPLC P9002 | Controller has no programs or a program has no routines | Empty Routine element | L | ✅ |
 
 #### Cross-Format Warnings (WC001+)
 
@@ -1134,8 +1134,8 @@ Codes are grouped by applicability. `—` in the l5x-lint column means the check
 | WC005 | Shadowed tag name | cross | truST | truST W006 | Program tag hides controller-scoped tag with same name | Ctrl.MyTag + Prog.MyTag | H |
 | WC103 | Cyclomatic complexity | cross | truST | truST W008 | Routine has ≥15 branching points (IFs, CASEs, branches) | 16 IF statements in one routine | M |
 | WC106 | Unused program/routine | cross | truST | truST W009 | Program/routine is never referenced by JSR or configured as Main | `MyProgram` with no calls to it | M |
-| WC107 | Empty IF/CASE body | cross | RuSTy | RuSTy E090 | Conditional branch contains no statements | `IF x THEN END_IF` | L |
-| WC108 | Deprecated instruction used | cross | truST | truST W007 | Instruction is deprecated in current Logix version | Reserved for future | L |
+| WC107 | Empty IF/CASE body | cross | RuSTy | RuSTy E090 | Conditional branch contains no statements | `IF x THEN END_IF` | L | ✅ |
+| WC108 | Deprecated instruction used | cross | truST | truST W007 | Instruction is deprecated in current Logix version | `FAL(FAL,MyCtrl,MyDest,0,1)` | L | ✅ |
 
 #### RLL-Specific Errors (ER001+)
 
@@ -1144,8 +1144,8 @@ Codes are grouped by applicability. `—` in the l5x-lint column means the check
 | ER009 | Wrong operand count for opcode | RLL | truST, RuSTy, IronPLC | truST E204, RuSTy E032, IronPLC P4025 | RLL opcode called with wrong number of operands | `XIC()` (needs 1) | H |
 | ER013 | Invalid JMP target label | RLL | RuSTy, IronPLC | RuSTy E018, IronPLC P4021 | JMP to label that has no matching LBL in the routine | `JMP(GoneLabel)` with no `LBL(GoneLabel)` | H | ✅ |
 | ER014 | OTL without OTU (unbalanced latch) | RLL | — | — (Logix-specific) | OTL output is never unlatched by a corresponding OTU | `OTL(MyBit)` but no `OTU(MyBit)` in any rung | M | ✅ |
-| ER015 | MCR zone without matching BST/BND | RLL | — | — (Logix-specific) | MCR instruction without beginning/end branch markers | `MCR()` alone with no matching MCR | L |
-| ER016 | FAL/FSC with incomplete operands | RLL | — | — (Logix-specific) | File instruction missing required mode/control/destination | `FAL()` with 0 args | M |
+| ER015 | MCR zone without matching BST/BND | RLL | — | — (Logix-specific) | MCR instruction without beginning/end branch markers | `MCR()` alone with no matching MCR | L | ✅ |
+| ER016 | FAL/FSC with incomplete operands | RLL | — | — (Logix-specific) | File instruction missing required mode/control/destination | `FAL()` with 0 args | M | ✅ |
 
 #### RLL-Specific Warnings (WR001+)
 
@@ -1157,8 +1157,8 @@ Codes are grouped by applicability. `—` in the l5x-lint column means the check
 | WR005 | NOP instruction present | RLL | — | — (Logix-specific) | NOP instructions are no-ops that indicate dead code | `NOP()` in rung | L | ✅ |
 | WR006 | SUS instruction present in production | RLL | — | — (Logix-specific) | SUS instruction is a debug breakpoint, should not be in production | `SUS(MyStr)` | L | ✅ |
 | WR007 | Rung with inputs only, no output | RLL | — | — (Logix-specific) | Rung has XIC/XIO but no OTE/OTL/OTU or other output | `XIC(A)XIO(B)` — no output | L | ✅ |
-| WR008 | COP/CPS overlapping source/dest | RLL | — | — (Logix-specific) | Copy instruction where source and destination overlap | `COP(MyArr[0],MyArr[1],10)` | L |
-| WR009 | GSV/SSV invalid object class | RLL | — | — (Logix-specific) | GSV/SSV references unknown object class | `GSV(InvalidClass,??,?)` | M |
+| WR008 | COP/CPS overlapping source/dest | RLL | — | — (Logix-specific) | Copy instruction where source and destination overlap | `COP(MyArr[0],MyArr[1],10)` | L | ✅ |
+| WR009 | GSV/SSV invalid object class | RLL | — | — (Logix-specific) | GSV/SSV references unknown object class | `GSV(InvalidClass,??,?)` | M | ✅ |
 
 #### ST-Specific Errors (ES001+)
 
@@ -1166,7 +1166,7 @@ Codes are grouped by applicability. `—` in the l5x-lint column means the check
 |----------|------|--------|---------------|-------------|-------------|-------------------|------|
 | ES001 | Invalid expression operation | ST | truST, RuSTy | truST E202, RuSTy E066 | Operation not valid for the operand types (e.g., string + DINT) | `result := "abc" + 5;` | M | ✅ |
 | ES002 | CASE with duplicate value | ST | RuSTy | RuSTy E054 | CASE statement has two branches with same selector value | `CASE x OF 1: a:=1; 1: a:=2; END_CASE` | M | ✅ |
-| ES003 | FOR loop with out-of-range bounds | ST | RuSTy | RuSTy E065/E097 | FOR loop start/end/repeat values outside valid range | `FOR i:=0 TO 9999999999 DO ... END_FOR` | L |
+| ES003 | FOR loop with out-of-range bounds | ST | RuSTy | RuSTy E065/E097 | FOR loop start/end/repeat values outside valid range | `FOR i:=0 TO 9999999999 DO ... END_FOR` | L | ✅ |
 | ES004 | Invalid escape sequence in string | ST | RuSTy | RuSTy E124 | String literal contains unrecognized escape sequence | `s := "hello\xJ";` | L |
 | ES005 | Non-constant array boundary | ST | RuSTy | RuSTy E117 | Array declaration uses non-constant expression for bound | `ARRAY[n..m]` where n,m are variables | L |
 
@@ -1182,10 +1182,10 @@ Codes are grouped by applicability. `—` in the l5x-lint column means the check
 | WS108 | Statement with no effect | ST | RuSTy | RuSTy E023/E060 | Expression statement that does nothing (just a value) | `x + 1;` alone as statement | L | ✅ |
 | WS109 | Assignment to FOR loop variable | ST | RuSTy | RuSTy E065 | Modifying loop counter inside FOR loop body | `FOR i:=1 TO 10 DO i:=i+1; END_FOR` | L | ✅ |
 | WS110 | Return/EXIT followed by dead code | ST | truST | truST W003 | Statements after RETURN or EXIT are unreachable | `RETURN; x := 1;` | M | ✅ |
-| WS111 | Literal overflow for target type | ST | RuSTy | RuSTy E053/E039 | Integer/real literal exceeds range of destination type | `smallSINT := 999;` (SINT max 127) | L | |
-| WS112 | Empty CASE branch body | ST | RuSTy | RuSTy E090 | CASE branch contains no statements | `CASE x OF 1: ; 2: y:=1; END_CASE` | L | |
+| WS111 | Literal overflow for target type | ST | RuSTy | RuSTy E053/E039 | Integer/real literal exceeds range of destination type | `smallSINT := 999;` (SINT max 127) | L | ✅ |
+| WS112 | Empty CASE branch body | ST | RuSTy | RuSTy E090 | CASE branch contains no statements | `CASE x OF 1: ; 2: y:=1; END_CASE` | L | ✅ |
 | WS113 | AND_THEN/OR_ELSE with non-BOOL operand | ST | RuSTy | RuSTy E133 | Short-circuit operator used with non-BOOL type | `x AND_THEN y` where x is DINT | L | ✅ |
-| WS114 | Implicit cast in mixed-type expression | ST | RuSTy, truST | RuSTy E067, truST W005 | Mixed numeric types in expression (DINT+REAL) get implicit cast | `result := dintVal + realVal;` | L | |
+| WS114 | Implicit cast in mixed-type expression | ST | RuSTy, truST | RuSTy E067, truST W005 | Mixed numeric types in expression (DINT+REAL) get implicit cast | `result := dintVal + realVal;` | L | ✅ |
 
 ---
 
@@ -1346,7 +1346,15 @@ limits don't exist):
 | 2u | WS109 | FOR loop var assignment | Small | Low | RuSTy E065 |
 | 2v | ES001 | Invalid expression operation | Medium | Medium | truST E202, RuSTy E066 |
 | 2w | ES002 | Duplicate CASE value | Small | Medium | RuSTy E054 |
-| — | 2x–2z | Remaining candidates from §4.4 tables | various | — | — |
+| 2x | ER015 | MCR zone without BST/BND | Small | Low | Logix-specific | ✅ |
+| 2y | ER016 | FAL/FSC incomplete operands | Small | Medium | Logix-specific | ✅ |
+| 2z | WR008 | COP/CPS overlapping src/dest | Small | Low | Logix-specific | ✅ |
+| 2za | WR009 | GSV/SSV invalid object class | Small | Medium | Logix-specific | ✅ |
+| 2zb | ES003 | FOR loop out-of-range bounds | Small | Low | RuSTy E065/E097 | ✅ |
+| 2zc | WS111 | Literal overflow for target type | Small | Low | RuSTy E053/E039 | ✅ |
+| 2zd | WS112 | Empty CASE branch body | Tiny | Low | RuSTy E090 | ✅ |
+| 2ze | WS114 | Implicit cast mixed-type expr | Small | Low | RuSTy E067 | ✅ |
+| — | — | ES004/ES005 | — | — | N/A for L5X (no string token / XML const dims) | — |
 | 3a | — | Config system | Medium | High | truST + RuSTy |
 | 3b | — | Related info + hints | Medium | High | truST |
 | 3c | — | Sub-checker delegation | Large | Medium | truST |

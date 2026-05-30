@@ -6,3 +6,7 @@ import l5x_lint.checks.st.ws110_dead_code  # noqa: F401
 import l5x_lint.checks.st.ws113_and_then_or_else  # noqa: F401
 import l5x_lint.checks.st.es001_invalid_expression_op  # noqa: F401
 import l5x_lint.checks.st.es002_duplicate_case_value  # noqa: F401
+import l5x_lint.checks.st.es003_for_bounds  # noqa: F401
+import l5x_lint.checks.st.ws111_literal_overflow  # noqa: F401
+import l5x_lint.checks.st.ws112_empty_case_branch  # noqa: F401
+import l5x_lint.checks.st.ws114_implicit_cast  # noqa: F401

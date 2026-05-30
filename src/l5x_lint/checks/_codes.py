@@ -625,16 +625,143 @@ class WC108(LintErrorBase):
     line: int
 
 
+@dataclass
+class ER015(LintErrorBase):
+    code: ClassVar[str] = "ER015"
+    severity: ClassVar[str] = "error"
+    message_template: ClassVar[str] = (
+        "Unpaired MCR instruction in routine '{routine}'"
+    )
+    description: ClassVar[str] = (
+        "MCR (Master Control Relay) must be used in pairs to open "
+        "and close a zone. An unpaired MCR has no matching zone end."
+    )
+    routine: str
+
+
+@dataclass
+class ER016(LintErrorBase):
+    code: ClassVar[str] = "ER016"
+    severity: ClassVar[str] = "error"
+    message_template: ClassVar[str] = (
+        "Incomplete {opcode} instruction at rung {rung}: "
+        "got {actual} operand(s), need at least {minimum}"
+    )
+    description: ClassVar[str] = (
+        "FAL and FSC file instructions require at least 3 operands "
+        "(mode, control, destination/source)."
+    )
+    opcode: str
+    rung: int
+    actual: int
+    minimum: int = 3
+
+
+@dataclass
+class WR008(LintErrorBase):
+    code: ClassVar[str] = "WR008"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = (
+        "COP/CPS destination overlaps source at rung {rung}: "
+        "'{source}' and '{dest}' share the same base tag"
+    )
+    description: ClassVar[str] = (
+        "A copy instruction (COP/CPS) where source and destination "
+        "operands reference the same base tag may produce "
+        "unexpected results due to overlap."
+    )
+    source: str
+    dest: str
+    rung: int
+
+
+@dataclass
+class WR009(LintErrorBase):
+    code: ClassVar[str] = "WR009"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = (
+        "Unknown GSV/SSV object class '{obj_class}' at rung {rung}"
+    )
+    description: ClassVar[str] = (
+        "GSV/SSV instruction references an object class that is "
+        "not a known Logix5000 system object."
+    )
+    obj_class: str
+    rung: int
+
+
+@dataclass
+class ES003(LintErrorBase):
+    code: ClassVar[str] = "ES003"
+    severity: ClassVar[str] = "error"
+    message_template: ClassVar[str] = (
+        "FOR loop at line {line} has out-of-range bound: {detail}"
+    )
+    description: ClassVar[str] = (
+        "A FOR loop start/end/step value exceeds the valid "
+        "range for its implied data type."
+    )
+    line: int
+    detail: str
+
+
+@dataclass
+class WS111(LintErrorBase):
+    code: ClassVar[str] = "WS111"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = (
+        "Literal {value} at line {line} may overflow the target type"
+    )
+    description: ClassVar[str] = (
+        "A literal value may be too large for the implied data type. "
+        "Consider using a larger type or checking the value range."
+    )
+    value: str
+    line: int
+
+
+@dataclass
+class WS112(LintErrorBase):
+    code: ClassVar[str] = "WS112"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = (
+        "Empty branch body in CASE at line {line}"
+    )
+    description: ClassVar[str] = (
+        "A CASE branch contains no statements. "
+        "This may indicate incomplete logic."
+    )
+    line: int
+
+
+@dataclass
+class WS114(LintErrorBase):
+    code: ClassVar[str] = "WS114"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = (
+        "Implicit cast in mixed-type expression at line {line}: "
+        "mixing {left_type} and {right_type}"
+    )
+    description: ClassVar[str] = (
+        "A binary operation mixes different numeric types "
+        "(e.g., INT and REAL), causing an implicit cast."
+    )
+    line: int
+    left_type: str
+    right_type: str
+
+
 LintError = (
     EC001 | EC002 | EC003 | EC004 | EC005
     | EC006 | EC007 | EC008 | ER009 | EC010
     | EC011 | EC012 | EC013 | EC014 | EC015
     | EC016 | EC017 | EC018
-    | ER013 | ER014
+    | ER013 | ER014 | ER015 | ER016
     | WC001 | WR002 | WR003 | WR004 | WC005
     | WC103 | WC106 | WC107 | WC108
+    | WR008 | WR009
     | WR005 | WR006 | WR007
     | WS101 | WS102 | WS104 | WS105 | WS107
-    | WS108 | WS109 | WS110 | WS113
-    | ES001 | ES002
+    | WS108 | WS109 | WS110 | WS111 | WS112 | WS113 | WS114
+    | ES001 | ES002 | ES003
 )
