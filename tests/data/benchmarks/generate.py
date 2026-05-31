@@ -1,276 +1,344 @@
 """Generate benchmark L5X files with realistic mixed content.
 
+Creates properly-indented L5X files with:
+- Controller tags (DINT, BOOL, REAL, STRING, SINT, LINT, arrays, UDTs)
+- User-defined data types (MotorParams, AlarmStruct, PIDparams)
+- AddOn Instruction definitions with parameters, local tags, RLL routines
+- Multiple programs with RLL and ST routines
+- Task configuration
+- RLL rungs with XIC/XIO/OTE/LES/GRT/EQU/MOV/ADD/TON/CTU/COP
+- ST statements with assignments, IF/THEN, OR expressions
+
 Run: python tests/data/benchmarks/generate.py
-Creates 5 files: bench_100kb.L5X through bench_50mb.L5X
 """
 
 from pathlib import Path
+from xml.dom.minidom import Document, parseString
 
 OUTPUT_DIR = Path(__file__).parent
 
 
-def header():
-    return (
-        '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
-        '<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" '
-        'TargetType="Controller" ContainsContext="true" '
-        'ExportDate="Sat Mar 04 21:40:05 2023" '
-        'ExportOptions="References NoRawData L5KData DecoratedData Context">\n'
-        '<Controller Name="BenchmarkCtrl">\n'
-    )
+class L5XWriter:
+    """Builds an L5X XML document using minidom for proper indentation."""
 
+    def __init__(self):
+        self.doc = Document()
 
-def footer():
-    return '</Controller>\n</RSLogix5000Content>\n'
+    def _elem(self, parent, tag, attrs=None):
+        """Create and append an element, returning it."""
+        el = self.doc.createElement(tag)
+        if attrs:
+            for k, v in attrs.items():
+                el.setAttribute(k, str(v))
+        parent.appendChild(el)
+        return el
 
+    def _text(self, parent, text):
+        """Set text content on an element."""
+        parent.appendChild(self.doc.createTextNode(text))
 
-def data_types_section():
-    """User-defined data types."""
-    return """\
-<DataTypes Use="Context">
-  <DataType Name="MotorParams" Family="NoFamily" Class="User">
-    <Members>
-      <Member Name="Speed" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
-      <Member Name="Torque" DataType="REAL" Dimension="0" Radix="Float" Hidden="false" ExternalAccess="Read/Write"/>
-      <Member Name="Running" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
-      <Member Name="FaultCode" DataType="SINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
-    </Members>
-  </DataType>
-  <DataType Name="AlarmStruct" Family="NoFamily" Class="User">
-    <Members>
-      <Member Name="Active" DataType="BOOL" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
-      <Member Name="Count" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
-      <Member Name="Timestamp" DataType="DINT" Dimension="0" Radix="Decimal" Hidden="false" ExternalAccess="Read/Write"/>
-    </Members>
-  </DataType>
-  <DataType Name="PIDparams" Family="NoFamily" Class="User">
-    <Members>
-      <Member Name="Setpoint" DataType="REAL" Dimension="0" Radix="Float" Hidden="false" ExternalAccess="Read/Write"/>
-      <Member Name="Kp" DataType="REAL" Dimension="0" Radix="Float" Hidden="false" ExternalAccess="Read/Write"/>
-      <Member Name="Ki" DataType="REAL" Dimension="0" Radix="Float" Hidden="false" ExternalAccess="Read/Write"/>
-      <Member Name="Kd" DataType="REAL" Dimension="0" Radix="Float" Hidden="false" ExternalAccess="Read/Write"/>
-      <Member Name="Output" DataType="REAL" Dimension="0" Radix="Float" Hidden="false" ExternalAccess="Read/Write"/>
-    </Members>
-  </DataType>
-</DataTypes>
-"""
+    def _cdata(self, parent, text):
+        """Set CDATA content on an element."""
+        parent.appendChild(self.doc.createCDATASection(text))
 
+    def build(self):
+        """Build the complete L5X document."""
+        root = self._elem(self.doc, "RSLogix5000Content", {
+            "SchemaRevision": "1.0",
+            "SoftwareRevision": "32.02",
+            "TargetType": "Controller",
+            "ContainsContext": "true",
+            "ExportDate": "Sat Mar 04 21:40:05 2023",
+            "ExportOptions": "References NoRawData L5KData DecoratedData Context",
+        })
+        ctrl = self._elem(root, "Controller", {"Name": "BenchmarkCtrl"})
 
-def controller_tags_section(count):
-    """Controller-scoped tags of various types."""
-    tags = ['<Tags Use="Context">\n']
-    for i in range(count):
-        dtype = ["DINT", "BOOL", "REAL", "STRING", "SINT", "LINT"][i % 6]
-        tags.append(
-            f'<Tag Name="Ctrl{i}" TagType="Base" DataType="{dtype}" Radix="Decimal" '
-            f'Constant="false" ExternalAccess="Read/Write">'
-            f'<Data Format="Decorated"><DataValue DataType="{dtype}" Radix="Decimal" '
-            f'Value="0"/></Data></Tag>\n'
-        )
-    # Array tags
-    for i in range(max(count // 10, 1)):
-        tags.append(
-            f'<Tag Name="Arr{i}" TagType="Base" DataType="DINT" Radix="Decimal" '
-            f'Constant="false" ExternalAccess="Read/Write" Dimensions="100">'
-            f'<Data Format="Decorated"><Array DataType="DINT" Dimensions="100"/>'
-            f'</Data></Tag>\n'
-        )
-    # UDT tags
-    for i in range(max(count // 5, 1)):
-        tags.append(
-            f'<Tag Name="Motor{i}" TagType="Base" DataType="MotorParams" '
-            f'Radix="NullType" Constant="false" ExternalAccess="Read/Write">\n'
-            f'<Data Format="Decorated"><Structure DataType="MotorParams">'
-            f'<DataValueMember Name="Speed" DataType="DINT" Value="0"/>'
-            f'<DataValueMember Name="Torque" DataType="REAL" Value="0.0"/>'
-            f'<DataValueMember Name="Running" DataType="BOOL" Value="0"/>'
-            f'<DataValueMember Name="FaultCode" DataType="SINT" Value="0"/>'
-            f'</Structure></Data></Tag>\n'
-        )
-    tags.append('</Tags>\n')
-    return "".join(tags)
+        self._build_data_types(ctrl)
+        self._build_controller_tags(ctrl)
+        self._build_aois(ctrl)
+        self._build_programs(ctrl)
+        self._build_tasks(ctrl)
+        self._build_modules(ctrl)
 
+        return root
 
-def aoi_section(count):
-    """AddOn Instruction definitions."""
-    aois = ['<AddOnInstructionDefinitions Use="Context">\n']
-    for i in range(count):
-        aois.append(f"""\
-<AddOnInstructionDefinition Name="AOI_Motor{i}" Revision="1.0">
-  <Parameters>
-    <Parameter Name="EnableIn" TagType="Base" DataType="BOOL" Usage="Input" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only"/>
-    <Parameter Name="EnableOut" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="false" ExternalAccess="Read Only"/>
-    <Parameter Name="SpeedRef" TagType="Base" DataType="DINT" Usage="Input" Radix="Decimal" Required="true" Visible="true" ExternalAccess="Read/Write"/>
-    <Parameter Name="Running" TagType="Base" DataType="BOOL" Usage="Output" Radix="Decimal" Required="false" Visible="true" ExternalAccess="Read/Write"/>
-  </Parameters>
-  <LocalTags>
-    <LocalTag Name="SpeedActual" DataType="DINT" Radix="Decimal" ExternalAccess="None"/>
-  </LocalTags>
-  <Routines>
-    <Routine Name="Logic" Type="RLL">
-      <RLLContent>
-        <Rung Number="0" Type="N"><Text><![CDATA[XIC(EnableIn)OTE(Running);]]></Text></Rung>
-        <Rung Number="1" Type="N"><Text><![CDATA[MOV(SpeedRef,SpeedActual);]]></Text></Rung>
-      </RLLContent>
-    </Routine>
-  </Routines>
-</AddOnInstructionDefinition>
-""")
-    aois.append('</AddOnInstructionDefinitions>\n')
-    return "".join(aois)
+    def _build_data_types(self, parent):
+        dts = self._elem(parent, "DataTypes", {"Use": "Context"})
+        for name, family, members in [
+            ("MotorParams", "NoFamily", [
+                ("Speed", "DINT"), ("Torque", "REAL"), ("Running", "BOOL"),
+                ("FaultCode", "SINT"), ("Enabled", "BOOL"),
+            ]),
+            ("AlarmStruct", "NoFamily", [
+                ("Active", "BOOL"), ("Count", "DINT"), ("Timestamp", "DINT"),
+            ]),
+            ("PIDparams", "NoFamily", [
+                ("Setpoint", "REAL"), ("Kp", "REAL"), ("Ki", "REAL"),
+                ("Kd", "REAL"), ("Output", "REAL"), ("Error", "REAL"),
+            ]),
+            ("ConveyorState", "NoFamily", [
+                ("Running", "BOOL"), ("Speed", "DINT"), ("JamCount", "DINT"),
+                ("Faulted", "BOOL"), ("LastFault", "SINT"),
+            ]),
+        ]:
+            dt = self._elem(dts, "DataType", {
+                "Name": name, "Family": family, "Class": "User",
+            })
+            members_el = self._elem(dt, "Members")
+            for mname, mtype in members:
+                self._elem(members_el, "Member", {
+                    "Name": mname, "DataType": mtype,
+                    "Dimension": "0", "Radix": "Decimal",
+                    "Hidden": "false", "ExternalAccess": "Read/Write",
+                })
 
+    def _build_controller_tags(self, parent):
+        tags = self._elem(parent, "Tags", {"Use": "Context"})
 
-def rll_rungs(count, tag_pool):
-    """Generate RLL rung text."""
-    rungs = []
-    opcodes = [
-        lambda t1, t2: f"XIC({t1})OTE({t2});",
-        lambda t1, t2: f"XIO({t1})OTE({t2});",
-        lambda t1, t2: f"XIC({t1})XIC({t2})OTE(Ctrl0);",
-        lambda t1, t2: f"LES({t1},{t2})OTE(Ctrl0);",
-        lambda t1, t2: f"GRT({t1},{t2})OTE(Ctrl1);",
-        lambda t1, t2: f"EQU({t1},{t2})MOV({t1},Arr0[0]);",
-        lambda t1, t2: f"NEQ({t1},{t2})ADD({t1},{t2},Ctrl0);",
-        lambda t1, t2: f"XIC({t1})TON(Timer{i % 10},5000,0);",
-        lambda t1, t2: f"XIC({t1})CTU(Counter{i % 10},{t2},100);",
-        lambda t1, t2: f"COP({t1},{t2},10);",
-    ]
-    for i in range(count):
-        t1 = f"Ctrl{i % tag_pool}"
-        t2 = f"Ctrl{(i + 1) % tag_pool}"
-        rungs.append(f'<Rung Number="{i}" Type="N"><Text><![CDATA[{opcodes[i % len(opcodes)](t1, t2)}]]></Text></Rung>\n')
-    return "".join(rungs)
+        # Basic typed tags
+        for i in range(60):
+            dtype = ["DINT", "BOOL", "REAL", "STRING", "SINT", "LINT"][i % 6]
+            tag = self._elem(tags, "Tag", {
+                "Name": f"Ctrl{i}", "TagType": "Base",
+                "DataType": dtype, "Radix": "Decimal",
+                "Constant": "false", "ExternalAccess": "Read/Write",
+            })
+            data = self._elem(tag, "Data", {"Format": "Decorated"})
+            self._elem(data, "DataValue", {
+                "DataType": dtype, "Radix": "Decimal", "Value": "0",
+            })
 
+        # Array tags
+        for i in range(6):
+            tag = self._elem(tags, "Tag", {
+                "Name": f"Arr{i}", "TagType": "Base",
+                "DataType": "DINT", "Radix": "Decimal",
+                "Constant": "false", "ExternalAccess": "Read/Write",
+                "Dimensions": "100",
+            })
+            data = self._elem(tag, "Data", {"Format": "Decorated"})
+            self._elem(data, "Array", {
+                "DataType": "DINT", "Dimensions": "100",
+            })
 
-def st_body(count, tag_pool):
-    """Generate ST statements."""
-    parts = []
-    for i in range(count):
-        t = f"Ctrl{i % tag_pool}"
-        patterns = [
-            f"{t} := {t} + 1;",
-            f"{t} := {t} * 2;",
-            f"IF {t} > 0 THEN {t} := {t} - 1; END_IF",
-            f"{t} := {t} OR Ctrl{(i + 1) % tag_pool};",
+        # UDT tags (MotorParams instances)
+        for i in range(8):
+            tag = self._elem(tags, "Tag", {
+                "Name": f"Motor{i}", "TagType": "Base",
+                "DataType": "MotorParams", "Radix": "NullType",
+                "Constant": "false", "ExternalAccess": "Read/Write",
+            })
+            data = self._elem(tag, "Data", {"Format": "Decorated"})
+            struct = self._elem(data, "Structure", {"DataType": "MotorParams"})
+            for mname, mtype, val in [
+                ("Speed", "DINT", "0"), ("Torque", "REAL", "0.0"),
+                ("Running", "BOOL", "0"), ("FaultCode", "SINT", "0"),
+                ("Enabled", "BOOL", "0"),
+            ]:
+                self._elem(struct, "DataValueMember", {
+                    "Name": mname, "DataType": mtype, "Value": val,
+                })
+
+        # PID tags
+        for i in range(4):
+            tag = self._elem(tags, "Tag", {
+                "Name": f"PID{i}", "TagType": "Base",
+                "DataType": "PIDparams", "Radix": "NullType",
+                "Constant": "false", "ExternalAccess": "Read/Write",
+            })
+            data = self._elem(tag, "Data", {"Format": "Decorated"})
+            struct = self._elem(data, "Structure", {"DataType": "PIDparams"})
+            for mname in ["Setpoint", "Kp", "Ki", "Kd", "Output", "Error"]:
+                self._elem(struct, "DataValueMember", {
+                    "Name": mname, "DataType": "REAL", "Value": "0.0",
+                })
+
+    def _build_aois(self, parent):
+        aois = self._elem(parent, "AddOnInstructionDefinitions", {"Use": "Context"})
+
+        for i in range(8):
+            aoi = self._elem(aois, "AddOnInstructionDefinition", {
+                "Name": f"AOI_Motor{i}", "Revision": "1.0",
+            })
+
+            params = self._elem(aoi, "Parameters")
+            self._elem(params, "Parameter", {
+                "Name": "EnableIn", "TagType": "Base", "DataType": "BOOL",
+                "Usage": "Input", "Radix": "Decimal", "Required": "false",
+                "Visible": "false", "ExternalAccess": "Read Only",
+            })
+            self._elem(params, "Parameter", {
+                "Name": "EnableOut", "TagType": "Base", "DataType": "BOOL",
+                "Usage": "Output", "Radix": "Decimal", "Required": "false",
+                "Visible": "false", "ExternalAccess": "Read Only",
+            })
+            self._elem(params, "Parameter", {
+                "Name": "SpeedRef", "TagType": "Base", "DataType": "DINT",
+                "Usage": "Input", "Radix": "Decimal", "Required": "true",
+                "Visible": "true", "ExternalAccess": "Read/Write",
+            })
+            self._elem(params, "Parameter", {
+                "Name": "Running", "TagType": "Base", "DataType": "BOOL",
+                "Usage": "Output", "Radix": "Decimal", "Required": "false",
+                "Visible": "true", "ExternalAccess": "Read/Write",
+            })
+
+            local_tags = self._elem(aoi, "LocalTags")
+            self._elem(local_tags, "LocalTag", {
+                "Name": "SpeedActual", "DataType": "DINT",
+                "Radix": "Decimal", "ExternalAccess": "None",
+            })
+
+            routines = self._elem(aoi, "Routines")
+            routine = self._elem(routines, "Routine", {
+                "Name": "Logic", "Type": "RLL",
+            })
+            rll = self._elem(routine, "RLLContent")
+            self._add_rung(rll, 0, "XIC(EnableIn)OTE(Running);")
+            self._add_rung(rll, 1, "MOV(SpeedRef,SpeedActual);")
+
+    def _build_programs(self, parent):
+        programs = self._elem(parent, "Programs", {"Use": "Context"})
+
+        for p in range(3):
+            prog_name = "MainProgram" if p == 0 else f"Program{p}"
+            prog = self._elem(programs, "Program", {"Name": prog_name})
+
+            # Program-scoped tags
+            prog_tags = self._elem(prog, "Tags", {"Use": "Context"})
+            for i in range(15):
+                dtype = ["DINT", "BOOL", "REAL"][i % 3]
+                tag = self._elem(prog_tags, "Tag", {
+                    "Name": f"Prog{p}Tag{i}", "TagType": "Base",
+                    "DataType": dtype, "Radix": "Decimal",
+                    "Constant": "false", "ExternalAccess": "Read/Write",
+                })
+                data = self._elem(tag, "Data", {"Format": "Decorated"})
+                self._elem(data, "DataValue", {
+                    "DataType": dtype, "Radix": "Decimal", "Value": "0",
+                })
+
+            routines = self._elem(prog, "Routines", {"Use": "Context"})
+
+            # Main RLL routine
+            routine = self._elem(routines, "Routine", {
+                "Name": "Main", "Type": "RLL",
+            })
+            rll = self._elem(routine, "RLLContent")
+            self._build_rll_rungs(rll, 200)
+
+            # Secondary RLL routine
+            routine2 = self._elem(routines, "Routine", {
+                "Name": "Control", "Type": "RLL",
+            })
+            rll2 = self._elem(routine2, "RLLContent")
+            self._build_rll_rungs(rll2, 100)
+
+            # ST routine
+            routine3 = self._elem(routines, "Routine", {
+                "Name": "STLogic", "Type": "ST",
+            })
+            st = self._elem(routine3, "STContent")
+            self._cdata(st, self._build_st_body(100))
+
+    def _build_rll_rungs(self, parent, count):
+        opcodes = [
+            lambda i: f"XIC(Ctrl{i % 30})OTE(Ctrl{(i + 1) % 30});",
+            lambda i: f"XIO(Ctrl{i % 30})OTE(Ctrl{(i + 2) % 30});",
+            lambda i: f"XIC(Ctrl{i % 30})XIC(Ctrl{(i + 1) % 30})OTE(Ctrl0);",
+            lambda i: f"LES(Ctrl{i % 30},Ctrl{(i + 1) % 30})OTE(Ctrl0);",
+            lambda i: f"GRT(Ctrl{i % 30},Ctrl{(i + 1) % 30})OTE(Ctrl1);",
+            lambda i: f"EQU(Ctrl{i % 30},Ctrl{(i + 1) % 30})MOV(Ctrl{i % 30},Arr0[{i % 10}]);",
+            lambda i: f"NEQ(Ctrl{i % 30},Ctrl{(i + 1) % 30})ADD(Ctrl{i % 30},Ctrl{(i + 1) % 30},Ctrl0);",
+            lambda i: f"XIC(Ctrl{i % 30})TON(Timer{i % 10},5000,0);",
+            lambda i: f"XIC(Ctrl{i % 30})CTU(Counter{i % 10},{(i + 1) % 30},100);",
+            lambda i: f"COP(Arr{i % 6},Arr{(i + 1) % 6},10);",
         ]
-        parts.append(patterns[i % len(patterns)])
-    return " ".join(parts)
+        for i in range(count):
+            text = opcodes[i % len(opcodes)](i)
+            self._add_rung(parent, i, text)
 
+    def _add_rung(self, parent, number, text):
+        rung = self._elem(parent, "Rung", {"Number": str(number), "Type": "N"})
+        cd = self._elem(rung, "Text")
+        self._cdata(cd, text)
 
-def routine(name, rtype, content):
-    """Wrap routine content in XML."""
-    if rtype == "RLL":
-        return f"""\
-<Routine Name="{name}" Type="RLL">
-<RLLContent>
-{content}</RLLContent>
-</Routine>
-"""
-    else:
-        return f"""\
-<Routine Name="{name}" Type="ST">
-<STContent>
-<![CDATA[{content}]]>
-</STContent>
-</Routine>
-"""
+    def _build_st_body(self, count):
+        parts = []
+        for i in range(count):
+            t = f"Ctrl{i % 30}"
+            patterns = [
+                f"{t} := {t} + 1;",
+                f"{t} := {t} * 2;",
+                f"IF {t} > 0 THEN {t} := {t} - 1; END_IF",
+                f"{t} := {t} OR Ctrl{(i + 1) % 30};",
+            ]
+            parts.append(patterns[i % len(patterns)])
+        return " ".join(parts)
 
+    def _build_tasks(self, parent):
+        tasks = self._elem(parent, "Tasks", {"Use": "Context"})
+        for name, sched, period, priority in [
+            ("MainTask", "Continuous", 10, 0),
+            ("Periodic1", "Periodic", 100, 1),
+            ("Periodic2", "Periodic", 500, 2),
+        ]:
+            task = self._elem(tasks, "Task", {
+                "Name": name, "Type": sched, "Period": str(period),
+                "Priority": str(priority), "WatchdogSize": "0",
+                "WatchdogValue": "0", "InhibitUpdate": "false",
+            })
+            progs = self._elem(task, "Programs")
+            if name == "MainTask":
+                self._elem(progs, "Program", {"Name": "MainProgram"})
+            elif name == "Periodic1":
+                self._elem(progs, "Program", {"Name": "Program1"})
+            else:
+                self._elem(progs, "Program", {"Name": "Program2"})
 
-def program(name, tags, routines):
-    """Wrap program content."""
-    return f"""\
-<Program Name="{name}">
-<Tags Use="Context">
-{tags}</Tags>
-<Routines Use="Context">
-{routines}</Routines>
-</Program>
-"""
+    def _build_modules(self, parent):
+        modules = self._elem(parent, "Modules", {"Use": "Context"})
+        for i in range(3):
+            mod = self._elem(modules, "Module", {
+                "Name": f"Module{i}", "Slot": str(i),
+                "ParentModPortId": "0", "InhibitUpdate": "false",
+            })
+            ports = self._elem(mod, "Ports")
+            self._elem(ports, "Port", {
+                "Id": "0", "Upstream": "true",
+            })
+
+    def toxml(self):
+        """Return the pretty-printed XML string."""
+        return self.doc.toprettyxml(indent="  ")
 
 
 def build_benchmark(target_bytes, label):
-    """Build a complete L5X file targeting approximately target_bytes."""
-    # Scale parameters based on target size
-    if target_bytes < 200_000:
-        ctrl_tags = 30
-        aoi_count = 2
-        rungs = 50
-        st_stmts = 30
-        programs = 1
-    elif target_bytes < 1_000_000:
-        ctrl_tags = 100
-        aoi_count = 5
-        rungs = 300
-        st_stmts = 100
-        programs = 1
-    elif target_bytes < 5_000_000:
-        ctrl_tags = 300
-        aoi_count = 10
-        rungs = 2000
-        st_stmts = 500
-        programs = 2
-    elif target_bytes < 20_000_000:
-        ctrl_tags = 800
-        aoi_count = 20
-        rungs = 10000
-        st_stmts = 2000
-        programs = 3
-    else:
-        ctrl_tags = 2000
-        aoi_count = 30
-        rungs = 50000
-        st_stmts = 5000
-        programs = 5
+    """Build an L5X file targeting approximately target_bytes."""
+    writer = L5XWriter()
+    ctrl = writer.build()
 
-    parts = [header()]
-    parts.append(data_types_section())
-    parts.append(controller_tags_section(ctrl_tags))
-    parts.append(aoi_section(aoi_count))
-    parts.append('<Programs Use="Context">\n')
+    # Check current size
+    xml = writer.toxml()
+    current = len(xml.encode("utf-8"))
 
-    for p in range(programs):
-        prog_name = f"Program{p}" if p > 0 else "MainProgram"
-        prog_tags = controller_tags_section(max(ctrl_tags // programs // 2, 5))
-        routines = []
+    if current < target_bytes:
+        # Add more RLL rungs to pad
+        programs_list = ctrl.getElementsByTagName("Programs")
+        if programs_list:
+            programs = programs_list[0]
+            prog_list = programs.getElementsByTagName("Program")
+            if prog_list:
+                main_prog = prog_list[0]
+                rll_list = main_prog.getElementsByTagName("RLLContent")
+                if rll_list:
+                    main_rll = rll_list[0]
+                    deficit = target_bytes - current
+                    extra_rungs = deficit // 150  # ~150 bytes per rung with indentation
+                    writer._build_rll_rungs(main_rll, extra_rungs)
+                    xml = writer.toxml()
 
-        # Main RLL routine
-        main_rll = rll_rungs(rungs // programs, ctrl_tags)
-        routines.append(routine("Main", "RLL", main_rll))
-
-        # Secondary RLL routine with different patterns
-        if programs > 1 or target_bytes > 500_000:
-            sec_rll = rll_rungs(max(rungs // programs // 2, 20), ctrl_tags)
-            routines.append(routine("Control", "RLL", sec_rll))
-
-        # ST routine
-        st_code = st_body(st_stmts // programs, ctrl_tags)
-        routines.append(routine("STLogic", "ST", st_code))
-
-        parts.append(program(prog_name, prog_tags, "".join(routines)))
-
-    parts.append('</Programs>\n')
-    parts.append(footer())
-
-    content = "".join(parts)
-    actual_size = len(content.encode("utf-8"))
-
-    # Pad if needed by adding more rungs to MainProgram
-    if actual_size < target_bytes:
-        deficit = target_bytes - actual_size
-        extra_rungs_needed = deficit // 120  # ~120 bytes per rung
-        extra_rll = rll_rungs(extra_rungs_needed, ctrl_tags)
-        # Insert before the closing </Routines> of MainProgram
-        marker = '</Routines>\n</Program>\n</Programs>'
-        insert_routine = routine("Extra", "RLL", extra_rll)
-        content = content.replace(
-            marker,
-            insert_routine + marker,
-            1,
-        )
-
-    actual_size = len(content.encode("utf-8"))
-    print(f"  {label}: {actual_size / 1024:.0f} KB ({actual_size / (1024*1024):.1f} MB)")
-    return content
+    return xml
 
 
 def main():
@@ -284,11 +352,11 @@ def main():
 
     print("Generating benchmark L5X files:")
     for filename, target, label in configs:
-        content = build_benchmark(target, label)
+        xml = build_benchmark(target, label)
         path = OUTPUT_DIR / filename
-        path.write_text(content, encoding="utf-8")
+        path.write_text(xml, encoding="utf-8")
         actual = path.stat().st_size
-        print(f"    -> {path.name}: {actual / 1024:.0f} KB")
+        print(f"  {label}: {actual / 1024:.0f} KB ({actual / (1024*1024):.1f} MB)")
 
     print("Done.")
 
