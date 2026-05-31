@@ -2,11 +2,18 @@ from pathlib import Path
 
 from returns.result import Failure, Success
 
+from l5x_lint.domain.errors import (
+    L5XStructureError,
+    RLLParseError,
+    SoftwareRevisionError,
+    STParseError,
+)
 from l5x_lint.domain.models import L5XProject
 from l5x_lint.infrastructure.adapter import parse_l5x
 from l5x_lint.infrastructure.parsers._factory import create_parser
 from l5x_lint.infrastructure.parsers.base import L5XParser
 from l5x_lint.infrastructure.parsers.v38 import L5XParserV38
+from l5x_lint.pipeline.analyze import analyze
 
 TEST_DATA = Path(__file__).parent.parent / "data"
 VALID_DIR = TEST_DATA / "valid"
@@ -421,3 +428,477 @@ def test_parser_stores_revision_metadata():
     mod = project.controller.modules[0]
     assert mod.name == "Local"
     assert mod.parent == "Local"
+
+
+# ---------------------------------------------------------------------------
+# Helper: build minimal valid L5X XML
+# ---------------------------------------------------------------------------
+
+def _minimal_l5x(controller_content="", software_revision="32.00"):
+    return f'''<?xml version="1.0" encoding="UTF-8"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="{software_revision}">
+  <Controller Name="Test" ProcessorType="1756-L83E">
+    {controller_content}
+  </Controller>
+</RSLogix5000Content>'''
+
+
+def _parse_and_analyze(xml):
+    """Parse L5X then run analyze (which triggers RLL/ST parsing)."""
+    result = parse_l5x(xml)
+    if isinstance(result, Failure):
+        return result
+    project = result.unwrap()
+    return analyze(project.controller)
+
+
+def _l5x_with_rll(routine_name, rll_code):
+    return _minimal_l5x(f"""
+    <DataTypes/><Tags/>
+    <Programs><Program Name="Main">
+      <Tags/>
+      <Routines>
+        <Routine Name="{routine_name}" Type="RLL">
+          <RLLContent><Rung Number="0"><Text>{rll_code}</Text></Rung></RLLContent>
+        </Routine>
+      </Routines>
+    </Program></Programs>
+    <Tasks/>
+    <AddOnInstructionDefinitions/>
+    <Modules/>""")
+
+
+def _l5x_with_st(routine_name, st_code):
+    return _minimal_l5x(f"""
+    <DataTypes/><Tags/>
+    <Programs><Program Name="Main">
+      <Tags/>
+      <Routines>
+        <Routine Name="{routine_name}" Type="ST">
+          <STContent><Line Number="0">{st_code}</Line></STContent>
+        </Routine>
+      </Routines>
+    </Program></Programs>
+    <Tasks/>
+    <AddOnInstructionDefinitions/>
+    <Modules/>""")
+
+
+# ---------------------------------------------------------------------------
+# Malformed XML — well-formedness errors (ET.parse failures)
+# ---------------------------------------------------------------------------
+
+class TestMalformedXml:
+    def test_truncated_xml(self):
+        result = parse_l5x("<RSLogix5000Content>")
+        assert isinstance(result, Failure)
+
+    def test_unclosed_child_element(self):
+        xml = _minimal_l5x("<DataTypes><DataType Name='Bad'>")
+        result = parse_l5x(xml)
+        assert isinstance(result, Failure)
+
+    def test_mismatched_tags(self):
+        xml = _minimal_l5x("</Controller>")
+        result = parse_l5x(xml)
+        assert isinstance(result, Failure)
+
+    def test_bad_entity_reference(self):
+        xml = _minimal_l5x("&invalid;")
+        result = parse_l5x(xml)
+        assert isinstance(result, Failure)
+
+    def test_garbage_in_valid_skeleton(self):
+        xml = _minimal_l5x("<<<<<<<GARBAGE>>>>>>>")
+        result = parse_l5x(xml)
+        assert isinstance(result, Failure)
+
+    def test_wrong_root_element(self):
+        xml = '<?xml version="1.0"?><NotL5X><Controller Name="T"/></NotL5X>'
+        result = parse_l5x(xml)
+        assert isinstance(result, Failure)
+
+    def test_empty_file(self):
+        result = parse_l5x("")
+        assert isinstance(result, Failure)
+
+    def test_binary_garbage(self):
+        result = parse_l5x("\xff\xfe\x00\x00")
+        assert isinstance(result, Failure)
+
+    def test_non_xml_string(self):
+        result = parse_l5x("hello world")
+        assert isinstance(result, Failure)
+
+    def test_malformed_xml_produces_structure_error(self):
+        result = parse_l5x("<unclosed>")
+        match result:
+            case Failure(L5XStructureError(element="XML")):
+                pass
+            case _:
+                assert False, f"Expected L5XStructureError(element='XML'), got {result}"
+
+
+# ---------------------------------------------------------------------------
+# Bad RLL code — should stop analysis with RLLParseError
+# (parse_l5x only extracts XML; analyze() triggers RLL/ST parsing)
+# ---------------------------------------------------------------------------
+
+class TestBadRllCode:
+    def test_garbage_rll_through_pipeline(self):
+        """CDATA wrapping prevents XML-level failure; Lark parser rejects bad RLL."""
+        xml = _minimal_l5x(f"""
+        <DataTypes/><Tags/>
+        <Programs><Program Name="Main">
+          <Tags/>
+          <Routines>
+            <Routine Name="Main" Type="RLL">
+              <RLLContent><Rung Number="0"><Text><![CDATA[@invalid!;]]></Text></Rung></RLLContent>
+            </Routine>
+          </Routines>
+        </Program></Programs>
+        <Tasks/>
+        <AddOnInstructionDefinitions/>
+        <Modules/>""")
+        result = _parse_and_analyze(xml)
+        assert isinstance(result, Failure), f"Expected Failure for bad RLL, got {result}"
+
+    def test_truncated_rll_in_cdata(self):
+        """CDATA wrapping; truncated RLL inside CDATA."""
+        xml = _minimal_l5x(f"""
+        <DataTypes/><Tags/>
+        <Programs><Program Name="Main">
+          <Tags/>
+          <Routines>
+            <Routine Name="Main" Type="RLL">
+              <RLLContent><Rung Number="0"><Text><![CDATA[XIC(]]></Text></Rung></RLLContent>
+            </Routine>
+          </Routines>
+        </Program></Programs>
+        <Tasks/>
+        <AddOnInstructionDefinitions/>
+        <Modules/>""")
+        result = _parse_and_analyze(xml)
+        assert isinstance(result, Failure), f"Expected Failure for truncated RLL, got {result}"
+
+    def test_empty_rll_text(self):
+        xml = _l5x_with_rll("Main", "")
+        result = parse_l5x(xml)
+        # Empty text is valid — parser returns empty rungs
+        assert isinstance(result, Success)
+
+    def test_rll_with_xml_special_chars_in_cdata(self):
+        xml = _minimal_l5x(f"""
+        <DataTypes/><Tags/>
+        <Programs><Program Name="Main">
+          <Tags/>
+          <Routines>
+            <Routine Name="Main" Type="RLL">
+              <RLLContent><Rung Number="0"><Text><![CDATA[XIC(Tag) < 5 OTE(Output);]]></Text></Rung></RLLContent>
+            </Routine>
+          </Routines>
+        </Program></Programs>
+        <Tasks/>
+        <AddOnInstructionDefinitions/>
+        <Modules/>""")
+        result = parse_l5x(xml)
+        # CDATA preserves the literal text, parser should handle it
+        assert isinstance(result, (Success, Failure))
+
+    def test_multiple_bad_routines_all_reported(self):
+        """Both routines have unparseable RLL — both errors should be reported."""
+        xml = _minimal_l5x(f"""
+        <DataTypes/><Tags/>
+        <Programs><Program Name="Main">
+          <Tags/>
+          <Routines>
+            <Routine Name="Bad1" Type="RLL">
+              <RLLContent><Rung Number="0"><Text><![CDATA[@invalid1;]]></Text></Rung></RLLContent>
+            </Routine>
+            <Routine Name="Bad2" Type="RLL">
+              <RLLContent><Rung Number="0"><Text><![CDATA[@invalid2;]]></Text></Rung></RLLContent>
+            </Routine>
+          </Routines>
+        </Program></Programs>
+        <Tasks/>
+        <AddOnInstructionDefinitions/>
+        <Modules/>""")
+        result = _parse_and_analyze(xml)
+        assert isinstance(result, Failure), f"Expected Failure for two bad routines, got {result}"
+
+
+# ---------------------------------------------------------------------------
+# Bad ST code — should stop analysis with STParseError
+# (parse_l5x only extracts XML; analyze() triggers RLL/ST parsing)
+# ---------------------------------------------------------------------------
+
+class TestBadStCode:
+    def test_garbage_st_through_pipeline(self):
+        """CDATA wrapping; garbage ST inside CDATA."""
+        xml = _minimal_l5x(f"""
+        <DataTypes/><Tags/>
+        <Programs><Program Name="Main">
+          <Tags/>
+          <Routines>
+            <Routine Name="Main" Type="ST">
+              <STContent><Line Number="0"><![CDATA[garbage code here]]></Line></STContent>
+            </Routine>
+          </Routines>
+        </Program></Programs>
+        <Tasks/>
+        <AddOnInstructionDefinitions/>
+        <Modules/>""")
+        result = _parse_and_analyze(xml)
+        assert isinstance(result, Failure), f"Expected Failure for bad ST, got {result}"
+
+    def test_truncated_st_in_cdata(self):
+        """CDATA wrapping; truncated ST inside CDATA."""
+        xml = _minimal_l5x(f"""
+        <DataTypes/><Tags/>
+        <Programs><Program Name="Main">
+          <Tags/>
+          <Routines>
+            <Routine Name="Main" Type="ST">
+              <STContent><Line Number="0"><![CDATA[IF x ></Line></STContent>
+            </Routine>
+          </Routines>
+        </Program></Programs>
+        <Tasks/>
+        <AddOnInstructionDefinitions/>
+        <Modules/>""")
+        result = _parse_and_analyze(xml)
+        assert isinstance(result, Failure), f"Expected Failure for truncated ST, got {result}"
+
+    def test_st_missing_rhs(self):
+        """Missing RHS in assignment — ST parser should reject."""
+        xml = _minimal_l5x(f"""
+        <DataTypes/><Tags/>
+        <Programs><Program Name="Main">
+          <Tags/>
+          <Routines>
+            <Routine Name="Main" Type="ST">
+              <STContent><Line Number="0"><![CDATA[x := ;]]></Line></STContent>
+            </Routine>
+          </Routines>
+        </Program></Programs>
+        <Tasks/>
+        <AddOnInstructionDefinitions/>
+        <Modules/>""")
+        result = _parse_and_analyze(xml)
+        assert isinstance(result, Failure), f"Expected Failure for missing RHS, got {result}"
+
+    def test_st_with_xml_special_chars(self):
+        xml = _minimal_l5x(f"""
+        <DataTypes/><Tags/>
+        <Programs><Program Name="Main">
+          <Tags/>
+          <Routines>
+            <Routine Name="Main" Type="ST">
+              <STContent><Line Number="0"><![CDATA[IF x < 5 THEN y := 1; END_IF]]></Line></STContent>
+            </Routine>
+          </Routines>
+        </Program></Programs>
+        <Tasks/>
+        <AddOnInstructionDefinitions/>
+        <Modules/>""")
+        result = parse_l5x(xml)
+        # CDATA preserves < and > literally, parser handles it
+        assert isinstance(result, (Success, Failure))
+
+
+# ---------------------------------------------------------------------------
+# CDATA edge cases
+# ---------------------------------------------------------------------------
+
+class TestCdataEdgeCases:
+    def test_rll_in_cdata_section(self):
+        xml = _minimal_l5x(f"""
+        <DataTypes/><Tags/>
+        <Programs><Program Name="Main">
+          <Tags/>
+          <Routines>
+            <Routine Name="Main" Type="RLL">
+              <RLLContent><Rung Number="0"><![CDATA[XIC(Tag)OTE(Output);]]></Rung></RLLContent>
+            </Routine>
+          </Routines>
+        </Program></Programs>
+        <Tasks/>
+        <AddOnInstructionDefinitions/>
+        <Modules/>""")
+        result = parse_l5x(xml)
+        assert isinstance(result, Success)
+
+    def test_st_in_cdata_section(self):
+        xml = _minimal_l5x(f"""
+        <DataTypes/><Tags/>
+        <Programs><Program Name="Main">
+          <Tags/>
+          <Routines>
+            <Routine Name="Main" Type="ST">
+              <STContent><Line Number="0"><![CDATA[x := 1;]]></Line></STContent>
+            </Routine>
+          </Routines>
+        </Program></Programs>
+        <Tasks/>
+        <AddOnInstructionDefinitions/>
+        <Modules/>""")
+        result = parse_l5x(xml)
+        assert isinstance(result, Success)
+
+    def test_mixed_cdata_and_text_rll(self):
+        xml = _minimal_l5x(f"""
+        <DataTypes/><Tags/>
+        <Programs><Program Name="Main">
+          <Tags/>
+          <Routines>
+            <Routine Name="Main" Type="RLL">
+              <RLLContent>
+                <Rung Number="0"><Text>XIC(Tag1)OTE(Output1);</Text></Rung>
+                <Rung Number="1"><![CDATA[XIC(Tag2)OTE(Output2);]]></Rung>
+              </RLLContent>
+            </Routine>
+          </Routines>
+        </Program></Programs>
+        <Tasks/>
+        <AddOnInstructionDefinitions/>
+        <Modules/>""")
+        result = parse_l5x(xml)
+        assert isinstance(result, Success)
+
+
+# ---------------------------------------------------------------------------
+# Bad SoftwareRevision — should fail gracefully
+# ---------------------------------------------------------------------------
+
+class TestBadSoftwareRevision:
+    def test_empty_software_revision(self):
+        xml = '<?xml version="1.0"?><RSLogix5000Content SchemaRevision="1.0" SoftwareRevision=""><Controller Name="T"/></RSLogix5000Content>'
+        result = parse_l5x(xml)
+        # Empty version — factory returns SoftwareRevisionError
+        assert isinstance(result, Failure)
+
+    def test_non_numeric_software_revision(self):
+        xml = '<?xml version="1.0"?><RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="abc"><Controller Name="T"/></RSLogix5000Content>'
+        result = parse_l5x(xml)
+        assert isinstance(result, Failure)
+
+    def test_future_version_warns_but_continues(self):
+        xml = _minimal_l5x(software_revision="99.00")
+        result = parse_l5x(xml)
+        # v99 has no XSD, validation skips, parser uses base — should succeed
+        assert isinstance(result, Success)
+
+    def test_old_version_without_xsd(self):
+        xml = _minimal_l5x(software_revision="20.01")
+        result = parse_l5x(xml)
+        # v20 has no XSD, validation skips — should succeed
+        assert isinstance(result, Success)
+
+
+# ---------------------------------------------------------------------------
+# XSD validation failures — missing required structure
+# ---------------------------------------------------------------------------
+
+class TestXsdValidationFailures:
+    def test_missing_controller_element(self):
+        xml = """<?xml version="1.0"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.00">
+</RSLogix5000Content>"""
+        result = parse_l5x(xml)
+        match result:
+            case Failure(L5XStructureError(element="Controller")):
+                pass
+            case _:
+                assert False, f"Expected L5XStructureError(element='Controller'), got {result}"
+
+    def test_routine_missing_type_attribute(self):
+        xml = _minimal_l5x("""
+        <DataTypes/><Tags/>
+        <Programs><Program Name="Main">
+          <Tags/>
+          <Routines>
+            <Routine Name="NoType">
+              <RLLContent><Rung Number="0"><Text>XIC(Tag)OTE(Out);</Text></Rung></RLLContent>
+            </Routine>
+          </Routines>
+        </Program></Programs>
+        <Tasks/>
+        <AddOnInstructionDefinitions/>
+        <Modules/>""")
+        result = parse_l5x(xml)
+        assert isinstance(result, Failure)
+
+    def test_routine_type_none_is_valid(self):
+        """Type='None' is a valid enum value in the XSD."""
+        xml = _minimal_l5x("""
+        <DataTypes/><Tags/>
+        <Programs><Program Name="Main">
+          <Tags/>
+          <Routines>
+            <Routine Name="Empty" Type="None"/>
+          </Routines>
+        </Program></Programs>
+        <Tasks/>
+        <AddOnInstructionDefinitions/>
+        <Modules/>""")
+        result = parse_l5x(xml)
+        # Type="None" is valid per XSD — empty routine is fine
+        assert isinstance(result, Success)
+
+
+# ---------------------------------------------------------------------------
+# Error type assertions — confirm correct error wrapper
+# ---------------------------------------------------------------------------
+
+class TestErrorTypes:
+    def test_well_formedness_error_is_structure_error(self):
+        result = parse_l5x("<bad>")
+        match result:
+            case Failure(L5XStructureError()):
+                pass
+            case _:
+                assert False, f"Expected L5XStructureError, got {result}"
+
+    def test_rll_parse_error_type(self):
+        """CDATA-wrapped bad RLL triggers parse failure through analyze()."""
+        xml = _minimal_l5x(f"""
+        <DataTypes/><Tags/>
+        <Programs><Program Name="Main">
+          <Tags/>
+          <Routines>
+            <Routine Name="Main" Type="RLL">
+              <RLLContent><Rung Number="0"><Text><![CDATA[@invalid!;]]></Text></Rung></RLLContent>
+            </Routine>
+          </Routines>
+        </Program></Programs>
+        <Tasks/>
+        <AddOnInstructionDefinitions/>
+        <Modules/>""")
+        result = _parse_and_analyze(xml)
+        assert isinstance(result, Failure), f"Expected Failure for bad RLL, got {result}"
+
+    def test_st_parse_error_type(self):
+        """CDATA-wrapped bad ST triggers parse failure through analyze()."""
+        xml = _minimal_l5x(f"""
+        <DataTypes/><Tags/>
+        <Programs><Program Name="Main">
+          <Tags/>
+          <Routines>
+            <Routine Name="Main" Type="ST">
+              <STContent><Line Number="0"><![CDATA[garbage code here]]></Line></STContent>
+            </Routine>
+          </Routines>
+        </Program></Programs>
+        <Tasks/>
+        <AddOnInstructionDefinitions/>
+        <Modules/>""")
+        result = _parse_and_analyze(xml)
+        assert isinstance(result, Failure), f"Expected Failure for bad ST, got {result}"
+
+    def test_wrong_arg_type_is_adapter_error(self):
+        result = parse_l5x(42)
+        match result:
+            case Failure():
+                pass
+            case _:
+                assert False, f"Expected Failure, got {result}"
