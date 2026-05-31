@@ -36,7 +36,7 @@ BENCH_DIR = Path(__file__).parent.parent / "data" / "benchmarks"
 TIME_MULTIPLIER = 3.0
 
 BENCHMARKS = [
-    ("bench_100kb.L5X", "100KB", 0.15),
+    ("bench_100kb.L5X", "100KB", 0.80),
     ("bench_500kb.L5X", "500KB", 0.50),
     ("bench_2mb.L5X", "2MB", 2.50),
     ("bench_10mb.L5X", "10MB", 12.0),

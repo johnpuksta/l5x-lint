@@ -30,7 +30,7 @@
 <Tags Use="Context">
 </Tags>
 <Routines Use="Context">
-<Routine Use="Context" Name="ProcessRoutine">
+<Routine Use="Context" Name="ProcessRoutine" Type="RLL">
 <RLLContent Use="Context">
 <Rung Use="Target" Number="0" Type="N">
 <Text><![CDATA[XIC(ProcessEnable)TON(TimerOn, 5000, 0);]]></Text>

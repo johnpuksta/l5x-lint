@@ -46,7 +46,7 @@
 </AddOnInstructionDefinition>
 </AddOnInstructionDefinitions>
 <Modules>
-<Module Name="Local" CatalogNumber="1756-L85E" ParentModule="Local" Inhibited="false" MajorFault="true" Use="Target">
+<Module Name="Local" CatalogNumber="1756-L85E" ParentModule="Local" ParentModPortId="0" Inhibited="false" MajorFault="true" Use="Target">
 <EKey State="Disabled"/>
 <Ports>
 <Port Id="1" Address="0" Type="ICP" Upstream="false">

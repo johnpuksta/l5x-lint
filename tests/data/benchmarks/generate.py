@@ -297,9 +297,9 @@ class L5XWriter:
     def _build_tasks(self, parent):
         tasks = self._elem(parent, "Tasks", {"Use": "Context"})
         for name, sched, period, priority in [
-            ("MainTask", "Continuous", 10, 0),
-            ("Periodic1", "Periodic", 100, 1),
-            ("Periodic2", "Periodic", 500, 2),
+            ("MainTask", "CONTINUOUS", 10, 0),
+            ("Periodic1", "PERIODIC", 100, 1),
+            ("Periodic2", "PERIODIC", 500, 2),
         ]:
             task = self._elem(tasks, "Task", {
                 "Name": name, "Type": sched, "Period": str(period),
@@ -320,6 +320,9 @@ class L5XWriter:
             mod = self._elem(modules, "Module", {
                 "Name": f"Module{i}", "Slot": str(i),
                 "ParentModPortId": "0", "InhibitUpdate": "false",
+                "CatalogNumber": f"1756-IB32/{chr(65 + i)}",
+                "Vendor": "1", "ProductType": "14",
+                "ProductCode": "16", "Major": "2", "Minor": "1",
             })
             ports = self._elem(mod, "Ports")
             self._elem(ports, "Port", {

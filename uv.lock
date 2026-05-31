@@ -358,22 +358,14 @@ wheels = [
 ]
 
 [[package]]
-name = "l5x"
-version = "1.7"
-source = { registry = "https://pypi.org/simple" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/1d/86/545176a1a3bd8690450e04f1f20db39ba1c8ba64d83b0a5a201a75bb5d4f/l5x-1.7-py2.py3-none-any.whl", hash = "sha256:0a13f37bc871accb09c8614b2b3256e62cc59aac8e93ea00dc90fc160ffa7832", size = 53887, upload-time = "2026-03-15T18:47:25.473Z" },
-]
-
-[[package]]
 name = "l5x-lint"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
-    { name = "l5x" },
     { name = "lark" },
     { name = "mcp" },
     { name = "returns" },
+    { name = "xmlschema" },
 ]
 
 [package.optional-dependencies]
@@ -385,13 +377,9 @@ dev = [
 mcp = [
     { name = "mcp" },
 ]
-xsd = [
-    { name = "xmlschema" },
-]
 
 [package.metadata]
 requires-dist = [
-    { name = "l5x", specifier = ">=0.1" },
     { name = "lark", specifier = ">=1.1" },
     { name = "mcp", specifier = ">=1.0" },
     { name = "mcp", marker = "extra == 'mcp'", specifier = ">=1.0" },
@@ -399,9 +387,9 @@ requires-dist = [
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=5.0" },
     { name = "returns", specifier = ">=0.27" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.9" },
-    { name = "xmlschema", marker = "extra == 'xsd'", specifier = ">=3.0" },
+    { name = "xmlschema", specifier = ">=3.0" },
 ]
-provides-extras = ["dev", "mcp", "xsd"]
+provides-extras = ["dev", "mcp"]
 
 [[package]]
 name = "lark"

@@ -20,7 +20,10 @@ def _parse_dimensions(dim_str: str | None) -> tuple[int, ...]:
         return ()
     raw = dim_str.strip().replace(",", " ")
     parts = [p for p in raw.split(" ") if p]
-    return tuple(int(p) for p in parts)
+    try:
+        return tuple(int(p) for p in parts)
+    except ValueError:
+        return ()
 
 
 def _parse_member_dimension(dim_str: str | None) -> int:

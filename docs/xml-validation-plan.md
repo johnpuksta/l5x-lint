@@ -175,28 +175,28 @@ pyproject.toml                  # CHANGE: move xmlschema from optional [xsd] to 
 
 ## Migration Path
 
-1. **Fix `_parse_dimensions` crash** — add `try/except ValueError`. 5 minutes, zero risk.
-2. **Move XSD files** to `src/l5x_lint/schemas/`, update `pyproject.toml` (remove `exclude` for schemas, move `xmlschema` from optional to core, remove phantom `l5x` dep).
-3. **Add `_xsd.py`** with `validate_l5x_xml()` and schema cache. Wire into `adapter.py` after `ET.parse`, before `create_parser`.
-4. **Fix cascade in `routine_router.py`** — collect all parse failures instead of aborting on first.
-5. **Fix cascade in `analyze.py`** — isolate per-check, continue on crash.
-6. **Add version warning** — warn when `SoftwareRevision` exceeds max known version.
-7. **Test with real L5X files** — verify namespace handling works, check error message quality.
+1. ✅ **Fix `_parse_dimensions` crash** — add `try/except ValueError`.
+2. ✅ **Move XSD files** to `src/l5x_lint/schemas/`, update `pyproject.toml` (remove `exclude` for schemas, move `xmlschema` from optional to core, remove phantom `l5x` dep).
+3. ✅ **Add `_xsd.py`** with `validate_l5x_xml()` and schema cache. Wire into `adapter.py` after `ET.parse`, before `create_parser`.
+4. ✅ **Fix cascade in `routine_router.py`** — collect all parse failures instead of aborting on first.
+5. ✅ **Fix cascade in `analyze.py`** — isolate per-check, continue on crash. Added EX100/EX101 codes.
+6. ✅ **Add version warning** — warn when `SoftwareRevision` exceeds max known version.
+7. **Test with real L5X files** — TODO: verify with actual Rockwell exports.
 
 ## What This Handles
 
 | Scenario | Current Behavior | After Fix |
 |---|---|---|
 | Missing required attribute | Silent `""` default | XSD validation fails → error reported → analysis stops |
-| Invalid enum value | Silent acceptance | XSD validation fails → error reported → analysis stops |
-| Wrong element ordering | Silent acceptance | XSD validation fails → error reported → analysis stops |
+| Invalid enum value | Silent acceptance | XSD validation fails (tolerated — Rockwell uses mixed case) |
+| Wrong element ordering | Silent acceptance | XSD validation fails (tolerated — Rockwell reorders elements) |
 | Bad attribute type | Silent `0` or crash | XSD validation fails → error reported → analysis stops |
-| Non-integer `Dimensions` | **Crash** (uncaught ValueError) | XSD catches it OR `try/except` returns `()` |
+| Non-integer `Dimensions` | **Crash** (uncaught ValueError) | `try/except` returns `()` |
 | Bad RLL/ST code in `<Text>` | Cascade kills all routines | All failures collected, all reported, analysis fails cleanly |
-| Check function crashes | Cascade kills all checks | Diagnostic emitted, remaining checks continue |
+| Check function crashes | Cascade kills all checks | EX101 diagnostic emitted, remaining checks continue |
 | Unsupported version | Silent fallback | Warning emitted |
 | Well-formedness error (bad XML) | `ET.ParseError` → `Failure` | Same — already works |
-| FBD/SFC routine | Silently skipped | Still skipped (no parser), but could add diagnostic |
+| FBD/SFC routine | Silently skipped | Still skipped (no parser) |
 
 ## What This Doesn't Handle (Intentionally)
 

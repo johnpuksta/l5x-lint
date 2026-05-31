@@ -11,6 +11,7 @@ from l5x_lint.domain.errors import (
     LintInternalError,
 )
 from l5x_lint.domain.models import L5XProject
+from l5x_lint.infrastructure._xsd import validate_l5x_xml
 from l5x_lint.infrastructure.parsers._factory import create_parser
 
 
@@ -31,6 +32,13 @@ def parse_l5x(source: str | Path) -> Result[L5XProject, LintInternalError]:
 
     schema_revision = root.get("SchemaRevision", "")
     software_revision = root.get("SoftwareRevision", "")
+
+    xsd_result = validate_l5x_xml(root, software_revision)
+    match xsd_result:
+        case Failure() as f:
+            return f
+        case Success():
+            pass
 
     controller_el = root.find("Controller")
     if controller_el is None:

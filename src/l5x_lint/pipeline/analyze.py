@@ -4,10 +4,10 @@ from collections.abc import Callable
 
 from returns.pipeline import flow
 from returns.pointfree import bind
-from returns.result import Failure, Result, Success
+from returns.result import Result, Success
 
 from l5x_lint.domain.diagnostics import AnalysisResult, Diagnostic
-from l5x_lint.domain.errors import CheckExecutionError, LintInternalError
+from l5x_lint.domain.errors import LintInternalError
 from l5x_lint.domain.models import Controller, Location, Routine
 from l5x_lint.pipeline.config import LintConfig
 from l5x_lint.pipeline.dialect import resolve_dialect, set_dialect
@@ -65,8 +65,10 @@ def _run_checks(controller: Controller) -> Result[AnalysisResult, LintInternalEr
                     diagnostics.extend(check(r, symbols, loc))
                 except Exception as e:
                     name = getattr(check, '__name__', type(check).__name__)
-                    return Failure(CheckExecutionError(
-                        check=name, detail=str(e),
+                    diagnostics.append(Diagnostic(
+                        code="EX101", severity="error",
+                        message=f"Check '{name}' crashed: {e}",
+                        location=loc,
                     ))
 
     errors = sum(1 for d in diagnostics if d.severity == "error")

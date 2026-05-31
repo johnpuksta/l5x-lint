@@ -2,7 +2,7 @@ from returns.pipeline import flow
 from returns.pointfree import bind
 from returns.result import Failure, Result, Success
 
-from l5x_lint.domain.errors import LintInternalError
+from l5x_lint.domain.errors import LintInternalError, RLLParseError
 from l5x_lint.domain.models import Controller
 from l5x_lint.domain.rll_models import ParsedRung
 from l5x_lint.domain.st_models import StProgram
@@ -21,15 +21,21 @@ def route_routines(controller: Controller) -> Result[Controller, LintInternalErr
 def _parse_all_routines(
     controller: Controller,
 ) -> Result[Controller, LintInternalError]:
+    failures: list[tuple[str, LintInternalError]] = []
     for prog in controller.programs:
         for r in prog.routines:
             if not r.cdata or r.type not in _ROUTABLE:
                 continue
             parsed = _parse_by_type(r.type, r.cdata)
-            result = parsed.map(lambda v: _assign(r, r.type, v))
-            match result:
-                case Failure():
-                    return Failure(result.failure)
+            match parsed:
+                case Success(value):
+                    _assign(r, r.type, value)
+                case Failure(err):
+                    failures.append((r.name, err))
+
+    if failures:
+        detail = "; ".join(f"'{name}': {err}" for name, err in failures)
+        return Failure(RLLParseError(text=detail))
     return Success(controller)
 
 

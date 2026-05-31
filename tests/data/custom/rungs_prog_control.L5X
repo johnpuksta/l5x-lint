@@ -14,7 +14,7 @@
 <Tags Use="Context">
 </Tags>
 <Routines Use="Context">
-<Routine Use="Context" Name="ProgControlRoutine">
+<Routine Use="Context" Name="ProgControlRoutine" Type="RLL">
 <RLLContent Use="Context">
 <Rung Use="Target" Number="0" Type="N">
 <Text><![CDATA[AFI;]]></Text>
@@ -36,7 +36,7 @@
 </Rung>
 </RLLContent>
 </Routine>
-<Routine Use="Context" Name="SubRoutine">
+<Routine Use="Context" Name="SubRoutine" Type="RLL">
 <RLLContent Use="Context">
 <Rung Use="Target" Number="0" Type="N">
 <Text><![CDATA[XIC(JsrEnable)ADD(Param1, Param2, Param1);]]></Text>

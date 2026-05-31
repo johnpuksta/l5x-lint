@@ -806,6 +806,34 @@ class WS118(LintErrorBase):
     line: int
 
 
+@dataclass
+class EX100(LintErrorBase):
+    code: ClassVar[str] = "EX100"
+    severity: ClassVar[str] = "error"
+    message_template: ClassVar[str] = (
+        "Parse failure in routine '{routine}': {detail}"
+    )
+    description: ClassVar[str] = (
+        "A routine's code (RLL or ST) could not be parsed. "
+        "The file may contain malformed neutral text."
+    )
+    routine: str
+    detail: str
+
+
+@dataclass
+class EX101(LintErrorBase):
+    code: ClassVar[str] = "EX101"
+    severity: ClassVar[str] = "error"
+    message_template: ClassVar[str] = "Check '{check}' crashed: {detail}"
+    description: ClassVar[str] = (
+        "An internal check function raised an unexpected exception. "
+        "This is a bug in the linter, not in the user's code."
+    )
+    check: str
+    detail: str
+
+
 LintError = (
     EC001 | EC002 | EC003 | EC004 | EC005
     | EC006 | EC007 | EC008 | ER009 | EC010
@@ -820,4 +848,5 @@ LintError = (
     | WS108 | WS109 | WS110 | WS111 | WS112 | WS113 | WS114
     | WS115 | WS116 | WS117 | WS118
     | ES001 | ES002 | ES003
+    | EX100 | EX101
 )
