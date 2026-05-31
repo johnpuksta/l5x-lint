@@ -13,7 +13,8 @@ from l5x_lint.infrastructure.adapter import parse_l5x
 from l5x_lint.infrastructure.parsers._factory import create_parser
 from l5x_lint.infrastructure.parsers.base import L5XParser
 from l5x_lint.infrastructure.parsers.v38 import L5XParserV38
-from l5x_lint.pipeline.analyze import analyze
+
+from helpers import l5x_with_rll, l5x_with_st, minimal_l5x, parse_and_analyze
 
 TEST_DATA = Path(__file__).parent.parent / "data"
 VALID_DIR = TEST_DATA / "valid"
@@ -431,60 +432,6 @@ def test_parser_stores_revision_metadata():
 
 
 # ---------------------------------------------------------------------------
-# Helper: build minimal valid L5X XML
-# ---------------------------------------------------------------------------
-
-def _minimal_l5x(controller_content="", software_revision="32.00"):
-    return f'''<?xml version="1.0" encoding="UTF-8"?>
-<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="{software_revision}">
-  <Controller Name="Test" ProcessorType="1756-L83E">
-    {controller_content}
-  </Controller>
-</RSLogix5000Content>'''
-
-
-def _parse_and_analyze(xml):
-    """Parse L5X then run analyze (which triggers RLL/ST parsing)."""
-    result = parse_l5x(xml)
-    if isinstance(result, Failure):
-        return result
-    project = result.unwrap()
-    return analyze(project.controller)
-
-
-def _l5x_with_rll(routine_name, rll_code):
-    return _minimal_l5x(f"""
-    <DataTypes/><Tags/>
-    <Programs><Program Name="Main">
-      <Tags/>
-      <Routines>
-        <Routine Name="{routine_name}" Type="RLL">
-          <RLLContent><Rung Number="0"><Text>{rll_code}</Text></Rung></RLLContent>
-        </Routine>
-      </Routines>
-    </Program></Programs>
-    <Tasks/>
-    <AddOnInstructionDefinitions/>
-    <Modules/>""")
-
-
-def _l5x_with_st(routine_name, st_code):
-    return _minimal_l5x(f"""
-    <DataTypes/><Tags/>
-    <Programs><Program Name="Main">
-      <Tags/>
-      <Routines>
-        <Routine Name="{routine_name}" Type="ST">
-          <STContent><Line Number="0">{st_code}</Line></STContent>
-        </Routine>
-      </Routines>
-    </Program></Programs>
-    <Tasks/>
-    <AddOnInstructionDefinitions/>
-    <Modules/>""")
-
-
-# ---------------------------------------------------------------------------
 # Malformed XML — well-formedness errors (ET.parse failures)
 # ---------------------------------------------------------------------------
 
@@ -494,22 +441,22 @@ class TestMalformedXml:
         assert isinstance(result, Failure)
 
     def test_unclosed_child_element(self):
-        xml = _minimal_l5x("<DataTypes><DataType Name='Bad'>")
+        xml = minimal_l5x("<DataTypes><DataType Name='Bad'>")
         result = parse_l5x(xml)
         assert isinstance(result, Failure)
 
     def test_mismatched_tags(self):
-        xml = _minimal_l5x("</Controller>")
+        xml = minimal_l5x("</Controller>")
         result = parse_l5x(xml)
         assert isinstance(result, Failure)
 
     def test_bad_entity_reference(self):
-        xml = _minimal_l5x("&invalid;")
+        xml = minimal_l5x("&invalid;")
         result = parse_l5x(xml)
         assert isinstance(result, Failure)
 
     def test_garbage_in_valid_skeleton(self):
-        xml = _minimal_l5x("<<<<<<<GARBAGE>>>>>>>")
+        xml = minimal_l5x("<<<<<<<GARBAGE>>>>>>>")
         result = parse_l5x(xml)
         assert isinstance(result, Failure)
 
@@ -547,7 +494,7 @@ class TestMalformedXml:
 class TestBadRllCode:
     def test_garbage_rll_through_pipeline(self):
         """CDATA wrapping prevents XML-level failure; Lark parser rejects bad RLL."""
-        xml = _minimal_l5x(f"""
+        xml = minimal_l5x(f"""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -560,12 +507,12 @@ class TestBadRllCode:
         <Tasks/>
         <AddOnInstructionDefinitions/>
         <Modules/>""")
-        result = _parse_and_analyze(xml)
+        result = parse_and_analyze(xml)
         assert isinstance(result, Failure), f"Expected Failure for bad RLL, got {result}"
 
     def test_truncated_rll_in_cdata(self):
         """CDATA wrapping; truncated RLL inside CDATA."""
-        xml = _minimal_l5x(f"""
+        xml = minimal_l5x(f"""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -578,17 +525,17 @@ class TestBadRllCode:
         <Tasks/>
         <AddOnInstructionDefinitions/>
         <Modules/>""")
-        result = _parse_and_analyze(xml)
+        result = parse_and_analyze(xml)
         assert isinstance(result, Failure), f"Expected Failure for truncated RLL, got {result}"
 
     def test_empty_rll_text(self):
-        xml = _l5x_with_rll("Main", "")
+        xml = l5x_with_rll("Main", "")
         result = parse_l5x(xml)
         # Empty text is valid — parser returns empty rungs
         assert isinstance(result, Success)
 
     def test_rll_with_xml_special_chars_in_cdata(self):
-        xml = _minimal_l5x(f"""
+        xml = minimal_l5x(f"""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -607,7 +554,7 @@ class TestBadRllCode:
 
     def test_multiple_bad_routines_all_reported(self):
         """Both routines have unparseable RLL — both errors should be reported."""
-        xml = _minimal_l5x(f"""
+        xml = minimal_l5x(f"""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -623,7 +570,7 @@ class TestBadRllCode:
         <Tasks/>
         <AddOnInstructionDefinitions/>
         <Modules/>""")
-        result = _parse_and_analyze(xml)
+        result = parse_and_analyze(xml)
         assert isinstance(result, Failure), f"Expected Failure for two bad routines, got {result}"
 
 
@@ -635,7 +582,7 @@ class TestBadRllCode:
 class TestBadStCode:
     def test_garbage_st_through_pipeline(self):
         """CDATA wrapping; garbage ST inside CDATA."""
-        xml = _minimal_l5x(f"""
+        xml = minimal_l5x(f"""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -648,12 +595,12 @@ class TestBadStCode:
         <Tasks/>
         <AddOnInstructionDefinitions/>
         <Modules/>""")
-        result = _parse_and_analyze(xml)
+        result = parse_and_analyze(xml)
         assert isinstance(result, Failure), f"Expected Failure for bad ST, got {result}"
 
     def test_truncated_st_in_cdata(self):
         """CDATA wrapping; truncated ST inside CDATA."""
-        xml = _minimal_l5x(f"""
+        xml = minimal_l5x(f"""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -666,12 +613,12 @@ class TestBadStCode:
         <Tasks/>
         <AddOnInstructionDefinitions/>
         <Modules/>""")
-        result = _parse_and_analyze(xml)
+        result = parse_and_analyze(xml)
         assert isinstance(result, Failure), f"Expected Failure for truncated ST, got {result}"
 
     def test_st_missing_rhs(self):
         """Missing RHS in assignment — ST parser should reject."""
-        xml = _minimal_l5x(f"""
+        xml = minimal_l5x(f"""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -684,11 +631,11 @@ class TestBadStCode:
         <Tasks/>
         <AddOnInstructionDefinitions/>
         <Modules/>""")
-        result = _parse_and_analyze(xml)
+        result = parse_and_analyze(xml)
         assert isinstance(result, Failure), f"Expected Failure for missing RHS, got {result}"
 
     def test_st_with_xml_special_chars(self):
-        xml = _minimal_l5x(f"""
+        xml = minimal_l5x(f"""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -712,7 +659,7 @@ class TestBadStCode:
 
 class TestCdataEdgeCases:
     def test_rll_in_cdata_section(self):
-        xml = _minimal_l5x(f"""
+        xml = minimal_l5x(f"""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -729,7 +676,7 @@ class TestCdataEdgeCases:
         assert isinstance(result, Success)
 
     def test_st_in_cdata_section(self):
-        xml = _minimal_l5x(f"""
+        xml = minimal_l5x(f"""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -746,7 +693,7 @@ class TestCdataEdgeCases:
         assert isinstance(result, Success)
 
     def test_mixed_cdata_and_text_rll(self):
-        xml = _minimal_l5x(f"""
+        xml = minimal_l5x(f"""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -783,13 +730,13 @@ class TestBadSoftwareRevision:
         assert isinstance(result, Failure)
 
     def test_future_version_warns_but_continues(self):
-        xml = _minimal_l5x(software_revision="99.00")
+        xml = minimal_l5x(software_revision="99.00")
         result = parse_l5x(xml)
         # v99 has no XSD, validation skips, parser uses base — should succeed
         assert isinstance(result, Success)
 
     def test_old_version_without_xsd(self):
-        xml = _minimal_l5x(software_revision="20.01")
+        xml = minimal_l5x(software_revision="20.01")
         result = parse_l5x(xml)
         # v20 has no XSD, validation skips — should succeed
         assert isinstance(result, Success)
@@ -812,7 +759,7 @@ class TestXsdValidationFailures:
                 assert False, f"Expected L5XStructureError(element='Controller'), got {result}"
 
     def test_routine_missing_type_attribute(self):
-        xml = _minimal_l5x("""
+        xml = minimal_l5x("""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -830,7 +777,7 @@ class TestXsdValidationFailures:
 
     def test_routine_type_none_is_valid(self):
         """Type='None' is a valid enum value in the XSD."""
-        xml = _minimal_l5x("""
+        xml = minimal_l5x("""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -861,7 +808,7 @@ class TestErrorTypes:
 
     def test_rll_parse_error_type(self):
         """CDATA-wrapped bad RLL triggers parse failure through analyze()."""
-        xml = _minimal_l5x(f"""
+        xml = minimal_l5x(f"""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -874,12 +821,12 @@ class TestErrorTypes:
         <Tasks/>
         <AddOnInstructionDefinitions/>
         <Modules/>""")
-        result = _parse_and_analyze(xml)
+        result = parse_and_analyze(xml)
         assert isinstance(result, Failure), f"Expected Failure for bad RLL, got {result}"
 
     def test_st_parse_error_type(self):
         """CDATA-wrapped bad ST triggers parse failure through analyze()."""
-        xml = _minimal_l5x(f"""
+        xml = minimal_l5x(f"""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -892,7 +839,7 @@ class TestErrorTypes:
         <Tasks/>
         <AddOnInstructionDefinitions/>
         <Modules/>""")
-        result = _parse_and_analyze(xml)
+        result = parse_and_analyze(xml)
         assert isinstance(result, Failure), f"Expected Failure for bad ST, got {result}"
 
     def test_wrong_arg_type_is_adapter_error(self):
