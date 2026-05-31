@@ -1,5 +1,6 @@
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -7,6 +8,7 @@ from returns.result import Failure, Success
 
 import l5x_lint.checks  # noqa: F401 — registers all check functions
 from l5x_lint.domain.diagnostics import Diagnostic
+from l5x_lint.domain.models import Controller, Location
 from l5x_lint.infrastructure.adapter import parse_l5x
 from l5x_lint.pipeline.analyze import analyze
 from l5x_lint.pipeline.config import LintConfig, apply_severity_overrides, apply_warning_toggles
@@ -38,6 +40,74 @@ def _build_config(args: argparse.Namespace) -> LintConfig | None:
     return config
 
 
+def _find_xml_line(source_lines: list[str], loc: Location) -> int | None:
+    """Find the XML source line number for a diagnostic location.
+
+    Searches for the XML element matching the program/routine/rung/line
+    from the diagnostic's Location.
+    """
+    if not source_lines:
+        return None
+
+    # Build a search pattern based on what we know
+    if loc.routine:
+        # Look for <Routine Name="..." ...> or <Program Name="..." ...>
+        # depending on whether we have a rung/line
+        if loc.rung is not None:
+            # RLL rung — look for <Rung Number="N"
+            pattern = re.compile(
+                rf'<Routine\s+[^>]*Name\s*=\s*"{re.escape(loc.routine)}"',
+                re.IGNORECASE,
+            )
+            for i, line in enumerate(source_lines):
+                if pattern.search(line):
+                    # Now find the rung inside this routine
+                    rung_pattern = re.compile(
+                        rf'<Rung\s+[^>]*Number\s*=\s*"{loc.rung}"',
+                        re.IGNORECASE,
+                    )
+                    for j in range(i + 1, min(i + 500, len(source_lines))):
+                        if rung_pattern.search(source_lines[j]):
+                            return j + 1
+                    return i + 1
+        elif loc.line is not None:
+            # ST line — look for <Line Number="N"
+            pattern = re.compile(
+                rf'<Routine\s+[^>]*Name\s*=\s*"{re.escape(loc.routine)}"',
+                re.IGNORECASE,
+            )
+            for i, line in enumerate(source_lines):
+                if pattern.search(line):
+                    line_pattern = re.compile(
+                        rf'<Line\s+[^>]*Number\s*=\s*"{loc.line}"',
+                        re.IGNORECASE,
+                    )
+                    for j in range(i + 1, min(i + 500, len(source_lines))):
+                        if line_pattern.search(source_lines[j]):
+                            return j + 1
+                    return i + 1
+        else:
+            # Just routine — find the Routine element
+            pattern = re.compile(
+                rf'<Routine\s+[^>]*Name\s*=\s*"{re.escape(loc.routine)}"',
+                re.IGNORECASE,
+            )
+            for i, line in enumerate(source_lines):
+                if pattern.search(line):
+                    return i + 1
+    elif loc.program:
+        # Program-level — find the Program element
+        pattern = re.compile(
+            rf'<Program\s+[^>]*Name\s*=\s*"{re.escape(loc.program)}"',
+            re.IGNORECASE,
+        )
+        for i, line in enumerate(source_lines):
+            if pattern.search(line):
+                return i + 1
+
+    return None
+
+
 def validate(path: Path, json_output: bool = False, config: LintConfig | None = None) -> int:
     result = parse_l5x(path)
     match result:
@@ -46,6 +116,8 @@ def validate(path: Path, json_output: bool = False, config: LintConfig | None = 
             return 1
         case Success(project):
             pass
+
+    source_lines = project.controller.source_lines
 
     analysis = analyze(project.controller, config=config)
     match analysis:
@@ -74,6 +146,9 @@ def validate(path: Path, json_output: bool = False, config: LintConfig | None = 
                     ctx += f":{loc.rung}"
                 elif loc.line is not None:
                     ctx += f":{loc.line}"
+                xml_line = _find_xml_line(source_lines, loc)
+                if xml_line is not None:
+                    ctx += f" (line {xml_line})"
                 print(f"  {d.severity.upper():7s} {d.code:5s} {ctx:40s} {d.message}")
             print(f"\n{ar.error_count} errors, {ar.warning_count} warnings")
     if not ar.passed:

@@ -16,12 +16,15 @@ from l5x_lint.infrastructure.parsers._factory import create_parser
 
 
 def parse_l5x(source: str | Path) -> Result[L5XProject, LintInternalError]:
+    source_lines: list[str] = []
     try:
         if isinstance(source, Path):
+            source_lines = source.read_text(encoding="utf-8").splitlines()
             root = ET.parse(source).getroot()
         elif isinstance(source, str):
             path = Path(source)
             if path.exists():
+                source_lines = path.read_text(encoding="utf-8").splitlines()
                 root = ET.parse(str(path)).getroot()
             else:
                 root = ET.fromstring(source)
@@ -52,6 +55,8 @@ def parse_l5x(source: str | Path) -> Result[L5XProject, LintInternalError]:
             return Failure(err)
         case Success(parser):
             controller = parser.parse_controller(controller_el)
+
+    controller.source_lines = source_lines
 
     return Success(L5XProject(
         schema_revision=schema_revision,

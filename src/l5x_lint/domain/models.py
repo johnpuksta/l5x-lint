@@ -110,6 +110,7 @@ class Controller:
     tasks: list[Task] = field(default_factory=list)
     aois: list[AOI] = field(default_factory=list)
     modules: list[Module] = field(default_factory=list)
+    source_lines: list[str] = field(default_factory=list)
 
 
 @dataclass
