@@ -43,3 +43,6 @@ line-ending = "auto"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = [
+    "benchmark: scaling/performance benchmark tests (deselect with '-m not benchmark')",
+]
