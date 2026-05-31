@@ -239,7 +239,13 @@ class L5XWriter:
                 "Name": "STLogic", "Type": "ST",
             })
             st = self._elem(routine3, "STContent")
-            self._cdata(st, self._build_st_body(100))
+            # Mix plain text and CDATA for ST statements
+            stmts = self._build_st_statements(100)
+            for text, use_cdata in stmts:
+                if use_cdata:
+                    self._cdata(st, text + "\n")
+                else:
+                    st.appendChild(self.doc.createTextNode(text + "\n"))
 
     def _build_rll_rungs(self, parent, count):
         opcodes = [
@@ -256,25 +262,37 @@ class L5XWriter:
         ]
         for i in range(count):
             text = opcodes[i % len(opcodes)](i)
-            self._add_rung(parent, i, text)
+            # ~80% plain text, ~20% CDATA (mostly for complex rungs)
+            use_cdata = (i % 5 == 0)
+            self._add_rung(parent, i, text, use_cdata)
 
-    def _add_rung(self, parent, number, text):
+    def _add_rung(self, parent, number, text, use_cdata=False):
         rung = self._elem(parent, "Rung", {"Number": str(number), "Type": "N"})
-        cd = self._elem(rung, "Text")
-        self._cdata(cd, text)
+        td = self._elem(rung, "Text")
+        if use_cdata:
+            self._cdata(td, text)
+        else:
+            td.appendChild(self.doc.createTextNode(text))
 
-    def _build_st_body(self, count):
-        parts = []
+    def _build_st_statements(self, count):
+        """Return list of (text, use_cdata) tuples for ST statements."""
+        stmts = []
         for i in range(count):
             t = f"Ctrl{i % 30}"
-            patterns = [
-                f"{t} := {t} + 1;",
-                f"{t} := {t} * 2;",
-                f"IF {t} > 0 THEN {t} := {t} - 1; END_IF",
-                f"{t} := {t} OR Ctrl{(i + 1) % 30};",
-            ]
-            parts.append(patterns[i % len(patterns)])
-        return " ".join(parts)
+            # Simple assignments: plain text (no XML special chars)
+            # IF/THEN: CDATA needed (contains > comparison)
+            if i % 4 == 2:
+                # IF statement - needs CDATA because of > in condition
+                stmts.append((f"IF {t} > 0 THEN {t} := {t} - 1; END_IF", True))
+            else:
+                # Simple assignment - plain text is fine
+                patterns = [
+                    f"{t} := {t} + 1;",
+                    f"{t} := {t} * 2;",
+                    f"{t} := {t} OR Ctrl{(i + 1) % 30};",
+                ]
+                stmts.append((patterns[i % 3], False))
+        return stmts
 
     def _build_tasks(self, parent):
         tasks = self._elem(parent, "Tasks", {"Use": "Context"})

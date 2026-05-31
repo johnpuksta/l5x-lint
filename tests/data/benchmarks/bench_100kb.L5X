@@ -521,10 +521,10 @@
           <Routine Name="Logic" Type="RLL">
             <RLLContent>
               <Rung Number="0" Type="N">
-                <Text><![CDATA[XIC(EnableIn)OTE(Running);]]></Text>
+                <Text>XIC(EnableIn)OTE(Running);</Text>
               </Rung>
               <Rung Number="1" Type="N">
-                <Text><![CDATA[MOV(SpeedRef,SpeedActual);]]></Text>
+                <Text>MOV(SpeedRef,SpeedActual);</Text>
               </Rung>
             </RLLContent>
           </Routine>
@@ -544,10 +544,10 @@
           <Routine Name="Logic" Type="RLL">
             <RLLContent>
               <Rung Number="0" Type="N">
-                <Text><![CDATA[XIC(EnableIn)OTE(Running);]]></Text>
+                <Text>XIC(EnableIn)OTE(Running);</Text>
               </Rung>
               <Rung Number="1" Type="N">
-                <Text><![CDATA[MOV(SpeedRef,SpeedActual);]]></Text>
+                <Text>MOV(SpeedRef,SpeedActual);</Text>
               </Rung>
             </RLLContent>
           </Routine>
@@ -567,10 +567,10 @@
           <Routine Name="Logic" Type="RLL">
             <RLLContent>
               <Rung Number="0" Type="N">
-                <Text><![CDATA[XIC(EnableIn)OTE(Running);]]></Text>
+                <Text>XIC(EnableIn)OTE(Running);</Text>
               </Rung>
               <Rung Number="1" Type="N">
-                <Text><![CDATA[MOV(SpeedRef,SpeedActual);]]></Text>
+                <Text>MOV(SpeedRef,SpeedActual);</Text>
               </Rung>
             </RLLContent>
           </Routine>
@@ -590,10 +590,10 @@
           <Routine Name="Logic" Type="RLL">
             <RLLContent>
               <Rung Number="0" Type="N">
-                <Text><![CDATA[XIC(EnableIn)OTE(Running);]]></Text>
+                <Text>XIC(EnableIn)OTE(Running);</Text>
               </Rung>
               <Rung Number="1" Type="N">
-                <Text><![CDATA[MOV(SpeedRef,SpeedActual);]]></Text>
+                <Text>MOV(SpeedRef,SpeedActual);</Text>
               </Rung>
             </RLLContent>
           </Routine>
@@ -613,10 +613,10 @@
           <Routine Name="Logic" Type="RLL">
             <RLLContent>
               <Rung Number="0" Type="N">
-                <Text><![CDATA[XIC(EnableIn)OTE(Running);]]></Text>
+                <Text>XIC(EnableIn)OTE(Running);</Text>
               </Rung>
               <Rung Number="1" Type="N">
-                <Text><![CDATA[MOV(SpeedRef,SpeedActual);]]></Text>
+                <Text>MOV(SpeedRef,SpeedActual);</Text>
               </Rung>
             </RLLContent>
           </Routine>
@@ -636,10 +636,10 @@
           <Routine Name="Logic" Type="RLL">
             <RLLContent>
               <Rung Number="0" Type="N">
-                <Text><![CDATA[XIC(EnableIn)OTE(Running);]]></Text>
+                <Text>XIC(EnableIn)OTE(Running);</Text>
               </Rung>
               <Rung Number="1" Type="N">
-                <Text><![CDATA[MOV(SpeedRef,SpeedActual);]]></Text>
+                <Text>MOV(SpeedRef,SpeedActual);</Text>
               </Rung>
             </RLLContent>
           </Routine>
@@ -659,10 +659,10 @@
           <Routine Name="Logic" Type="RLL">
             <RLLContent>
               <Rung Number="0" Type="N">
-                <Text><![CDATA[XIC(EnableIn)OTE(Running);]]></Text>
+                <Text>XIC(EnableIn)OTE(Running);</Text>
               </Rung>
               <Rung Number="1" Type="N">
-                <Text><![CDATA[MOV(SpeedRef,SpeedActual);]]></Text>
+                <Text>MOV(SpeedRef,SpeedActual);</Text>
               </Rung>
             </RLLContent>
           </Routine>
@@ -682,10 +682,10 @@
           <Routine Name="Logic" Type="RLL">
             <RLLContent>
               <Rung Number="0" Type="N">
-                <Text><![CDATA[XIC(EnableIn)OTE(Running);]]></Text>
+                <Text>XIC(EnableIn)OTE(Running);</Text>
               </Rung>
               <Rung Number="1" Type="N">
-                <Text><![CDATA[MOV(SpeedRef,SpeedActual);]]></Text>
+                <Text>MOV(SpeedRef,SpeedActual);</Text>
               </Rung>
             </RLLContent>
           </Routine>
@@ -778,601 +778,601 @@
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="1" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="2" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="3" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="4" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="5" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="6" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="7" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="8" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="9" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="10" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="11" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="12" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="13" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="14" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="15" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="16" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="17" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="18" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="19" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="20" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="21" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="22" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="23" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="24" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="25" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="26" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="27" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="28" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="29" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="30" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="31" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="32" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="33" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="34" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="35" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="36" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="37" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="38" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="39" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="40" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="41" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="42" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="43" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="44" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="45" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="46" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="47" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="48" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="49" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="50" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="51" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="52" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="53" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="54" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="55" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="56" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="57" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="58" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="59" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="60" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="61" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="62" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="63" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="64" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="65" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="66" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="67" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="68" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="69" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="70" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="71" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="72" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="73" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="74" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="75" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="76" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="77" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="78" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="79" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="80" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="81" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="82" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="83" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="84" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="85" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="86" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="87" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="88" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="89" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="90" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="91" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="92" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="93" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="94" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="95" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="96" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="97" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="98" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="99" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="100" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="101" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="102" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="103" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="104" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="105" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="106" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="107" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="108" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="109" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="110" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="111" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="112" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="113" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="114" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="115" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="116" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="117" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="118" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="119" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="120" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="121" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="122" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="123" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="124" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="125" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="126" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="127" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="128" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="129" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="130" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="131" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="132" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="133" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="134" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="135" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="136" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="137" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="138" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="139" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="140" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="141" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="142" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="143" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="144" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="145" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="146" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="147" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="148" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="149" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="150" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="151" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="152" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="153" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="154" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="155" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="156" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="157" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="158" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="159" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="160" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="161" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="162" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="163" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="164" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="165" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="166" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="167" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="168" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="169" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="170" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="171" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="172" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="173" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="174" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="175" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="176" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="177" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="178" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="179" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="180" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="181" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="182" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="183" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="184" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="185" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="186" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="187" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="188" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="189" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="190" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="191" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="192" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="193" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="194" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="195" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="196" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="197" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="198" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="199" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
             </RLLContent>
           </Routine>
@@ -1382,306 +1382,482 @@
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="1" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="2" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="3" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="4" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="5" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="6" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="7" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="8" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="9" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="10" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="11" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="12" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="13" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="14" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="15" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="16" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="17" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="18" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="19" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="20" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="21" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="22" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="23" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="24" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="25" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="26" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="27" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="28" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="29" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="30" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="31" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="32" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="33" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="34" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="35" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="36" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="37" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="38" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="39" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="40" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="41" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="42" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="43" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="44" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="45" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="46" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="47" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="48" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="49" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="50" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="51" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="52" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="53" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="54" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="55" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="56" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="57" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="58" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="59" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="60" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="61" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="62" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="63" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="64" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="65" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="66" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="67" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="68" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="69" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="70" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="71" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="72" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="73" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="74" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="75" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="76" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="77" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="78" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="79" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="80" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="81" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="82" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="83" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="84" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="85" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="86" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="87" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="88" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="89" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="90" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="91" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="92" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="93" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="94" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="95" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="96" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="97" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="98" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="99" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
             </RLLContent>
           </Routine>
           <Routine Name="STLogic" Type="ST">
-            <STContent><![CDATA[Ctrl0 := Ctrl0 + 1; Ctrl1 := Ctrl1 * 2; IF Ctrl2 > 0 THEN Ctrl2 := Ctrl2 - 1; END_IF Ctrl3 := Ctrl3 OR Ctrl4; Ctrl4 := Ctrl4 + 1; Ctrl5 := Ctrl5 * 2; IF Ctrl6 > 0 THEN Ctrl6 := Ctrl6 - 1; END_IF Ctrl7 := Ctrl7 OR Ctrl8; Ctrl8 := Ctrl8 + 1; Ctrl9 := Ctrl9 * 2; IF Ctrl10 > 0 THEN Ctrl10 := Ctrl10 - 1; END_IF Ctrl11 := Ctrl11 OR Ctrl12; Ctrl12 := Ctrl12 + 1; Ctrl13 := Ctrl13 * 2; IF Ctrl14 > 0 THEN Ctrl14 := Ctrl14 - 1; END_IF Ctrl15 := Ctrl15 OR Ctrl16; Ctrl16 := Ctrl16 + 1; Ctrl17 := Ctrl17 * 2; IF Ctrl18 > 0 THEN Ctrl18 := Ctrl18 - 1; END_IF Ctrl19 := Ctrl19 OR Ctrl20; Ctrl20 := Ctrl20 + 1; Ctrl21 := Ctrl21 * 2; IF Ctrl22 > 0 THEN Ctrl22 := Ctrl22 - 1; END_IF Ctrl23 := Ctrl23 OR Ctrl24; Ctrl24 := Ctrl24 + 1; Ctrl25 := Ctrl25 * 2; IF Ctrl26 > 0 THEN Ctrl26 := Ctrl26 - 1; END_IF Ctrl27 := Ctrl27 OR Ctrl28; Ctrl28 := Ctrl28 + 1; Ctrl29 := Ctrl29 * 2; IF Ctrl0 > 0 THEN Ctrl0 := Ctrl0 - 1; END_IF Ctrl1 := Ctrl1 OR Ctrl2; Ctrl2 := Ctrl2 + 1; Ctrl3 := Ctrl3 * 2; IF Ctrl4 > 0 THEN Ctrl4 := Ctrl4 - 1; END_IF Ctrl5 := Ctrl5 OR Ctrl6; Ctrl6 := Ctrl6 + 1; Ctrl7 := Ctrl7 * 2; IF Ctrl8 > 0 THEN Ctrl8 := Ctrl8 - 1; END_IF Ctrl9 := Ctrl9 OR Ctrl10; Ctrl10 := Ctrl10 + 1; Ctrl11 := Ctrl11 * 2; IF Ctrl12 > 0 THEN Ctrl12 := Ctrl12 - 1; END_IF Ctrl13 := Ctrl13 OR Ctrl14; Ctrl14 := Ctrl14 + 1; Ctrl15 := Ctrl15 * 2; IF Ctrl16 > 0 THEN Ctrl16 := Ctrl16 - 1; END_IF Ctrl17 := Ctrl17 OR Ctrl18; Ctrl18 := Ctrl18 + 1; Ctrl19 := Ctrl19 * 2; IF Ctrl20 > 0 THEN Ctrl20 := Ctrl20 - 1; END_IF Ctrl21 := Ctrl21 OR Ctrl22; Ctrl22 := Ctrl22 + 1; Ctrl23 := Ctrl23 * 2; IF Ctrl24 > 0 THEN Ctrl24 := Ctrl24 - 1; END_IF Ctrl25 := Ctrl25 OR Ctrl26; Ctrl26 := Ctrl26 + 1; Ctrl27 := Ctrl27 * 2; IF Ctrl28 > 0 THEN Ctrl28 := Ctrl28 - 1; END_IF Ctrl29 := Ctrl29 OR Ctrl0; Ctrl0 := Ctrl0 + 1; Ctrl1 := Ctrl1 * 2; IF Ctrl2 > 0 THEN Ctrl2 := Ctrl2 - 1; END_IF Ctrl3 := Ctrl3 OR Ctrl4; Ctrl4 := Ctrl4 + 1; Ctrl5 := Ctrl5 * 2; IF Ctrl6 > 0 THEN Ctrl6 := Ctrl6 - 1; END_IF Ctrl7 := Ctrl7 OR Ctrl8; Ctrl8 := Ctrl8 + 1; Ctrl9 := Ctrl9 * 2; IF Ctrl10 > 0 THEN Ctrl10 := Ctrl10 - 1; END_IF Ctrl11 := Ctrl11 OR Ctrl12; Ctrl12 := Ctrl12 + 1; Ctrl13 := Ctrl13 * 2; IF Ctrl14 > 0 THEN Ctrl14 := Ctrl14 - 1; END_IF Ctrl15 := Ctrl15 OR Ctrl16; Ctrl16 := Ctrl16 + 1; Ctrl17 := Ctrl17 * 2; IF Ctrl18 > 0 THEN Ctrl18 := Ctrl18 - 1; END_IF Ctrl19 := Ctrl19 OR Ctrl20; Ctrl20 := Ctrl20 + 1; Ctrl21 := Ctrl21 * 2; IF Ctrl22 > 0 THEN Ctrl22 := Ctrl22 - 1; END_IF Ctrl23 := Ctrl23 OR Ctrl24; Ctrl24 := Ctrl24 + 1; Ctrl25 := Ctrl25 * 2; IF Ctrl26 > 0 THEN Ctrl26 := Ctrl26 - 1; END_IF Ctrl27 := Ctrl27 OR Ctrl28; Ctrl28 := Ctrl28 + 1; Ctrl29 := Ctrl29 * 2; IF Ctrl0 > 0 THEN Ctrl0 := Ctrl0 - 1; END_IF Ctrl1 := Ctrl1 OR Ctrl2; Ctrl2 := Ctrl2 + 1; Ctrl3 := Ctrl3 * 2; IF Ctrl4 > 0 THEN Ctrl4 := Ctrl4 - 1; END_IF Ctrl5 := Ctrl5 OR Ctrl6; Ctrl6 := Ctrl6 + 1; Ctrl7 := Ctrl7 * 2; IF Ctrl8 > 0 THEN Ctrl8 := Ctrl8 - 1; END_IF Ctrl9 := Ctrl9 OR Ctrl10;]]></STContent>
+            <STContent>
+              Ctrl0 := Ctrl0 + 1;
+
+              Ctrl1 := Ctrl1 * 2;
+
+<![CDATA[IF Ctrl2 > 0 THEN Ctrl2 := Ctrl2 - 1; END_IF
+]]>              Ctrl3 := Ctrl3 + 1;
+
+              Ctrl4 := Ctrl4 * 2;
+
+              Ctrl5 := Ctrl5 OR Ctrl6;
+
+<![CDATA[IF Ctrl6 > 0 THEN Ctrl6 := Ctrl6 - 1; END_IF
+]]>              Ctrl7 := Ctrl7 * 2;
+
+              Ctrl8 := Ctrl8 OR Ctrl9;
+
+              Ctrl9 := Ctrl9 + 1;
+
+<![CDATA[IF Ctrl10 > 0 THEN Ctrl10 := Ctrl10 - 1; END_IF
+]]>              Ctrl11 := Ctrl11 OR Ctrl12;
+
+              Ctrl12 := Ctrl12 + 1;
+
+              Ctrl13 := Ctrl13 * 2;
+
+<![CDATA[IF Ctrl14 > 0 THEN Ctrl14 := Ctrl14 - 1; END_IF
+]]>              Ctrl15 := Ctrl15 + 1;
+
+              Ctrl16 := Ctrl16 * 2;
+
+              Ctrl17 := Ctrl17 OR Ctrl18;
+
+<![CDATA[IF Ctrl18 > 0 THEN Ctrl18 := Ctrl18 - 1; END_IF
+]]>              Ctrl19 := Ctrl19 * 2;
+
+              Ctrl20 := Ctrl20 OR Ctrl21;
+
+              Ctrl21 := Ctrl21 + 1;
+
+<![CDATA[IF Ctrl22 > 0 THEN Ctrl22 := Ctrl22 - 1; END_IF
+]]>              Ctrl23 := Ctrl23 OR Ctrl24;
+
+              Ctrl24 := Ctrl24 + 1;
+
+              Ctrl25 := Ctrl25 * 2;
+
+<![CDATA[IF Ctrl26 > 0 THEN Ctrl26 := Ctrl26 - 1; END_IF
+]]>              Ctrl27 := Ctrl27 + 1;
+
+              Ctrl28 := Ctrl28 * 2;
+
+              Ctrl29 := Ctrl29 OR Ctrl0;
+
+<![CDATA[IF Ctrl0 > 0 THEN Ctrl0 := Ctrl0 - 1; END_IF
+]]>              Ctrl1 := Ctrl1 * 2;
+
+              Ctrl2 := Ctrl2 OR Ctrl3;
+
+              Ctrl3 := Ctrl3 + 1;
+
+<![CDATA[IF Ctrl4 > 0 THEN Ctrl4 := Ctrl4 - 1; END_IF
+]]>              Ctrl5 := Ctrl5 OR Ctrl6;
+
+              Ctrl6 := Ctrl6 + 1;
+
+              Ctrl7 := Ctrl7 * 2;
+
+<![CDATA[IF Ctrl8 > 0 THEN Ctrl8 := Ctrl8 - 1; END_IF
+]]>              Ctrl9 := Ctrl9 + 1;
+
+              Ctrl10 := Ctrl10 * 2;
+
+              Ctrl11 := Ctrl11 OR Ctrl12;
+
+<![CDATA[IF Ctrl12 > 0 THEN Ctrl12 := Ctrl12 - 1; END_IF
+]]>              Ctrl13 := Ctrl13 * 2;
+
+              Ctrl14 := Ctrl14 OR Ctrl15;
+
+              Ctrl15 := Ctrl15 + 1;
+
+<![CDATA[IF Ctrl16 > 0 THEN Ctrl16 := Ctrl16 - 1; END_IF
+]]>              Ctrl17 := Ctrl17 OR Ctrl18;
+
+              Ctrl18 := Ctrl18 + 1;
+
+              Ctrl19 := Ctrl19 * 2;
+
+<![CDATA[IF Ctrl20 > 0 THEN Ctrl20 := Ctrl20 - 1; END_IF
+]]>              Ctrl21 := Ctrl21 + 1;
+
+              Ctrl22 := Ctrl22 * 2;
+
+              Ctrl23 := Ctrl23 OR Ctrl24;
+
+<![CDATA[IF Ctrl24 > 0 THEN Ctrl24 := Ctrl24 - 1; END_IF
+]]>              Ctrl25 := Ctrl25 * 2;
+
+              Ctrl26 := Ctrl26 OR Ctrl27;
+
+              Ctrl27 := Ctrl27 + 1;
+
+<![CDATA[IF Ctrl28 > 0 THEN Ctrl28 := Ctrl28 - 1; END_IF
+]]>              Ctrl29 := Ctrl29 OR Ctrl0;
+
+              Ctrl0 := Ctrl0 + 1;
+
+              Ctrl1 := Ctrl1 * 2;
+
+<![CDATA[IF Ctrl2 > 0 THEN Ctrl2 := Ctrl2 - 1; END_IF
+]]>              Ctrl3 := Ctrl3 + 1;
+
+              Ctrl4 := Ctrl4 * 2;
+
+              Ctrl5 := Ctrl5 OR Ctrl6;
+
+<![CDATA[IF Ctrl6 > 0 THEN Ctrl6 := Ctrl6 - 1; END_IF
+]]>              Ctrl7 := Ctrl7 * 2;
+
+              Ctrl8 := Ctrl8 OR Ctrl9;
+
+              Ctrl9 := Ctrl9 + 1;
+
+<![CDATA[IF Ctrl10 > 0 THEN Ctrl10 := Ctrl10 - 1; END_IF
+]]>              Ctrl11 := Ctrl11 OR Ctrl12;
+
+              Ctrl12 := Ctrl12 + 1;
+
+              Ctrl13 := Ctrl13 * 2;
+
+<![CDATA[IF Ctrl14 > 0 THEN Ctrl14 := Ctrl14 - 1; END_IF
+]]>              Ctrl15 := Ctrl15 + 1;
+
+              Ctrl16 := Ctrl16 * 2;
+
+              Ctrl17 := Ctrl17 OR Ctrl18;
+
+<![CDATA[IF Ctrl18 > 0 THEN Ctrl18 := Ctrl18 - 1; END_IF
+]]>              Ctrl19 := Ctrl19 * 2;
+
+              Ctrl20 := Ctrl20 OR Ctrl21;
+
+              Ctrl21 := Ctrl21 + 1;
+
+<![CDATA[IF Ctrl22 > 0 THEN Ctrl22 := Ctrl22 - 1; END_IF
+]]>              Ctrl23 := Ctrl23 OR Ctrl24;
+
+              Ctrl24 := Ctrl24 + 1;
+
+              Ctrl25 := Ctrl25 * 2;
+
+<![CDATA[IF Ctrl26 > 0 THEN Ctrl26 := Ctrl26 - 1; END_IF
+]]>              Ctrl27 := Ctrl27 + 1;
+
+              Ctrl28 := Ctrl28 * 2;
+
+              Ctrl29 := Ctrl29 OR Ctrl0;
+
+<![CDATA[IF Ctrl0 > 0 THEN Ctrl0 := Ctrl0 - 1; END_IF
+]]>              Ctrl1 := Ctrl1 * 2;
+
+              Ctrl2 := Ctrl2 OR Ctrl3;
+
+              Ctrl3 := Ctrl3 + 1;
+
+<![CDATA[IF Ctrl4 > 0 THEN Ctrl4 := Ctrl4 - 1; END_IF
+]]>              Ctrl5 := Ctrl5 OR Ctrl6;
+
+              Ctrl6 := Ctrl6 + 1;
+
+              Ctrl7 := Ctrl7 * 2;
+
+<![CDATA[IF Ctrl8 > 0 THEN Ctrl8 := Ctrl8 - 1; END_IF
+]]>              Ctrl9 := Ctrl9 + 1;
+
+            </STContent>
           </Routine>
         </Routines>
       </Program>
@@ -1770,601 +1946,601 @@
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="1" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="2" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="3" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="4" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="5" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="6" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="7" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="8" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="9" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="10" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="11" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="12" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="13" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="14" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="15" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="16" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="17" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="18" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="19" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="20" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="21" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="22" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="23" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="24" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="25" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="26" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="27" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="28" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="29" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="30" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="31" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="32" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="33" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="34" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="35" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="36" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="37" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="38" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="39" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="40" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="41" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="42" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="43" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="44" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="45" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="46" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="47" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="48" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="49" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="50" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="51" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="52" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="53" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="54" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="55" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="56" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="57" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="58" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="59" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="60" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="61" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="62" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="63" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="64" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="65" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="66" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="67" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="68" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="69" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="70" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="71" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="72" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="73" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="74" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="75" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="76" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="77" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="78" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="79" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="80" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="81" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="82" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="83" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="84" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="85" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="86" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="87" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="88" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="89" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="90" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="91" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="92" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="93" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="94" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="95" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="96" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="97" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="98" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="99" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="100" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="101" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="102" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="103" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="104" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="105" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="106" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="107" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="108" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="109" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="110" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="111" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="112" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="113" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="114" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="115" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="116" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="117" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="118" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="119" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="120" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="121" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="122" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="123" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="124" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="125" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="126" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="127" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="128" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="129" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="130" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="131" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="132" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="133" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="134" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="135" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="136" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="137" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="138" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="139" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="140" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="141" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="142" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="143" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="144" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="145" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="146" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="147" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="148" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="149" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="150" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="151" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="152" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="153" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="154" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="155" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="156" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="157" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="158" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="159" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="160" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="161" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="162" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="163" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="164" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="165" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="166" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="167" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="168" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="169" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="170" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="171" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="172" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="173" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="174" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="175" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="176" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="177" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="178" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="179" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="180" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="181" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="182" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="183" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="184" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="185" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="186" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="187" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="188" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="189" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="190" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="191" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="192" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="193" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="194" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="195" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="196" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="197" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="198" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="199" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
             </RLLContent>
           </Routine>
@@ -2374,306 +2550,482 @@
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="1" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="2" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="3" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="4" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="5" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="6" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="7" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="8" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="9" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="10" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="11" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="12" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="13" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="14" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="15" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="16" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="17" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="18" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="19" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="20" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="21" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="22" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="23" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="24" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="25" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="26" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="27" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="28" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="29" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="30" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="31" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="32" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="33" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="34" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="35" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="36" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="37" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="38" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="39" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="40" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="41" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="42" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="43" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="44" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="45" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="46" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="47" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="48" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="49" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="50" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="51" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="52" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="53" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="54" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="55" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="56" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="57" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="58" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="59" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="60" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="61" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="62" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="63" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="64" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="65" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="66" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="67" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="68" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="69" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="70" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="71" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="72" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="73" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="74" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="75" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="76" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="77" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="78" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="79" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="80" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="81" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="82" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="83" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="84" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="85" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="86" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="87" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="88" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="89" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="90" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="91" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="92" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="93" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="94" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="95" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="96" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="97" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="98" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="99" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
             </RLLContent>
           </Routine>
           <Routine Name="STLogic" Type="ST">
-            <STContent><![CDATA[Ctrl0 := Ctrl0 + 1; Ctrl1 := Ctrl1 * 2; IF Ctrl2 > 0 THEN Ctrl2 := Ctrl2 - 1; END_IF Ctrl3 := Ctrl3 OR Ctrl4; Ctrl4 := Ctrl4 + 1; Ctrl5 := Ctrl5 * 2; IF Ctrl6 > 0 THEN Ctrl6 := Ctrl6 - 1; END_IF Ctrl7 := Ctrl7 OR Ctrl8; Ctrl8 := Ctrl8 + 1; Ctrl9 := Ctrl9 * 2; IF Ctrl10 > 0 THEN Ctrl10 := Ctrl10 - 1; END_IF Ctrl11 := Ctrl11 OR Ctrl12; Ctrl12 := Ctrl12 + 1; Ctrl13 := Ctrl13 * 2; IF Ctrl14 > 0 THEN Ctrl14 := Ctrl14 - 1; END_IF Ctrl15 := Ctrl15 OR Ctrl16; Ctrl16 := Ctrl16 + 1; Ctrl17 := Ctrl17 * 2; IF Ctrl18 > 0 THEN Ctrl18 := Ctrl18 - 1; END_IF Ctrl19 := Ctrl19 OR Ctrl20; Ctrl20 := Ctrl20 + 1; Ctrl21 := Ctrl21 * 2; IF Ctrl22 > 0 THEN Ctrl22 := Ctrl22 - 1; END_IF Ctrl23 := Ctrl23 OR Ctrl24; Ctrl24 := Ctrl24 + 1; Ctrl25 := Ctrl25 * 2; IF Ctrl26 > 0 THEN Ctrl26 := Ctrl26 - 1; END_IF Ctrl27 := Ctrl27 OR Ctrl28; Ctrl28 := Ctrl28 + 1; Ctrl29 := Ctrl29 * 2; IF Ctrl0 > 0 THEN Ctrl0 := Ctrl0 - 1; END_IF Ctrl1 := Ctrl1 OR Ctrl2; Ctrl2 := Ctrl2 + 1; Ctrl3 := Ctrl3 * 2; IF Ctrl4 > 0 THEN Ctrl4 := Ctrl4 - 1; END_IF Ctrl5 := Ctrl5 OR Ctrl6; Ctrl6 := Ctrl6 + 1; Ctrl7 := Ctrl7 * 2; IF Ctrl8 > 0 THEN Ctrl8 := Ctrl8 - 1; END_IF Ctrl9 := Ctrl9 OR Ctrl10; Ctrl10 := Ctrl10 + 1; Ctrl11 := Ctrl11 * 2; IF Ctrl12 > 0 THEN Ctrl12 := Ctrl12 - 1; END_IF Ctrl13 := Ctrl13 OR Ctrl14; Ctrl14 := Ctrl14 + 1; Ctrl15 := Ctrl15 * 2; IF Ctrl16 > 0 THEN Ctrl16 := Ctrl16 - 1; END_IF Ctrl17 := Ctrl17 OR Ctrl18; Ctrl18 := Ctrl18 + 1; Ctrl19 := Ctrl19 * 2; IF Ctrl20 > 0 THEN Ctrl20 := Ctrl20 - 1; END_IF Ctrl21 := Ctrl21 OR Ctrl22; Ctrl22 := Ctrl22 + 1; Ctrl23 := Ctrl23 * 2; IF Ctrl24 > 0 THEN Ctrl24 := Ctrl24 - 1; END_IF Ctrl25 := Ctrl25 OR Ctrl26; Ctrl26 := Ctrl26 + 1; Ctrl27 := Ctrl27 * 2; IF Ctrl28 > 0 THEN Ctrl28 := Ctrl28 - 1; END_IF Ctrl29 := Ctrl29 OR Ctrl0; Ctrl0 := Ctrl0 + 1; Ctrl1 := Ctrl1 * 2; IF Ctrl2 > 0 THEN Ctrl2 := Ctrl2 - 1; END_IF Ctrl3 := Ctrl3 OR Ctrl4; Ctrl4 := Ctrl4 + 1; Ctrl5 := Ctrl5 * 2; IF Ctrl6 > 0 THEN Ctrl6 := Ctrl6 - 1; END_IF Ctrl7 := Ctrl7 OR Ctrl8; Ctrl8 := Ctrl8 + 1; Ctrl9 := Ctrl9 * 2; IF Ctrl10 > 0 THEN Ctrl10 := Ctrl10 - 1; END_IF Ctrl11 := Ctrl11 OR Ctrl12; Ctrl12 := Ctrl12 + 1; Ctrl13 := Ctrl13 * 2; IF Ctrl14 > 0 THEN Ctrl14 := Ctrl14 - 1; END_IF Ctrl15 := Ctrl15 OR Ctrl16; Ctrl16 := Ctrl16 + 1; Ctrl17 := Ctrl17 * 2; IF Ctrl18 > 0 THEN Ctrl18 := Ctrl18 - 1; END_IF Ctrl19 := Ctrl19 OR Ctrl20; Ctrl20 := Ctrl20 + 1; Ctrl21 := Ctrl21 * 2; IF Ctrl22 > 0 THEN Ctrl22 := Ctrl22 - 1; END_IF Ctrl23 := Ctrl23 OR Ctrl24; Ctrl24 := Ctrl24 + 1; Ctrl25 := Ctrl25 * 2; IF Ctrl26 > 0 THEN Ctrl26 := Ctrl26 - 1; END_IF Ctrl27 := Ctrl27 OR Ctrl28; Ctrl28 := Ctrl28 + 1; Ctrl29 := Ctrl29 * 2; IF Ctrl0 > 0 THEN Ctrl0 := Ctrl0 - 1; END_IF Ctrl1 := Ctrl1 OR Ctrl2; Ctrl2 := Ctrl2 + 1; Ctrl3 := Ctrl3 * 2; IF Ctrl4 > 0 THEN Ctrl4 := Ctrl4 - 1; END_IF Ctrl5 := Ctrl5 OR Ctrl6; Ctrl6 := Ctrl6 + 1; Ctrl7 := Ctrl7 * 2; IF Ctrl8 > 0 THEN Ctrl8 := Ctrl8 - 1; END_IF Ctrl9 := Ctrl9 OR Ctrl10;]]></STContent>
+            <STContent>
+              Ctrl0 := Ctrl0 + 1;
+
+              Ctrl1 := Ctrl1 * 2;
+
+<![CDATA[IF Ctrl2 > 0 THEN Ctrl2 := Ctrl2 - 1; END_IF
+]]>              Ctrl3 := Ctrl3 + 1;
+
+              Ctrl4 := Ctrl4 * 2;
+
+              Ctrl5 := Ctrl5 OR Ctrl6;
+
+<![CDATA[IF Ctrl6 > 0 THEN Ctrl6 := Ctrl6 - 1; END_IF
+]]>              Ctrl7 := Ctrl7 * 2;
+
+              Ctrl8 := Ctrl8 OR Ctrl9;
+
+              Ctrl9 := Ctrl9 + 1;
+
+<![CDATA[IF Ctrl10 > 0 THEN Ctrl10 := Ctrl10 - 1; END_IF
+]]>              Ctrl11 := Ctrl11 OR Ctrl12;
+
+              Ctrl12 := Ctrl12 + 1;
+
+              Ctrl13 := Ctrl13 * 2;
+
+<![CDATA[IF Ctrl14 > 0 THEN Ctrl14 := Ctrl14 - 1; END_IF
+]]>              Ctrl15 := Ctrl15 + 1;
+
+              Ctrl16 := Ctrl16 * 2;
+
+              Ctrl17 := Ctrl17 OR Ctrl18;
+
+<![CDATA[IF Ctrl18 > 0 THEN Ctrl18 := Ctrl18 - 1; END_IF
+]]>              Ctrl19 := Ctrl19 * 2;
+
+              Ctrl20 := Ctrl20 OR Ctrl21;
+
+              Ctrl21 := Ctrl21 + 1;
+
+<![CDATA[IF Ctrl22 > 0 THEN Ctrl22 := Ctrl22 - 1; END_IF
+]]>              Ctrl23 := Ctrl23 OR Ctrl24;
+
+              Ctrl24 := Ctrl24 + 1;
+
+              Ctrl25 := Ctrl25 * 2;
+
+<![CDATA[IF Ctrl26 > 0 THEN Ctrl26 := Ctrl26 - 1; END_IF
+]]>              Ctrl27 := Ctrl27 + 1;
+
+              Ctrl28 := Ctrl28 * 2;
+
+              Ctrl29 := Ctrl29 OR Ctrl0;
+
+<![CDATA[IF Ctrl0 > 0 THEN Ctrl0 := Ctrl0 - 1; END_IF
+]]>              Ctrl1 := Ctrl1 * 2;
+
+              Ctrl2 := Ctrl2 OR Ctrl3;
+
+              Ctrl3 := Ctrl3 + 1;
+
+<![CDATA[IF Ctrl4 > 0 THEN Ctrl4 := Ctrl4 - 1; END_IF
+]]>              Ctrl5 := Ctrl5 OR Ctrl6;
+
+              Ctrl6 := Ctrl6 + 1;
+
+              Ctrl7 := Ctrl7 * 2;
+
+<![CDATA[IF Ctrl8 > 0 THEN Ctrl8 := Ctrl8 - 1; END_IF
+]]>              Ctrl9 := Ctrl9 + 1;
+
+              Ctrl10 := Ctrl10 * 2;
+
+              Ctrl11 := Ctrl11 OR Ctrl12;
+
+<![CDATA[IF Ctrl12 > 0 THEN Ctrl12 := Ctrl12 - 1; END_IF
+]]>              Ctrl13 := Ctrl13 * 2;
+
+              Ctrl14 := Ctrl14 OR Ctrl15;
+
+              Ctrl15 := Ctrl15 + 1;
+
+<![CDATA[IF Ctrl16 > 0 THEN Ctrl16 := Ctrl16 - 1; END_IF
+]]>              Ctrl17 := Ctrl17 OR Ctrl18;
+
+              Ctrl18 := Ctrl18 + 1;
+
+              Ctrl19 := Ctrl19 * 2;
+
+<![CDATA[IF Ctrl20 > 0 THEN Ctrl20 := Ctrl20 - 1; END_IF
+]]>              Ctrl21 := Ctrl21 + 1;
+
+              Ctrl22 := Ctrl22 * 2;
+
+              Ctrl23 := Ctrl23 OR Ctrl24;
+
+<![CDATA[IF Ctrl24 > 0 THEN Ctrl24 := Ctrl24 - 1; END_IF
+]]>              Ctrl25 := Ctrl25 * 2;
+
+              Ctrl26 := Ctrl26 OR Ctrl27;
+
+              Ctrl27 := Ctrl27 + 1;
+
+<![CDATA[IF Ctrl28 > 0 THEN Ctrl28 := Ctrl28 - 1; END_IF
+]]>              Ctrl29 := Ctrl29 OR Ctrl0;
+
+              Ctrl0 := Ctrl0 + 1;
+
+              Ctrl1 := Ctrl1 * 2;
+
+<![CDATA[IF Ctrl2 > 0 THEN Ctrl2 := Ctrl2 - 1; END_IF
+]]>              Ctrl3 := Ctrl3 + 1;
+
+              Ctrl4 := Ctrl4 * 2;
+
+              Ctrl5 := Ctrl5 OR Ctrl6;
+
+<![CDATA[IF Ctrl6 > 0 THEN Ctrl6 := Ctrl6 - 1; END_IF
+]]>              Ctrl7 := Ctrl7 * 2;
+
+              Ctrl8 := Ctrl8 OR Ctrl9;
+
+              Ctrl9 := Ctrl9 + 1;
+
+<![CDATA[IF Ctrl10 > 0 THEN Ctrl10 := Ctrl10 - 1; END_IF
+]]>              Ctrl11 := Ctrl11 OR Ctrl12;
+
+              Ctrl12 := Ctrl12 + 1;
+
+              Ctrl13 := Ctrl13 * 2;
+
+<![CDATA[IF Ctrl14 > 0 THEN Ctrl14 := Ctrl14 - 1; END_IF
+]]>              Ctrl15 := Ctrl15 + 1;
+
+              Ctrl16 := Ctrl16 * 2;
+
+              Ctrl17 := Ctrl17 OR Ctrl18;
+
+<![CDATA[IF Ctrl18 > 0 THEN Ctrl18 := Ctrl18 - 1; END_IF
+]]>              Ctrl19 := Ctrl19 * 2;
+
+              Ctrl20 := Ctrl20 OR Ctrl21;
+
+              Ctrl21 := Ctrl21 + 1;
+
+<![CDATA[IF Ctrl22 > 0 THEN Ctrl22 := Ctrl22 - 1; END_IF
+]]>              Ctrl23 := Ctrl23 OR Ctrl24;
+
+              Ctrl24 := Ctrl24 + 1;
+
+              Ctrl25 := Ctrl25 * 2;
+
+<![CDATA[IF Ctrl26 > 0 THEN Ctrl26 := Ctrl26 - 1; END_IF
+]]>              Ctrl27 := Ctrl27 + 1;
+
+              Ctrl28 := Ctrl28 * 2;
+
+              Ctrl29 := Ctrl29 OR Ctrl0;
+
+<![CDATA[IF Ctrl0 > 0 THEN Ctrl0 := Ctrl0 - 1; END_IF
+]]>              Ctrl1 := Ctrl1 * 2;
+
+              Ctrl2 := Ctrl2 OR Ctrl3;
+
+              Ctrl3 := Ctrl3 + 1;
+
+<![CDATA[IF Ctrl4 > 0 THEN Ctrl4 := Ctrl4 - 1; END_IF
+]]>              Ctrl5 := Ctrl5 OR Ctrl6;
+
+              Ctrl6 := Ctrl6 + 1;
+
+              Ctrl7 := Ctrl7 * 2;
+
+<![CDATA[IF Ctrl8 > 0 THEN Ctrl8 := Ctrl8 - 1; END_IF
+]]>              Ctrl9 := Ctrl9 + 1;
+
+            </STContent>
           </Routine>
         </Routines>
       </Program>
@@ -2762,601 +3114,601 @@
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="1" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="2" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="3" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="4" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="5" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="6" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="7" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="8" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="9" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="10" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="11" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="12" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="13" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="14" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="15" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="16" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="17" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="18" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="19" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="20" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="21" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="22" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="23" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="24" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="25" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="26" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="27" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="28" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="29" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="30" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="31" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="32" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="33" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="34" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="35" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="36" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="37" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="38" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="39" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="40" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="41" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="42" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="43" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="44" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="45" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="46" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="47" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="48" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="49" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="50" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="51" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="52" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="53" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="54" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="55" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="56" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="57" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="58" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="59" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="60" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="61" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="62" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="63" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="64" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="65" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="66" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="67" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="68" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="69" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="70" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="71" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="72" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="73" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="74" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="75" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="76" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="77" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="78" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="79" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="80" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="81" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="82" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="83" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="84" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="85" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="86" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="87" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="88" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="89" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="90" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="91" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="92" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="93" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="94" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="95" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="96" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="97" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="98" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="99" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="100" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="101" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="102" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="103" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="104" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="105" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="106" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="107" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="108" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="109" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="110" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="111" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="112" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="113" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="114" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="115" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="116" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="117" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="118" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="119" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="120" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="121" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="122" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="123" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="124" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="125" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="126" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="127" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="128" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="129" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="130" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="131" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="132" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="133" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="134" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="135" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="136" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="137" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="138" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="139" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="140" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="141" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="142" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="143" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="144" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="145" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="146" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="147" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="148" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="149" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="150" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="151" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="152" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="153" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="154" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="155" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="156" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="157" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="158" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="159" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="160" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="161" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="162" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="163" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="164" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="165" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="166" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="167" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="168" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="169" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="170" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="171" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="172" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="173" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="174" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="175" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="176" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="177" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="178" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="179" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="180" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="181" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="182" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="183" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="184" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="185" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="186" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="187" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="188" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="189" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="190" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="191" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="192" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="193" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="194" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="195" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="196" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="197" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="198" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="199" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
             </RLLContent>
           </Routine>
@@ -3366,306 +3718,482 @@
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="1" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="2" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="3" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="4" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="5" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="6" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="7" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="8" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="9" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="10" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="11" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="12" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="13" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="14" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="15" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="16" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="17" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="18" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="19" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="20" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="21" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="22" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="23" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="24" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="25" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="26" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="27" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="28" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="29" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="30" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="31" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="32" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="33" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="34" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="35" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="36" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="37" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="38" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="39" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="40" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="41" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="42" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="43" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="44" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="45" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="46" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="47" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="48" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="49" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="50" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="51" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="52" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="53" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="54" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="55" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="56" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="57" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="58" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="59" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="60" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="61" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="62" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="63" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="64" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="65" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="66" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="67" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="68" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="69" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
               <Rung Number="70" Type="N">
                 <Text><![CDATA[XIC(Ctrl10)OTE(Ctrl11);]]></Text>
               </Rung>
               <Rung Number="71" Type="N">
-                <Text><![CDATA[XIO(Ctrl11)OTE(Ctrl13);]]></Text>
+                <Text>XIO(Ctrl11)OTE(Ctrl13);</Text>
               </Rung>
               <Rung Number="72" Type="N">
-                <Text><![CDATA[XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl12)XIC(Ctrl13)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="73" Type="N">
-                <Text><![CDATA[LES(Ctrl13,Ctrl14)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl13,Ctrl14)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="74" Type="N">
-                <Text><![CDATA[GRT(Ctrl14,Ctrl15)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl14,Ctrl15)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="75" Type="N">
                 <Text><![CDATA[EQU(Ctrl15,Ctrl16)MOV(Ctrl15,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="76" Type="N">
-                <Text><![CDATA[NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl16,Ctrl17)ADD(Ctrl16,Ctrl17,Ctrl0);</Text>
               </Rung>
               <Rung Number="77" Type="N">
-                <Text><![CDATA[XIC(Ctrl17)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl17)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="78" Type="N">
-                <Text><![CDATA[XIC(Ctrl18)CTU(Counter8,19,100);]]></Text>
+                <Text>XIC(Ctrl18)CTU(Counter8,19,100);</Text>
               </Rung>
               <Rung Number="79" Type="N">
-                <Text><![CDATA[COP(Arr1,Arr2,10);]]></Text>
+                <Text>COP(Arr1,Arr2,10);</Text>
               </Rung>
               <Rung Number="80" Type="N">
                 <Text><![CDATA[XIC(Ctrl20)OTE(Ctrl21);]]></Text>
               </Rung>
               <Rung Number="81" Type="N">
-                <Text><![CDATA[XIO(Ctrl21)OTE(Ctrl23);]]></Text>
+                <Text>XIO(Ctrl21)OTE(Ctrl23);</Text>
               </Rung>
               <Rung Number="82" Type="N">
-                <Text><![CDATA[XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl22)XIC(Ctrl23)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="83" Type="N">
-                <Text><![CDATA[LES(Ctrl23,Ctrl24)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl23,Ctrl24)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="84" Type="N">
-                <Text><![CDATA[GRT(Ctrl24,Ctrl25)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl24,Ctrl25)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="85" Type="N">
                 <Text><![CDATA[EQU(Ctrl25,Ctrl26)MOV(Ctrl25,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="86" Type="N">
-                <Text><![CDATA[NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl26,Ctrl27)ADD(Ctrl26,Ctrl27,Ctrl0);</Text>
               </Rung>
               <Rung Number="87" Type="N">
-                <Text><![CDATA[XIC(Ctrl27)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl27)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="88" Type="N">
-                <Text><![CDATA[XIC(Ctrl28)CTU(Counter8,29,100);]]></Text>
+                <Text>XIC(Ctrl28)CTU(Counter8,29,100);</Text>
               </Rung>
               <Rung Number="89" Type="N">
-                <Text><![CDATA[COP(Arr5,Arr0,10);]]></Text>
+                <Text>COP(Arr5,Arr0,10);</Text>
               </Rung>
               <Rung Number="90" Type="N">
                 <Text><![CDATA[XIC(Ctrl0)OTE(Ctrl1);]]></Text>
               </Rung>
               <Rung Number="91" Type="N">
-                <Text><![CDATA[XIO(Ctrl1)OTE(Ctrl3);]]></Text>
+                <Text>XIO(Ctrl1)OTE(Ctrl3);</Text>
               </Rung>
               <Rung Number="92" Type="N">
-                <Text><![CDATA[XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);]]></Text>
+                <Text>XIC(Ctrl2)XIC(Ctrl3)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="93" Type="N">
-                <Text><![CDATA[LES(Ctrl3,Ctrl4)OTE(Ctrl0);]]></Text>
+                <Text>LES(Ctrl3,Ctrl4)OTE(Ctrl0);</Text>
               </Rung>
               <Rung Number="94" Type="N">
-                <Text><![CDATA[GRT(Ctrl4,Ctrl5)OTE(Ctrl1);]]></Text>
+                <Text>GRT(Ctrl4,Ctrl5)OTE(Ctrl1);</Text>
               </Rung>
               <Rung Number="95" Type="N">
                 <Text><![CDATA[EQU(Ctrl5,Ctrl6)MOV(Ctrl5,Arr0[5]);]]></Text>
               </Rung>
               <Rung Number="96" Type="N">
-                <Text><![CDATA[NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);]]></Text>
+                <Text>NEQ(Ctrl6,Ctrl7)ADD(Ctrl6,Ctrl7,Ctrl0);</Text>
               </Rung>
               <Rung Number="97" Type="N">
-                <Text><![CDATA[XIC(Ctrl7)TON(Timer7,5000,0);]]></Text>
+                <Text>XIC(Ctrl7)TON(Timer7,5000,0);</Text>
               </Rung>
               <Rung Number="98" Type="N">
-                <Text><![CDATA[XIC(Ctrl8)CTU(Counter8,9,100);]]></Text>
+                <Text>XIC(Ctrl8)CTU(Counter8,9,100);</Text>
               </Rung>
               <Rung Number="99" Type="N">
-                <Text><![CDATA[COP(Arr3,Arr4,10);]]></Text>
+                <Text>COP(Arr3,Arr4,10);</Text>
               </Rung>
             </RLLContent>
           </Routine>
           <Routine Name="STLogic" Type="ST">
-            <STContent><![CDATA[Ctrl0 := Ctrl0 + 1; Ctrl1 := Ctrl1 * 2; IF Ctrl2 > 0 THEN Ctrl2 := Ctrl2 - 1; END_IF Ctrl3 := Ctrl3 OR Ctrl4; Ctrl4 := Ctrl4 + 1; Ctrl5 := Ctrl5 * 2; IF Ctrl6 > 0 THEN Ctrl6 := Ctrl6 - 1; END_IF Ctrl7 := Ctrl7 OR Ctrl8; Ctrl8 := Ctrl8 + 1; Ctrl9 := Ctrl9 * 2; IF Ctrl10 > 0 THEN Ctrl10 := Ctrl10 - 1; END_IF Ctrl11 := Ctrl11 OR Ctrl12; Ctrl12 := Ctrl12 + 1; Ctrl13 := Ctrl13 * 2; IF Ctrl14 > 0 THEN Ctrl14 := Ctrl14 - 1; END_IF Ctrl15 := Ctrl15 OR Ctrl16; Ctrl16 := Ctrl16 + 1; Ctrl17 := Ctrl17 * 2; IF Ctrl18 > 0 THEN Ctrl18 := Ctrl18 - 1; END_IF Ctrl19 := Ctrl19 OR Ctrl20; Ctrl20 := Ctrl20 + 1; Ctrl21 := Ctrl21 * 2; IF Ctrl22 > 0 THEN Ctrl22 := Ctrl22 - 1; END_IF Ctrl23 := Ctrl23 OR Ctrl24; Ctrl24 := Ctrl24 + 1; Ctrl25 := Ctrl25 * 2; IF Ctrl26 > 0 THEN Ctrl26 := Ctrl26 - 1; END_IF Ctrl27 := Ctrl27 OR Ctrl28; Ctrl28 := Ctrl28 + 1; Ctrl29 := Ctrl29 * 2; IF Ctrl0 > 0 THEN Ctrl0 := Ctrl0 - 1; END_IF Ctrl1 := Ctrl1 OR Ctrl2; Ctrl2 := Ctrl2 + 1; Ctrl3 := Ctrl3 * 2; IF Ctrl4 > 0 THEN Ctrl4 := Ctrl4 - 1; END_IF Ctrl5 := Ctrl5 OR Ctrl6; Ctrl6 := Ctrl6 + 1; Ctrl7 := Ctrl7 * 2; IF Ctrl8 > 0 THEN Ctrl8 := Ctrl8 - 1; END_IF Ctrl9 := Ctrl9 OR Ctrl10; Ctrl10 := Ctrl10 + 1; Ctrl11 := Ctrl11 * 2; IF Ctrl12 > 0 THEN Ctrl12 := Ctrl12 - 1; END_IF Ctrl13 := Ctrl13 OR Ctrl14; Ctrl14 := Ctrl14 + 1; Ctrl15 := Ctrl15 * 2; IF Ctrl16 > 0 THEN Ctrl16 := Ctrl16 - 1; END_IF Ctrl17 := Ctrl17 OR Ctrl18; Ctrl18 := Ctrl18 + 1; Ctrl19 := Ctrl19 * 2; IF Ctrl20 > 0 THEN Ctrl20 := Ctrl20 - 1; END_IF Ctrl21 := Ctrl21 OR Ctrl22; Ctrl22 := Ctrl22 + 1; Ctrl23 := Ctrl23 * 2; IF Ctrl24 > 0 THEN Ctrl24 := Ctrl24 - 1; END_IF Ctrl25 := Ctrl25 OR Ctrl26; Ctrl26 := Ctrl26 + 1; Ctrl27 := Ctrl27 * 2; IF Ctrl28 > 0 THEN Ctrl28 := Ctrl28 - 1; END_IF Ctrl29 := Ctrl29 OR Ctrl0; Ctrl0 := Ctrl0 + 1; Ctrl1 := Ctrl1 * 2; IF Ctrl2 > 0 THEN Ctrl2 := Ctrl2 - 1; END_IF Ctrl3 := Ctrl3 OR Ctrl4; Ctrl4 := Ctrl4 + 1; Ctrl5 := Ctrl5 * 2; IF Ctrl6 > 0 THEN Ctrl6 := Ctrl6 - 1; END_IF Ctrl7 := Ctrl7 OR Ctrl8; Ctrl8 := Ctrl8 + 1; Ctrl9 := Ctrl9 * 2; IF Ctrl10 > 0 THEN Ctrl10 := Ctrl10 - 1; END_IF Ctrl11 := Ctrl11 OR Ctrl12; Ctrl12 := Ctrl12 + 1; Ctrl13 := Ctrl13 * 2; IF Ctrl14 > 0 THEN Ctrl14 := Ctrl14 - 1; END_IF Ctrl15 := Ctrl15 OR Ctrl16; Ctrl16 := Ctrl16 + 1; Ctrl17 := Ctrl17 * 2; IF Ctrl18 > 0 THEN Ctrl18 := Ctrl18 - 1; END_IF Ctrl19 := Ctrl19 OR Ctrl20; Ctrl20 := Ctrl20 + 1; Ctrl21 := Ctrl21 * 2; IF Ctrl22 > 0 THEN Ctrl22 := Ctrl22 - 1; END_IF Ctrl23 := Ctrl23 OR Ctrl24; Ctrl24 := Ctrl24 + 1; Ctrl25 := Ctrl25 * 2; IF Ctrl26 > 0 THEN Ctrl26 := Ctrl26 - 1; END_IF Ctrl27 := Ctrl27 OR Ctrl28; Ctrl28 := Ctrl28 + 1; Ctrl29 := Ctrl29 * 2; IF Ctrl0 > 0 THEN Ctrl0 := Ctrl0 - 1; END_IF Ctrl1 := Ctrl1 OR Ctrl2; Ctrl2 := Ctrl2 + 1; Ctrl3 := Ctrl3 * 2; IF Ctrl4 > 0 THEN Ctrl4 := Ctrl4 - 1; END_IF Ctrl5 := Ctrl5 OR Ctrl6; Ctrl6 := Ctrl6 + 1; Ctrl7 := Ctrl7 * 2; IF Ctrl8 > 0 THEN Ctrl8 := Ctrl8 - 1; END_IF Ctrl9 := Ctrl9 OR Ctrl10;]]></STContent>
+            <STContent>
+              Ctrl0 := Ctrl0 + 1;
+
+              Ctrl1 := Ctrl1 * 2;
+
+<![CDATA[IF Ctrl2 > 0 THEN Ctrl2 := Ctrl2 - 1; END_IF
+]]>              Ctrl3 := Ctrl3 + 1;
+
+              Ctrl4 := Ctrl4 * 2;
+
+              Ctrl5 := Ctrl5 OR Ctrl6;
+
+<![CDATA[IF Ctrl6 > 0 THEN Ctrl6 := Ctrl6 - 1; END_IF
+]]>              Ctrl7 := Ctrl7 * 2;
+
+              Ctrl8 := Ctrl8 OR Ctrl9;
+
+              Ctrl9 := Ctrl9 + 1;
+
+<![CDATA[IF Ctrl10 > 0 THEN Ctrl10 := Ctrl10 - 1; END_IF
+]]>              Ctrl11 := Ctrl11 OR Ctrl12;
+
+              Ctrl12 := Ctrl12 + 1;
+
+              Ctrl13 := Ctrl13 * 2;
+
+<![CDATA[IF Ctrl14 > 0 THEN Ctrl14 := Ctrl14 - 1; END_IF
+]]>              Ctrl15 := Ctrl15 + 1;
+
+              Ctrl16 := Ctrl16 * 2;
+
+              Ctrl17 := Ctrl17 OR Ctrl18;
+
+<![CDATA[IF Ctrl18 > 0 THEN Ctrl18 := Ctrl18 - 1; END_IF
+]]>              Ctrl19 := Ctrl19 * 2;
+
+              Ctrl20 := Ctrl20 OR Ctrl21;
+
+              Ctrl21 := Ctrl21 + 1;
+
+<![CDATA[IF Ctrl22 > 0 THEN Ctrl22 := Ctrl22 - 1; END_IF
+]]>              Ctrl23 := Ctrl23 OR Ctrl24;
+
+              Ctrl24 := Ctrl24 + 1;
+
+              Ctrl25 := Ctrl25 * 2;
+
+<![CDATA[IF Ctrl26 > 0 THEN Ctrl26 := Ctrl26 - 1; END_IF
+]]>              Ctrl27 := Ctrl27 + 1;
+
+              Ctrl28 := Ctrl28 * 2;
+
+              Ctrl29 := Ctrl29 OR Ctrl0;
+
+<![CDATA[IF Ctrl0 > 0 THEN Ctrl0 := Ctrl0 - 1; END_IF
+]]>              Ctrl1 := Ctrl1 * 2;
+
+              Ctrl2 := Ctrl2 OR Ctrl3;
+
+              Ctrl3 := Ctrl3 + 1;
+
+<![CDATA[IF Ctrl4 > 0 THEN Ctrl4 := Ctrl4 - 1; END_IF
+]]>              Ctrl5 := Ctrl5 OR Ctrl6;
+
+              Ctrl6 := Ctrl6 + 1;
+
+              Ctrl7 := Ctrl7 * 2;
+
+<![CDATA[IF Ctrl8 > 0 THEN Ctrl8 := Ctrl8 - 1; END_IF
+]]>              Ctrl9 := Ctrl9 + 1;
+
+              Ctrl10 := Ctrl10 * 2;
+
+              Ctrl11 := Ctrl11 OR Ctrl12;
+
+<![CDATA[IF Ctrl12 > 0 THEN Ctrl12 := Ctrl12 - 1; END_IF
+]]>              Ctrl13 := Ctrl13 * 2;
+
+              Ctrl14 := Ctrl14 OR Ctrl15;
+
+              Ctrl15 := Ctrl15 + 1;
+
+<![CDATA[IF Ctrl16 > 0 THEN Ctrl16 := Ctrl16 - 1; END_IF
+]]>              Ctrl17 := Ctrl17 OR Ctrl18;
+
+              Ctrl18 := Ctrl18 + 1;
+
+              Ctrl19 := Ctrl19 * 2;
+
+<![CDATA[IF Ctrl20 > 0 THEN Ctrl20 := Ctrl20 - 1; END_IF
+]]>              Ctrl21 := Ctrl21 + 1;
+
+              Ctrl22 := Ctrl22 * 2;
+
+              Ctrl23 := Ctrl23 OR Ctrl24;
+
+<![CDATA[IF Ctrl24 > 0 THEN Ctrl24 := Ctrl24 - 1; END_IF
+]]>              Ctrl25 := Ctrl25 * 2;
+
+              Ctrl26 := Ctrl26 OR Ctrl27;
+
+              Ctrl27 := Ctrl27 + 1;
+
+<![CDATA[IF Ctrl28 > 0 THEN Ctrl28 := Ctrl28 - 1; END_IF
+]]>              Ctrl29 := Ctrl29 OR Ctrl0;
+
+              Ctrl0 := Ctrl0 + 1;
+
+              Ctrl1 := Ctrl1 * 2;
+
+<![CDATA[IF Ctrl2 > 0 THEN Ctrl2 := Ctrl2 - 1; END_IF
+]]>              Ctrl3 := Ctrl3 + 1;
+
+              Ctrl4 := Ctrl4 * 2;
+
+              Ctrl5 := Ctrl5 OR Ctrl6;
+
+<![CDATA[IF Ctrl6 > 0 THEN Ctrl6 := Ctrl6 - 1; END_IF
+]]>              Ctrl7 := Ctrl7 * 2;
+
+              Ctrl8 := Ctrl8 OR Ctrl9;
+
+              Ctrl9 := Ctrl9 + 1;
+
+<![CDATA[IF Ctrl10 > 0 THEN Ctrl10 := Ctrl10 - 1; END_IF
+]]>              Ctrl11 := Ctrl11 OR Ctrl12;
+
+              Ctrl12 := Ctrl12 + 1;
+
+              Ctrl13 := Ctrl13 * 2;
+
+<![CDATA[IF Ctrl14 > 0 THEN Ctrl14 := Ctrl14 - 1; END_IF
+]]>              Ctrl15 := Ctrl15 + 1;
+
+              Ctrl16 := Ctrl16 * 2;
+
+              Ctrl17 := Ctrl17 OR Ctrl18;
+
+<![CDATA[IF Ctrl18 > 0 THEN Ctrl18 := Ctrl18 - 1; END_IF
+]]>              Ctrl19 := Ctrl19 * 2;
+
+              Ctrl20 := Ctrl20 OR Ctrl21;
+
+              Ctrl21 := Ctrl21 + 1;
+
+<![CDATA[IF Ctrl22 > 0 THEN Ctrl22 := Ctrl22 - 1; END_IF
+]]>              Ctrl23 := Ctrl23 OR Ctrl24;
+
+              Ctrl24 := Ctrl24 + 1;
+
+              Ctrl25 := Ctrl25 * 2;
+
+<![CDATA[IF Ctrl26 > 0 THEN Ctrl26 := Ctrl26 - 1; END_IF
+]]>              Ctrl27 := Ctrl27 + 1;
+
+              Ctrl28 := Ctrl28 * 2;
+
+              Ctrl29 := Ctrl29 OR Ctrl0;
+
+<![CDATA[IF Ctrl0 > 0 THEN Ctrl0 := Ctrl0 - 1; END_IF
+]]>              Ctrl1 := Ctrl1 * 2;
+
+              Ctrl2 := Ctrl2 OR Ctrl3;
+
+              Ctrl3 := Ctrl3 + 1;
+
+<![CDATA[IF Ctrl4 > 0 THEN Ctrl4 := Ctrl4 - 1; END_IF
+]]>              Ctrl5 := Ctrl5 OR Ctrl6;
+
+              Ctrl6 := Ctrl6 + 1;
+
+              Ctrl7 := Ctrl7 * 2;
+
+<![CDATA[IF Ctrl8 > 0 THEN Ctrl8 := Ctrl8 - 1; END_IF
+]]>              Ctrl9 := Ctrl9 + 1;
+
+            </STContent>
           </Routine>
         </Routines>
       </Program>
