@@ -9,7 +9,8 @@ from l5x_lint.domain.models import Location, Routine
 from l5x_lint.pipeline.analyze import register
 from l5x_lint.pipeline.symbols import SymbolTable
 
-_ARRAY_INDEX = re.compile(r"^[A-Za-z_][A-Za-z0-9_:]*\[(\d+)\]")
+_ARRAY_INDEX_BRACKET = re.compile(r"^[A-Za-z_][A-Za-z0-9_:]*\[(\d+)\]")
+_ARRAY_INDEX_DOT = re.compile(r"^([A-Za-z_][A-Za-z0-9_:]*)\.(\d+)(?:\.|$)")
 
 
 @register
@@ -38,11 +39,16 @@ def _check_rll(instructions, symbols, loc, rung_num, result):
 
 
 def _check_operand(value, symbols, loc, result, rung_num=None):
-    m = _ARRAY_INDEX.search(value)
-    if not m:
-        return
-    index = int(m.group(1))
-    base_name = extract_base(value)
+    m = _ARRAY_INDEX_BRACKET.search(value)
+    if m:
+        index = int(m.group(1))
+        base_name = extract_base(value)
+    else:
+        m = _ARRAY_INDEX_DOT.match(value)
+        if not m:
+            return
+        base_name = m.group(1)
+        index = int(m.group(2))
     if base_name is None:
         return
     match symbols.resolve(base_name, loc.program):

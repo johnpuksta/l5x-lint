@@ -64,8 +64,9 @@ def _run_checks(controller: Controller) -> Result[AnalysisResult, LintInternalEr
                 try:
                     diagnostics.extend(check(r, symbols, loc))
                 except Exception as e:
+                    name = getattr(check, '__name__', type(check).__name__)
                     return Failure(CheckExecutionError(
-                        check=check.__name__, detail=str(e),
+                        check=name, detail=str(e),
                     ))
 
     errors = sum(1 for d in diagnostics if d.severity == "error")

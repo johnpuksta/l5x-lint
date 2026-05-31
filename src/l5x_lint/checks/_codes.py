@@ -751,6 +751,61 @@ class WS114(LintErrorBase):
     right_type: str
 
 
+@dataclass
+class WS115(LintErrorBase):
+    code: ClassVar[str] = "WS115"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = (
+        "REPEAT loop at line {line} is not supported by Logix controllers"
+    )
+    description: ClassVar[str] = (
+        "Rockwell Logix controllers do not support the REPEAT loop "
+        "construct in Structured Text. Use WHILE with an exit condition instead."
+    )
+    line: int
+
+
+@dataclass
+class WS116(LintErrorBase):
+    code: ClassVar[str] = "WS116"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = (
+        "GOTO statement at line {line} is not supported by Logix controllers"
+    )
+    description: ClassVar[str] = (
+        "Rockwell Logix controllers do not support GOTO statements in "
+        "Structured Text. Use structured control flow (IF/CASE) instead."
+    )
+    line: int
+
+
+@dataclass
+class WS117(LintErrorBase):
+    code: ClassVar[str] = "WS117"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = (
+        "OR/XOR expression may exceed Logix controller operand limit"
+    )
+    description: ClassVar[str] = (
+        "Rockwell Logix controllers limit OR and XOR expressions to a "
+        "maximum number of operands. Break the expression into multiple statements."
+    )
+
+
+@dataclass
+class WS118(LintErrorBase):
+    code: ClassVar[str] = "WS118"
+    severity: ClassVar[str] = "warning"
+    message_template: ClassVar[str] = (
+        "CASE value at line {line} is not a compile-time constant"
+    )
+    description: ClassVar[str] = (
+        "Rockwell Logix requires CASE values to be compile-time constants "
+        "(literals or symbolic constants), not runtime expressions."
+    )
+    line: int
+
+
 LintError = (
     EC001 | EC002 | EC003 | EC004 | EC005
     | EC006 | EC007 | EC008 | ER009 | EC010
@@ -763,5 +818,6 @@ LintError = (
     | WR005 | WR006 | WR007
     | WS101 | WS102 | WS104 | WS105 | WS107
     | WS108 | WS109 | WS110 | WS111 | WS112 | WS113 | WS114
+    | WS115 | WS116 | WS117 | WS118
     | ES001 | ES002 | ES003
 )

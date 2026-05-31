@@ -37,10 +37,10 @@ statement: assignment
 
 assignment: tag_path ASSIGN expression SEMICOLON
 
-if_statement: IF expression THEN statement+ (ELSIF expression THEN statement+)* (ELSE statement+)? END_IF
+if_statement: IF expression THEN statement* (ELSIF expression THEN statement*)* (ELSE statement*)? END_IF
 
-case_statement: CASE expression OF case_element+ (ELSE statement+)? END_CASE
-case_element: expression (COMMA expression)* COLON statement+
+case_statement: CASE expression OF case_element+ (ELSE statement*)? END_CASE
+case_element: expression (COMMA expression)* COLON statement*
 
 for_loop: FOR tag_path ASSIGN expression TO expression (BY expression)? DO statement+ END_FOR
 
@@ -57,7 +57,8 @@ return_statement: RETURN SEMICOLON
 call: TAG_BASE LPAREN (expression (COMMA expression)*)? RPAREN
 wildcard: WILDCARD
 
-expression: or_expr
+expression: short_circuit_expr
+short_circuit_expr: or_expr (AND_THEN or_expr | OR_ELSE or_expr)*
 or_expr: and_expr (OR and_expr)*
 and_expr: compare_expr (AND compare_expr)*
 compare_expr: add_expr ((EQ | NE | LT | GT | LE | GE) add_expr)?
@@ -94,7 +95,9 @@ END_REPEAT: /(?i:end_repeat)/
 EXIT: /(?i:exit)/
 RETURN: /(?i:return)/
 OR: /(?i:or)/
+OR_ELSE.100: /(?i:or_else)/
 AND: /(?i:and)/
+AND_THEN.100: /(?i:and_then)/
 NOT: /(?i:not)/
 MOD.100: /(?i:mod)/
 TRUE: /(?i:true)/
@@ -276,6 +279,9 @@ class _StTransformer(Transformer):
     def expression(self, items):
         return items[0]
 
+    def short_circuit_expr(self, items):
+        return self._build_binary(items, "and_then", "or_else")
+
     def or_expr(self, items):
         return self._build_binary(items, "or")
 
@@ -367,8 +373,14 @@ class _StTransformer(Transformer):
     def OR(self, token):  # noqa: N802
         return "or"
 
+    def OR_ELSE(self, token):  # noqa: N802
+        return "or_else"
+
     def AND(self, token):  # noqa: N802
         return "and"
+
+    def AND_THEN(self, token):  # noqa: N802
+        return "and_then"
 
     def NOT(self, token):  # noqa: N802
         return "not"

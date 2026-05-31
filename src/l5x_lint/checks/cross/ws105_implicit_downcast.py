@@ -1,10 +1,7 @@
-from l5x_lint.domain.diagnostics import Diagnostic
-from l5x_lint.domain.models import Location, Routine
-from l5x_lint.domain.st_models import StAssignment, StProgram, StTagRef
-from l5x_lint.pipeline.analyze import register
-from l5x_lint.pipeline.symbols import SymbolTable
-
 from l5x_lint.checks._codes import WS105
+from l5x_lint.checks._walkers import StWalker
+from l5x_lint.domain.st_models import StAssignment, StTagRef
+from l5x_lint.pipeline.analyze import register
 
 _NARROW_TO_WIDE: dict[str, int] = {
     "SINT": 1, "INT": 2, "DINT": 4, "LINT": 8,
@@ -22,37 +19,30 @@ def _is_downcast(from_type: str, to_type: str) -> bool:
     return fw > tw
 
 
-@register
-def ws105_implicit_downcast(
-    routine: Routine, symbols: SymbolTable, loc: Location,
-) -> list[Diagnostic]:
-    result: list[Diagnostic] = []
-    if routine.type != "ST":
-        return result
-    bod = routine.st_body
-    if not isinstance(bod, StProgram):
-        return result
-    for stmt in bod.statements:
-        match stmt:
-            case StAssignment():
-                if not stmt.target.segments:
-                    continue
-                target_name = stmt.target.segments[0].name
-                target_type = symbols.resolve_type(target_name, loc.program)
-                if target_type is None:
-                    continue
-                match stmt.expression:
-                    case StTagRef() if stmt.expression.path.segments:
-                        src_name = stmt.expression.path.segments[0].name
-                        src_type = symbols.resolve_type(src_name, loc.program)
-                        if src_type is not None and _is_downcast(src_type.name, target_type.name):
-                            result.append(Diagnostic(
-                                code=WS105.code, severity=WS105.severity,
-                                location=loc,
-                                message=WS105(
-                                    name=target_name,
-                                    from_type=src_type.name,
-                                    to_type=target_type.name,
-                                ).message,
-                            ))
-    return result
+class Ws105ImplicitDowncast(StWalker):
+    def visit_assignment(self, node: StAssignment) -> None:
+        if not node.target.segments:
+            return
+        target_name = node.target.segments[0].name
+        target_type = self.symbols.resolve_type(target_name, self.loc.program)
+        if target_type is None:
+            return
+        match node.expression:
+            case StTagRef() if node.expression.path.segments:
+                src_name = node.expression.path.segments[0].name
+                src_type = self.symbols.resolve_type(src_name, self.loc.program)
+                if src_type is not None and _is_downcast(src_type.name, target_type.name):
+                    self.add_diagnostic(
+                        code=WS105.code,
+                        severity=WS105.severity,
+                        message=WS105(
+                            name=target_name,
+                            from_type=src_type.name,
+                            to_type=target_type.name,
+                        ).message,
+                        line=node.line,
+                    )
+
+
+ws105_implicit_downcast = Ws105ImplicitDowncast()
+register(ws105_implicit_downcast)

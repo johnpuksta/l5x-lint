@@ -10,3 +10,7 @@ import l5x_lint.checks.st.es003_for_bounds  # noqa: F401
 import l5x_lint.checks.st.ws111_literal_overflow  # noqa: F401
 import l5x_lint.checks.st.ws112_empty_case_branch  # noqa: F401
 import l5x_lint.checks.st.ws114_implicit_cast  # noqa: F401
+import l5x_lint.checks.st.ws115_no_repeat  # noqa: F401
+import l5x_lint.checks.st.ws116_no_goto  # noqa: F401
+import l5x_lint.checks.st.ws117_or_xor_limit  # noqa: F401
+import l5x_lint.checks.st.ws118_case_constant  # noqa: F401

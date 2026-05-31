@@ -1093,9 +1093,40 @@ tests/checks/
 | W107 | WS107 | warning | ST | Missing ELSE clause on IF/CASE | ✅ done |
 | — | ER013 | error | RLL | Invalid JMP target label | ✅ done |
 | — | ER014 | error | RLL | OTL without OTU (unbalanced latch) | ✅ done |
-| — | WS121 | warning | ST | Statement with no effect | 🟡 candidate |
-| — | WC122 | warning | cross | Empty routine body | 🟡 candidate |
-| — | WS123 | warning | ST | Literal overflow for target type | 🟡 candidate |
+| — | ER013 | Invalid JMP target label | RLL | ✅ done |
+| — | ER014 | OTL without OTU (unbalanced latch) | RLL | ✅ done |
+| — | WS108 | Statement with no effect | ST | ✅ done |
+| — | WS109 | FOR loop variable assignment | ST | ✅ done |
+| — | WS110 | Dead code after RETURN | ST | ✅ done |
+| — | WS111 | Literal overflow for target type | ST | ✅ done |
+| — | WS112 | Empty CASE branch body | ST | ✅ done |
+| — | WS113 | AND_THEN/OR_ELSE non-BOOL | ST | ✅ done |
+| — | WS114 | Implicit cast mixed-type expr | ST | ✅ done |
+| — | ES001 | Invalid expression op | ST | ✅ done |
+| — | ES002 | Duplicate CASE value | ST | ✅ done |
+| — | ES003 | FOR loop out-of-range bounds | ST | ✅ done |
+| — | WS115 | REPEAT not supported by Logix | ST | ✅ done |
+| — | WS116 | GOTO not supported by Logix | ST | ✅ done (no-op — parser doesn't support GOTO) |
+| — | WS117 | OR/XOR operand limit | ST | ✅ done |
+| — | WS118 | CASE non-constant value | ST | ✅ done |
+| — | EC013 | Duplicate JMP label | cross | ✅ done |
+| — | EC014 | Unresolved constant | cross | ✅ done |
+| — | EC015 | Invalid/undeclared data type | cross | ✅ done |
+| — | EC016 | Invalid array range | cross | ✅ done |
+| — | EC017 | Constant modification | cross | ✅ done |
+| — | EC018 | Empty POU | cross | ✅ done |
+| — | WC107 | Empty IF/CASE body | cross | ✅ done |
+| — | WC108 | Deprecated instruction | cross | ✅ done |
+| — | ER015 | MCR zone without BST/BND | RLL | ✅ done |
+| — | ER016 | FAL/FSC incomplete operands | RLL | ✅ done |
+| — | WR005 | NOP instruction present | RLL | ✅ done |
+| — | WR006 | SUS instruction in production | RLL | ✅ done |
+| — | WR007 | Rung with inputs only | RLL | ✅ done |
+| — | WR008 | COP/CPS overlapping src/dest | RLL | ✅ done |
+| — | WR009 | GSV/SSV invalid object class | RLL | ✅ done |
+| — | WS121 | Statement with no effect | ST | 🟡 candidate (merged into WS108) |
+| — | WC122 | Empty routine body | cross | 🟡 candidate |
+| — | WS123 | Literal overflow for target type | ST | 🟡 candidate (merged into WS111) |
 | ... | ... (see full registry below) | | | | |
 
 ### 4.4 Complete Error/Warning Code Registry
@@ -1354,6 +1385,10 @@ limits don't exist):
 | 2zc | WS111 | Literal overflow for target type | Small | Low | RuSTy E053/E039 | ✅ |
 | 2zd | WS112 | Empty CASE branch body | Tiny | Low | RuSTy E090 | ✅ |
 | 2ze | WS114 | Implicit cast mixed-type expr | Small | Low | RuSTy E067 | ✅ |
+| 2zf | WS115 | REPEAT not supported by Logix | Tiny | Low | Logix 1756-PM007 | ✅ |
+| 2zg | WS116 | GOTO not supported by Logix | Tiny | Low | Logix 1756-PM007 | ✅ (no-op) |
+| 2zh | WS117 | OR/XOR operand limit | Tiny | Low | TechNote 64904 | ✅ |
+| 2zi | WS118 | CASE non-constant value | Tiny | Low | 1756-PM001 | ✅ |
 | — | — | ES004/ES005 | — | — | N/A for L5X (no string token / XML const dims) | — |
 | 3a | — | Config system | Medium | High | truST + RuSTy |
 | 3b | — | Related info + hints | Medium | High | truST |

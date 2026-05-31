@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.02" TargetType="Controller" ContainsContext="true" ExportDate="Sat Mar 04 21:40:05 2023" ExportOptions="References NoRawData L5KData DecoratedData Context">
+<Controller Use="Context" Name="TestController">
+<DataTypes Use="Context"></DataTypes>
+<Tags Use="Context"><Tag Name="SomeTag" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write"><Data Format="Decorated"><DataValue DataType="BOOL" Radix="Decimal" Value="0"/></Data></Tag>
+<Tag Name="OutTag" TagType="Base" DataType="BOOL" Radix="Decimal" Constant="false" ExternalAccess="Read/Write"><Data Format="Decorated"><DataValue DataType="BOOL" Radix="Decimal" Value="0"/></Data></Tag>
+</Tags>
+<Programs Use="Context"><Program Use="Context" Name="MainProgram">
+<Tags Use="Context">
+</Tags>
+<Routines Use="Context">
+<Routine Use="Context" Name="Main" Type="RLL">
+<RLLContent Use="Context">
+<Rung Use="Target" Number="0" Type="N">
+<Text><![CDATA[XIC(SomeTag)OTE(OutTag);]]></Text>
+</Rung>
+</RLLContent>
+</Routine>
+</Routines>
+</Program>
+</Programs>
+<AddOnInstructionDefinitions Use="Context"><AddOnInstructionDefinition Name="MyUnusedAOI" Revision="1.0"><Parameters/><LocalTags/></AddOnInstructionDefinition>
+</AddOnInstructionDefinitions>
+</Controller>
+</RSLogix5000Content>

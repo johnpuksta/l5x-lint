@@ -1,3 +1,5 @@
+from returns.maybe import Some
+
 from l5x_lint.domain.st_models import (
     StBinaryOp,
     StCall,
@@ -5,7 +7,7 @@ from l5x_lint.domain.st_models import (
     StTagRef,
     StUnaryOp,
 )
-from l5x_lint.pipeline.symbols import SymbolTable
+from l5x_lint.pipeline.symbols import BUILTIN_TYPES, SymbolTable
 
 _REAL_OPS: frozenset[str] = frozenset({"ADD", "SUB", "MUL", "DIV", "NEG", "MOV", "CPT"})
 _BOOL_OPS: frozenset[str] = frozenset({"XIC", "XIO", "OTE", "OTL", "OTU"})
@@ -21,11 +23,19 @@ def _call_return_type(name: str, symbols: SymbolTable) -> str | None:
     return None
 
 
+
 def _tag_ref_type(segments, program: str, symbols: SymbolTable) -> str | None:
-    base = symbols.resolve_type(segments[0].name, program)
-    if base is None:
-        return None
-    current = base.name
+    tag = symbols.resolve(segments[0].name, program)
+    match tag:
+        case Some(t) if t.data_type.upper() in BUILTIN_TYPES:
+            current = t.data_type.upper()
+        case Some(t):
+            base = symbols.resolve_type(segments[0].name, program)
+            if base is None:
+                return None
+            current = base.name
+        case _:
+            return None
     for seg in segments[1:]:
         dt = symbols.resolve_member_type(current, seg.name)
         if dt is None:

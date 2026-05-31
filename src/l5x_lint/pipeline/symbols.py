@@ -2,7 +2,15 @@ from dataclasses import dataclass, field
 
 from returns.maybe import Maybe, Nothing, Some
 
-from l5x_lint.domain.models import AOI, Controller, DataType, Tag
+from l5x_lint.domain.models import AOI, Controller, DataType, Member, Tag
+
+BUILTIN_TYPES: set[str] = {
+    "BOOL", "SINT", "INT", "DINT", "LINT",
+    "USINT", "UINT", "UDINT", "ULINT",
+    "REAL", "LREAL",
+    "STRING", "BYTE", "WORD", "DWORD", "LWORD",
+    "TIMER", "COUNTER", "CONTROL", "MESSAGE",
+}
 
 
 @dataclass
@@ -31,7 +39,14 @@ class SymbolTable:
     def resolve_type(self, name: str, program: str | None = None) -> DataType | None:
         match self.resolve(name, program):
             case Some(tag):
-                return self.data_types.get(tag.data_type)
+                dt = self.data_types.get(tag.data_type)
+                if dt is not None:
+                    return dt
+                if tag.data_type.upper() in BUILTIN_TYPES:
+                    return DataType(
+                        name=tag.data_type.upper(), family="BuiltIn", class_=""
+                    )
+                return None
             case _:
                 return None
 

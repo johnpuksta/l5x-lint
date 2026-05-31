@@ -112,6 +112,13 @@ class StWalker:
                 self.visit_exit(stmt)
             case StReturn():
                 self.visit_return(stmt)
+            case StBinaryOp():
+                self.visit_binary_op(stmt)
+                self._walk_expr(stmt.left)
+                self._walk_expr(stmt.right)
+            case StUnaryOp():
+                self.visit_unary_op(stmt)
+                self._walk_expr(stmt.operand)
 
     def _walk_expr(self, expr) -> None:
         match expr:
