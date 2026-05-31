@@ -22,7 +22,10 @@ def _validate(path: Path, config: LintConfig | None = None) -> str:
     result = parse_l5x(path)
     match result:
         case Failure(err):
-            return json.dumps({"error": str(err)})
+            entry = {"error": str(err)}
+            if hasattr(err, "line") and err.line is not None:
+                entry["line"] = err.line
+            return json.dumps(entry)
         case Success(project):
             pass
 

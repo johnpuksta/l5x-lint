@@ -31,7 +31,14 @@ def parse_l5x(source: str | Path) -> Result[L5XProject, LintInternalError]:
         else:
             return Failure(AdapterArgumentError(got=type(source).__name__))
     except (ET.ParseError, OSError) as e:
-        return Failure(L5XStructureError(element="XML", detail=str(e)))
+        line = None
+        msg = str(e)
+        if "line " in msg:
+            try:
+                line = int(msg.split("line ")[1].split(",")[0])
+            except (IndexError, ValueError):
+                pass
+        return Failure(L5XStructureError(element="XML", detail=msg, line=line))
 
     schema_revision = root.get("SchemaRevision", "")
     software_revision = root.get("SoftwareRevision", "")

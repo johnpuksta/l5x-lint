@@ -27,7 +27,10 @@ def validate(path: Path, json_output: bool = False, config: LintConfig | None = 
     result = parse_l5x(path)
     match result:
         case Failure(err):
-            print(f"Error: {err}", file=sys.stderr)
+            loc = ""
+            if hasattr(err, "line") and err.line is not None:
+                loc = f" at line {err.line}"
+            print(f"Error{loc}: {err}", file=sys.stderr)
             return 1
         case Success(project):
             pass

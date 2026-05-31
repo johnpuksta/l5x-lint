@@ -5,6 +5,10 @@ from dataclasses import dataclass
 class L5XStructureError:
     element: str
     detail: str
+    line: int | None = None
+
+    def __str__(self) -> str:
+        return self.detail
 
 
 @dataclass
