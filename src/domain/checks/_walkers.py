@@ -1,3 +1,22 @@
+"""AST walkers for ST and RLL check rules.
+
+Usage:
+    from domain.checks._walkers import StWalker, RllWalker
+    from application.analyze import register
+
+    class MyCheck(StWalker):
+        def visit_if(self, node):
+            self.add_diagnostic("WSXXX", "warning", "missing else", line=node.line)
+
+    my_check = MyCheck()
+    register(my_check)
+
+- **StWalker** — walks ST programs; override visit_* methods
+- **RllWalker** — walks RLL rungs/instructions (includes branch recursion)
+- Both match `CheckFn` signature for `register(check_instance)`
+- Default visit methods are no-ops; only override what you need
+"""
+
 from __future__ import annotations
 
 from domain.diagnostics import Diagnostic

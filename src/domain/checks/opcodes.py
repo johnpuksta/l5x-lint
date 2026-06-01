@@ -1,3 +1,10 @@
+"""Opcode definitions for RLL instruction validation.
+
+NOTE: _BUILTIN_OPCODES in ec003_missing_aoi.py must stay in sync with this.
+Any opcode not in _BUILTIN_OPCODES and not defined as an AOI triggers EC003.
+GT was recently added as a comparison instruction alias alongside GRT.
+"""
+
 OPCODE_OPERANDS: dict[str, tuple[int | None, int | None]] = {
     # Bit
     "XIC": (1, 1),

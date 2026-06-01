@@ -1,3 +1,25 @@
+"""PLC dialect configuration.
+
+Seven boolean flags on DialectConfig control check behavior across presets:
+
+| Flag | rockwell | iec-61131-3 | codesys |
+|---|---|---|---|
+| allow_keywords_case_insensitive | True | False | False |
+| allow_positional_args | True | False | True |
+| allow_jsr | True | False | False |
+| allow_wildcard_operands | True | False | True |
+| allow_type_punning | True | False | True |
+| allow_c_style_comments | True | False | True |
+| allow_cross_family_widening | True | False | True |
+
+Usage:
+    from domain.dialect import resolve_dialect, DIALECT_PRESETS
+
+    dialect = resolve_dialect("rockwell")
+    # or
+    dialect = DIALECT_PRESETS["iec-61131-3"]
+"""
+
 from __future__ import annotations
 
 from dataclasses import dataclass

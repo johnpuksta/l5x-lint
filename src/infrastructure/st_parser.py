@@ -1,3 +1,13 @@
+"""ST (Structured Text) parser using Lark.
+
+Lark Scanner Priority:
+    TAG_BASE uses priority -1 to sort after keywords (priority 0)
+    to prevent identifiers from shadowing keywords.
+
+    All 26 keyword terminals use /(?i:keyword)/ regex (case-insensitive).
+    TAG_BASE.-1 ensures identifiers don't match before keywords.
+"""
+
 from lark import Lark, Transformer, UnexpectedInput
 from returns.result import Failure, Result, Success
 

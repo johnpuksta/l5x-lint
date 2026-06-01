@@ -1,3 +1,10 @@
+"""EC003: Missing AOI definition.
+
+Uses _BUILTIN_OPCODES to distinguish built-in instructions from AOIs.
+Any opcode not in this set and not defined as an AOI triggers EC003.
+Must stay in sync with OPCODE_OPERANDS in opcodes.py.
+"""
+
 from domain.checks._codes import EC003
 from domain.diagnostics import Diagnostic
 from domain.models import Location, Routine

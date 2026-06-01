@@ -1,3 +1,27 @@
+"""RLL rung parser using Lark.
+
+Lark Scanner Priority:
+    Lark's BasicLexer._build_scanner() sorts terminals by
+    (-priority, -max_width, -len(pattern.value), name) ascending.
+    Higher numeric priority in grammar (e.g., NAME.100) means the
+    terminal matches first (because -100 < 0).
+
+    TAG_BASE uses priority -1 to sort after keywords (priority 0)
+    — otherwise -max_width tiebreaker puts unbounded TAG_BASE before
+    fixed-length keywords like IF.
+
+    CMP.100 and HEX_LITERAL.100 use high priority to match before
+    broader OPCODE/NUMBER patterns.
+
+Inline String Literals in Alternatives:
+    Lark drops inline string literal tokens (e.g., "[", "]") from
+    alternatives within (...)* groups. The tag_path rule uses
+    "[" NUMBER ("," NUMBER)* "]" but the transformer receives only
+    TAG_BASE, NUMBER tokens — brackets are invisible. Array indices
+    are internally represented as .N (dot notation). To preserve
+    brackets, use named terminals (LSQB: "[", RSQB: "]") in grammar.
+"""
+
 from dataclasses import dataclass, field
 
 from lark import Lark, Transformer, UnexpectedInput
