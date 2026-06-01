@@ -1,5 +1,5 @@
-from l5x_lint.domain.checks.st.es001_invalid_expression_op import es001_invalid_expression_op
-from l5x_lint.domain.models import (
+from domain.checks.st.es001_invalid_expression_op import es001_invalid_expression_op
+from domain.models import (
     DataType,
     Location,
     Routine,
@@ -7,8 +7,8 @@ from l5x_lint.domain.models import (
     TagPath,
     TagPathSegment,
 )
-from l5x_lint.domain.st_models import StBinaryOp, StProgram, StTagRef
-from l5x_lint.domain.symbols import SymbolTable
+from domain.st_models import StBinaryOp, StProgram, StTagRef
+from domain.symbols import SymbolTable
 
 
 def _make_string_tag(name: str) -> Tag:

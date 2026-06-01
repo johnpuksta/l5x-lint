@@ -1,7 +1,7 @@
-from l5x_lint.domain.checks.cross.ec008_aoi_circular_dep import ec008_aoi_circular_dep
-from l5x_lint.domain.models import AOI, Controller, Location, Routine
-from l5x_lint.application import analyze
-from l5x_lint.domain.symbols import build_symbol_table
+from domain.checks.cross.ec008_aoi_circular_dep import ec008_aoi_circular_dep
+from domain.models import AOI, Controller, Location, Routine
+from application import analyze
+from domain.symbols import build_symbol_table
 
 
 def _reset_registry():

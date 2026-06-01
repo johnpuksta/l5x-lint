@@ -1,11 +1,11 @@
-from l5x_lint.domain.checks._codes import EC001
-from l5x_lint.domain.checks.cross.ec001_undefined_tag import (
+from domain.checks._codes import EC001
+from domain.checks.cross.ec001_undefined_tag import (
     _check_rll,
     _check_st,
     _extract_base,
     ec001_undefined_tag,
 )
-from l5x_lint.domain.models import (
+from domain.models import (
     Controller,
     Location,
     Program,
@@ -14,8 +14,8 @@ from l5x_lint.domain.models import (
     TagPath,
     TagPathSegment,
 )
-from l5x_lint.domain.rll_models import Instruction, Operand, ParsedRung
-from l5x_lint.domain.st_models import (
+from domain.rll_models import Instruction, Operand, ParsedRung
+from domain.st_models import (
     StAssignment,
     StBinaryOp,
     StCall,
@@ -27,8 +27,8 @@ from l5x_lint.domain.st_models import (
     StTagRef,
     StWhile,
 )
-from l5x_lint.application import analyze
-from l5x_lint.domain.symbols import build_symbol_table
+from application import analyze
+from domain.symbols import build_symbol_table
 
 
 def _reset_registry():

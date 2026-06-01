@@ -1,5 +1,5 @@
-from l5x_lint.domain.models import TagPath, TagPathSegment
-from l5x_lint.domain.st_models import (
+from domain.models import TagPath, TagPathSegment
+from domain.st_models import (
     StAssignment,
     StBinaryOp,
     StCall,

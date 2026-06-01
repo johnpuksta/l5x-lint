@@ -1,8 +1,8 @@
-from l5x_lint.domain.checks.cross.ec003_missing_aoi import ec003_missing_aoi
-from l5x_lint.domain.models import AOI, Controller, Location, Routine, Tag
-from l5x_lint.domain.rll_models import Instruction, Operand, ParsedRung
-from l5x_lint.application import analyze
-from l5x_lint.domain.symbols import build_symbol_table
+from domain.checks.cross.ec003_missing_aoi import ec003_missing_aoi
+from domain.models import AOI, Controller, Location, Routine, Tag
+from domain.rll_models import Instruction, Operand, ParsedRung
+from application import analyze
+from domain.symbols import build_symbol_table
 
 
 def _reset_registry():
@@ -57,7 +57,7 @@ def test_non_rll_ignored():
 
 
 def test_st_call_undefined_aoi():
-    from l5x_lint.domain.st_models import StCall, StProgram
+    from domain.st_models import StCall, StProgram
 
     prog = StProgram(statements=[StCall(name="NoSuchAOI")])
     r = Routine(name="Main", type="ST", st_body=prog)
@@ -69,7 +69,7 @@ def test_st_call_undefined_aoi():
 
 
 def test_st_call_builtin_skipped():
-    from l5x_lint.domain.st_models import StCall, StProgram
+    from domain.st_models import StCall, StProgram
 
     prog = StProgram(statements=[StCall(name="TON")])
     r = Routine(name="Main", type="ST", st_body=prog)

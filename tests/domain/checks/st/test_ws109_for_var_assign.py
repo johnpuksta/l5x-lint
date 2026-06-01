@@ -1,13 +1,13 @@
-from l5x_lint.domain.checks.st.ws109_for_var_assign import ws109_for_var_assign
-from l5x_lint.domain.models import Location, Routine, TagPath, TagPathSegment
-from l5x_lint.domain.st_models import (
+from domain.checks.st.ws109_for_var_assign import ws109_for_var_assign
+from domain.models import Location, Routine, TagPath, TagPathSegment
+from domain.st_models import (
     StAssignment,
     StFor,
     StLiteral,
     StProgram,
     StTagRef,
 )
-from l5x_lint.domain.symbols import SymbolTable
+from domain.symbols import SymbolTable
 
 
 def test_for_var_not_assigned_no_diagnostic():

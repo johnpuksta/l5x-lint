@@ -1,14 +1,14 @@
-from l5x_lint.domain.checks.cross.wc107_empty_if_case import wc107_empty_body
-from l5x_lint.domain.models import Location, Routine
-from l5x_lint.domain.models import TagPath, TagPathSegment
-from l5x_lint.domain.st_models import (
+from domain.checks.cross.wc107_empty_if_case import wc107_empty_body
+from domain.models import Location, Routine
+from domain.models import TagPath, TagPathSegment
+from domain.st_models import (
     StAssignment,
     StCase,
     StIf,
     StLiteral,
     StProgram,
 )
-from l5x_lint.domain.symbols import SymbolTable
+from domain.symbols import SymbolTable
 
 
 def _make_st_routine(body_stmts) -> Routine:

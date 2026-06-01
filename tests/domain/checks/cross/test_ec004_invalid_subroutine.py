@@ -1,8 +1,8 @@
-from l5x_lint.domain.checks.cross.ec004_invalid_subroutine import ec004_invalid_subroutine
-from l5x_lint.domain.models import Controller, Location, Program, Routine
-from l5x_lint.domain.rll_models import Instruction, Operand, ParsedRung
-from l5x_lint.application import analyze
-from l5x_lint.domain.symbols import build_symbol_table
+from domain.checks.cross.ec004_invalid_subroutine import ec004_invalid_subroutine
+from domain.models import Controller, Location, Program, Routine
+from domain.rll_models import Instruction, Operand, ParsedRung
+from application import analyze
+from domain.symbols import build_symbol_table
 
 
 def _reset_registry():
@@ -59,7 +59,7 @@ def test_jxr_valid():
 
 
 def test_st_jsr_valid():
-    from l5x_lint.domain.st_models import StJsr, StProgram
+    from domain.st_models import StJsr, StProgram
 
     prog = StProgram(statements=[StJsr(routine_name="SubRoutine")])
     r = Routine(name="Main", type="ST", st_body=prog)
@@ -75,7 +75,7 @@ def test_st_jsr_valid():
 
 
 def test_st_jsr_invalid():
-    from l5x_lint.domain.st_models import StJsr, StProgram
+    from domain.st_models import StJsr, StProgram
 
     prog = StProgram(statements=[StJsr(routine_name="NoSuch")])
     r = Routine(name="Main", type="ST", st_body=prog)

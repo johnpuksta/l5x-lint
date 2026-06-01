@@ -1,6 +1,6 @@
-from l5x_lint.domain.checks.cross.ec011_reserved_name import _reset, ec011_reserved_name
-from l5x_lint.domain.models import AOI, Controller, Location, Routine
-from l5x_lint.domain.symbols import build_symbol_table
+from domain.checks.cross.ec011_reserved_name import _reset, ec011_reserved_name
+from domain.models import AOI, Controller, Location, Routine
+from domain.symbols import build_symbol_table
 
 
 def _loc(program="", routine=""):

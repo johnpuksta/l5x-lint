@@ -1,5 +1,5 @@
-from l5x_lint.domain.checks.cross.ws105_implicit_downcast import ws105_implicit_downcast
-from l5x_lint.domain.models import (
+from domain.checks.cross.ws105_implicit_downcast import ws105_implicit_downcast
+from domain.models import (
     Controller,
     DataType,
     Location,
@@ -9,8 +9,8 @@ from l5x_lint.domain.models import (
     TagPath,
     TagPathSegment,
 )
-from l5x_lint.domain.st_models import StAssignment, StProgram, StTagRef
-from l5x_lint.domain.symbols import build_symbol_table
+from domain.st_models import StAssignment, StProgram, StTagRef
+from domain.symbols import build_symbol_table
 
 
 def _loc(program="Prog", routine=""):

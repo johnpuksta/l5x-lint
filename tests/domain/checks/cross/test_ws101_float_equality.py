@@ -1,20 +1,20 @@
-from l5x_lint.domain.checks.cross.ws101_float_equality import ws101_float_equality
-from l5x_lint.domain.models import (
+from domain.checks.cross.ws101_float_equality import ws101_float_equality
+from domain.models import (
     Controller,
     Location,
     Routine,
     TagPath,
     TagPathSegment,
 )
-from l5x_lint.domain.rll_models import Instruction, Operand, ParsedRung
-from l5x_lint.domain.st_models import (
+from domain.rll_models import Instruction, Operand, ParsedRung
+from domain.st_models import (
     StAssignment,
     StBinaryOp,
     StLiteral,
     StProgram,
     StTagRef,
 )
-from l5x_lint.domain.symbols import build_symbol_table
+from domain.symbols import build_symbol_table
 
 
 def _loc(program="", routine=""):

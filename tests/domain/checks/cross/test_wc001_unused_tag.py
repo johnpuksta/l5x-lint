@@ -1,8 +1,8 @@
-from l5x_lint.domain.checks.cross.wc001_unused_tag import _reset, wc001_unused_tag
-from l5x_lint.domain.models import Controller, Location, Program, Routine, Tag
-from l5x_lint.domain.rll_models import Instruction, Operand, ParsedRung
-from l5x_lint.application import analyze
-from l5x_lint.domain.symbols import build_symbol_table
+from domain.checks.cross.wc001_unused_tag import _reset, wc001_unused_tag
+from domain.models import Controller, Location, Program, Routine, Tag
+from domain.rll_models import Instruction, Operand, ParsedRung
+from application import analyze
+from domain.symbols import build_symbol_table
 
 
 def _reset_registry():
@@ -59,8 +59,8 @@ def test_used_program_tag_no_diagnostic():
 
 def test_st_routine():
     _reset()
-    from l5x_lint.domain.models import TagPath, TagPathSegment
-    from l5x_lint.domain.st_models import StAssignment, StProgram, StTagRef
+    from domain.models import TagPath, TagPathSegment
+    from domain.st_models import StAssignment, StProgram, StTagRef
 
     prog = StProgram(
         statements=[

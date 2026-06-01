@@ -1,7 +1,7 @@
-from l5x_lint.domain.checks.cross.wc106_unused_pou import _reset, wc106_unused_pou
-from l5x_lint.domain.models import AOI, Controller, Location, Routine
-from l5x_lint.domain.rll_models import Instruction, Operand, ParsedRung
-from l5x_lint.domain.symbols import build_symbol_table
+from domain.checks.cross.wc106_unused_pou import _reset, wc106_unused_pou
+from domain.models import AOI, Controller, Location, Routine
+from domain.rll_models import Instruction, Operand, ParsedRung
+from domain.symbols import build_symbol_table
 
 
 def _loc(program="", routine=""):

@@ -1,4 +1,4 @@
-from l5x_lint.domain.rll_models import Instruction, Operand, ParsedRung
+from domain.rll_models import Instruction, Operand, ParsedRung
 
 
 def test_operand_simple():

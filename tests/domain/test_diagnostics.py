@@ -1,10 +1,10 @@
-from l5x_lint.domain.diagnostics import (
+from domain.diagnostics import (
     AnalysisResult,
     Diagnostic,
     FixSuggestion,
     RelatedInfo,
 )
-from l5x_lint.domain.models import Location
+from domain.models import Location
 
 
 def test_diagnostic_minimal():

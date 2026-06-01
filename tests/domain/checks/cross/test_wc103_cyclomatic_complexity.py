@@ -1,10 +1,10 @@
-from l5x_lint.domain.checks.cross.wc103_cyclomatic_complexity import (
+from domain.checks.cross.wc103_cyclomatic_complexity import (
     wc103_cyclomatic_complexity,
 )
-from l5x_lint.domain.models import Controller, Location, Routine
-from l5x_lint.domain.rll_models import Instruction, ParsedRung
-from l5x_lint.domain.st_models import StIf, StProgram
-from l5x_lint.domain.symbols import build_symbol_table
+from domain.models import Controller, Location, Routine
+from domain.rll_models import Instruction, ParsedRung
+from domain.st_models import StIf, StProgram
+from domain.symbols import build_symbol_table
 
 
 def _loc(program="", routine=""):

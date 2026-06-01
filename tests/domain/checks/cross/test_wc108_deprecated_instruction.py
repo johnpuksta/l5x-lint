@@ -1,11 +1,11 @@
-from l5x_lint.domain.checks.cross.wc108_deprecated_instruction import (
+from domain.checks.cross.wc108_deprecated_instruction import (
     wc108_rll_deprecated,
     wc108_st_deprecated,
 )
-from l5x_lint.domain.models import Location, Routine
-from l5x_lint.domain.rll_models import Instruction, Operand, ParsedRung
-from l5x_lint.domain.st_models import StCall, StLiteral, StProgram
-from l5x_lint.domain.symbols import SymbolTable
+from domain.models import Location, Routine
+from domain.rll_models import Instruction, Operand, ParsedRung
+from domain.st_models import StCall, StLiteral, StProgram
+from domain.symbols import SymbolTable
 
 
 def test_st_deprecated_call_emits_wc108():

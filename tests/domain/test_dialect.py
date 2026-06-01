@@ -1,4 +1,4 @@
-from l5x_lint.domain.dialect import (
+from domain.dialect import (
     DIALECT_PRESETS,
     DialectConfig,
     resolve_dialect,

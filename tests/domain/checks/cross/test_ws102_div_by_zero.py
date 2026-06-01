@@ -1,7 +1,7 @@
-from l5x_lint.domain.checks.cross.ws102_div_by_zero import ws102_div_by_zero
-from l5x_lint.domain.models import Controller, Location, Routine
-from l5x_lint.domain.rll_models import Instruction, Operand, ParsedRung
-from l5x_lint.domain.symbols import build_symbol_table
+from domain.checks.cross.ws102_div_by_zero import ws102_div_by_zero
+from domain.models import Controller, Location, Routine
+from domain.rll_models import Instruction, Operand, ParsedRung
+from domain.symbols import build_symbol_table
 
 
 def _loc(program="", routine=""):

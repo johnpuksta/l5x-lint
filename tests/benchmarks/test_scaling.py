@@ -23,9 +23,9 @@ from pathlib import Path
 
 import pytest
 
-from l5x_lint import domain  # noqa: F401 — ensure domain is loaded before checks
-from l5x_lint.infrastructure.adapter import parse_l5x
-from l5x_lint.application.analyze import analyze
+import domain  # noqa: F401 — ensure domain is loaded before checks
+from infrastructure.adapter import parse_l5x
+from application.analyze import analyze
 from returns.result import Success
 
 # Directory containing pre-generated benchmark L5X files

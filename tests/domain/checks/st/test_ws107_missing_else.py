@@ -1,7 +1,7 @@
-from l5x_lint.domain.checks.st.ws107_missing_else import ws107_missing_else
-from l5x_lint.domain.models import Controller, Location, Routine
-from l5x_lint.domain.st_models import StCase, StIf, StProgram
-from l5x_lint.domain.symbols import build_symbol_table
+from domain.checks.st.ws107_missing_else import ws107_missing_else
+from domain.models import Controller, Location, Routine
+from domain.st_models import StCase, StIf, StProgram
+from domain.symbols import build_symbol_table
 
 
 def _loc(program="", routine=""):
@@ -9,8 +9,8 @@ def _loc(program="", routine=""):
 
 
 def test_if_with_else_no_diagnostic():
-    from l5x_lint.domain.st_models import StAssignment
-    from l5x_lint.domain.models import TagPath, TagPathSegment
+    from domain.st_models import StAssignment
+    from domain.models import TagPath, TagPathSegment
 
     prog = StProgram(
         statements=[
@@ -63,8 +63,8 @@ def test_case_without_else_emits_ws107():
 
 
 def test_case_with_else_no_diagnostic():
-    from l5x_lint.domain.st_models import StAssignment
-    from l5x_lint.domain.models import TagPath, TagPathSegment
+    from domain.st_models import StAssignment
+    from domain.models import TagPath, TagPathSegment
 
     prog = StProgram(
         statements=[

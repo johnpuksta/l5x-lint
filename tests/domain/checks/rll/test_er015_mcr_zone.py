@@ -1,7 +1,7 @@
-from l5x_lint.domain.checks.rll.er015_mcr_zone import er015_mcr_zone
-from l5x_lint.domain.models import Location, Routine
-from l5x_lint.domain.rll_models import Instruction, ParsedRung
-from l5x_lint.domain.symbols import SymbolTable
+from domain.checks.rll.er015_mcr_zone import er015_mcr_zone
+from domain.models import Location, Routine
+from domain.rll_models import Instruction, ParsedRung
+from domain.symbols import SymbolTable
 
 
 def _make_rung(num: int, instructions: list[Instruction]) -> ParsedRung:

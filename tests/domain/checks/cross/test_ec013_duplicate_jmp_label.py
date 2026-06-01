@@ -1,9 +1,9 @@
 import importlib
 
-from l5x_lint.domain.checks.cross import ec013_duplicate_jmp_label
-from l5x_lint.domain.models import Location, Routine
-from l5x_lint.domain.rll_models import Instruction, Operand, ParsedRung
-from l5x_lint.domain.symbols import SymbolTable
+from domain.checks.cross import ec013_duplicate_jmp_label
+from domain.models import Location, Routine
+from domain.rll_models import Instruction, Operand, ParsedRung
+from domain.symbols import SymbolTable
 
 
 def _reset():

@@ -1,6 +1,6 @@
 from returns.maybe import Some
 
-from l5x_lint.domain.models import (
+from domain.models import (
     Controller,
     DataType,
     L5XProject,

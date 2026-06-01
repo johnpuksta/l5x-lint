@@ -1,6 +1,6 @@
-from l5x_lint.domain.checks.st.ws111_literal_overflow import ws111_literal_overflow
-from l5x_lint.domain.models import Location, Routine, TagPath, TagPathSegment
-from l5x_lint.domain.st_models import (
+from domain.checks.st.ws111_literal_overflow import ws111_literal_overflow
+from domain.models import Location, Routine, TagPath, TagPathSegment
+from domain.st_models import (
     StAssignment,
     StBinaryOp,
     StFor,
@@ -8,7 +8,7 @@ from l5x_lint.domain.st_models import (
     StProgram,
     StTagRef,
 )
-from l5x_lint.domain.symbols import SymbolTable
+from domain.symbols import SymbolTable
 
 
 def _make_routine(stmts) -> Routine:

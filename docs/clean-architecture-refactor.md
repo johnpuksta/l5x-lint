@@ -129,7 +129,7 @@ presentation/ → application/ → domain/
 
 ## 4. Step-by-Step Execution Plan
 
-### Step 0: Remove double-nested package
+### Step 0: Remove double-nested package ✅ DONE
 
 **Goal:** Eliminate `src/l5x_lint/` — promote its contents to `src/` directly.
 

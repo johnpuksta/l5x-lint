@@ -1,4 +1,4 @@
-from l5x_lint.domain.checks._hints import (
+from domain.checks._hints import (
     suggest_did_you_mean,
     syntax_habit_hints,
     _levenshtein,

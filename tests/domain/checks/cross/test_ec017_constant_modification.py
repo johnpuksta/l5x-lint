@@ -2,11 +2,11 @@ import importlib
 
 from returns.maybe import Some
 
-from l5x_lint.domain.checks.cross import ec017_constant_modification
-from l5x_lint.domain.models import Location, Routine, Tag
-from l5x_lint.domain.st_models import StAssignment, StLiteral, StProgram, StTagRef
-from l5x_lint.domain.symbols import SymbolTable
-from l5x_lint.domain.models import TagPath, TagPathSegment
+from domain.checks.cross import ec017_constant_modification
+from domain.models import Location, Routine, Tag
+from domain.st_models import StAssignment, StLiteral, StProgram, StTagRef
+from domain.symbols import SymbolTable
+from domain.models import TagPath, TagPathSegment
 
 
 def _reset():
@@ -68,7 +68,7 @@ def test_st_assign_to_non_constant_no_diagnostic():
 
 def test_rll_ote_constant_emits_ec017():
     _reset()
-    from l5x_lint.domain.rll_models import Instruction, Operand, ParsedRung
+    from domain.rll_models import Instruction, Operand, ParsedRung
 
     symbols = SymbolTable(
         controller_tags={

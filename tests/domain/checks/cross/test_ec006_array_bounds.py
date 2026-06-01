@@ -1,8 +1,8 @@
-from l5x_lint.domain.checks.cross.ec006_array_bounds import ec006_array_bounds
-from l5x_lint.domain.models import Controller, Location, Routine, Tag
-from l5x_lint.domain.rll_models import Instruction, Operand, ParsedRung
-from l5x_lint.application import analyze
-from l5x_lint.domain.symbols import build_symbol_table
+from domain.checks.cross.ec006_array_bounds import ec006_array_bounds
+from domain.models import Controller, Location, Routine, Tag
+from domain.rll_models import Instruction, Operand, ParsedRung
+from application import analyze
+from domain.symbols import build_symbol_table
 
 
 def _reset_registry():

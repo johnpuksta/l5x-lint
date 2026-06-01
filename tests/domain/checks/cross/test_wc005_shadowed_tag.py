@@ -1,7 +1,7 @@
-from l5x_lint.domain.checks.cross.wc005_shadowed_tag import wc005_shadowed_tag
-from l5x_lint.domain.models import Controller, Location, Program, Routine, Tag
-from l5x_lint.application import analyze
-from l5x_lint.domain.symbols import build_symbol_table
+from domain.checks.cross.wc005_shadowed_tag import wc005_shadowed_tag
+from domain.models import Controller, Location, Program, Routine, Tag
+from application import analyze
+from domain.symbols import build_symbol_table
 
 
 def _reset_registry():

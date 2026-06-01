@@ -1,7 +1,7 @@
-from l5x_lint.domain.diagnostics import Diagnostic
-from l5x_lint.domain.models import Location
-from l5x_lint.application.config import LintConfig
-from l5x_lint.application.filter import filter_diagnostics
+from domain.diagnostics import Diagnostic
+from domain.models import Location
+from application.config import LintConfig
+from application.filter import filter_diagnostics
 
 
 _LOC = Location("Prog", "Main", rung=0)

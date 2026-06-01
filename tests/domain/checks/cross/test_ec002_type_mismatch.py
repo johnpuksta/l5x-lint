@@ -1,8 +1,8 @@
-from l5x_lint.domain.checks.cross.ec002_type_mismatch import ec002_type_mismatch
-from l5x_lint.domain.models import Controller, Location, Routine, Tag
-from l5x_lint.domain.rll_models import Instruction, Operand, ParsedRung
-from l5x_lint.application import analyze
-from l5x_lint.domain.symbols import build_symbol_table
+from domain.checks.cross.ec002_type_mismatch import ec002_type_mismatch
+from domain.models import Controller, Location, Routine, Tag
+from domain.rll_models import Instruction, Operand, ParsedRung
+from application import analyze
+from domain.symbols import build_symbol_table
 
 
 def _reset_registry():
@@ -49,8 +49,8 @@ def test_no_expected_type_no_diagnostic():
 
 
 def test_st_call_type_mismatch():
-    from l5x_lint.domain.models import TagPath, TagPathSegment
-    from l5x_lint.domain.st_models import StCall, StProgram, StTagRef
+    from domain.models import TagPath, TagPathSegment
+    from domain.st_models import StCall, StProgram, StTagRef
 
     prog = StProgram(
         statements=[

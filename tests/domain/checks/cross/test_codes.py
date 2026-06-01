@@ -1,4 +1,4 @@
-from l5x_lint.domain.checks._codes import (
+from domain.checks._codes import (
     EC001,
     EC002,
     EC003,

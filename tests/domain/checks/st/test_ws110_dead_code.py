@@ -1,14 +1,14 @@
-from l5x_lint.domain.checks.st.ws110_dead_code import ws110_dead_code
-from l5x_lint.domain.models import Location, Routine
-from l5x_lint.domain.st_models import (
+from domain.checks.st.ws110_dead_code import ws110_dead_code
+from domain.models import Location, Routine
+from domain.st_models import (
     StAssignment,
     StLiteral,
     StProgram,
     StReturn,
     StTagRef,
 )
-from l5x_lint.domain.models import TagPath, TagPathSegment
-from l5x_lint.domain.symbols import SymbolTable
+from domain.models import TagPath, TagPathSegment
+from domain.symbols import SymbolTable
 
 
 def test_return_no_following_statements_no_diagnostic():

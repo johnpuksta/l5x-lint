@@ -1,7 +1,7 @@
-from l5x_lint.domain.checks.rll.er013_invalid_jmp_target import er013_invalid_jmp_target
-from l5x_lint.domain.models import Location, Routine
-from l5x_lint.domain.rll_models import Instruction, Operand, ParsedRung
-from l5x_lint.domain.symbols import SymbolTable
+from domain.checks.rll.er013_invalid_jmp_target import er013_invalid_jmp_target
+from domain.models import Location, Routine
+from domain.rll_models import Instruction, Operand, ParsedRung
+from domain.symbols import SymbolTable
 
 
 def _make_rung(num: int, instructions: list[Instruction]) -> ParsedRung:

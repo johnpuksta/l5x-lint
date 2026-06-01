@@ -1,8 +1,8 @@
 import importlib
 
-from l5x_lint.domain.checks.cross import ec016_invalid_array_range
-from l5x_lint.domain.models import Location, Routine, Tag
-from l5x_lint.domain.symbols import SymbolTable
+from domain.checks.cross import ec016_invalid_array_range
+from domain.models import Location, Routine, Tag
+from domain.symbols import SymbolTable
 
 
 def _reset():

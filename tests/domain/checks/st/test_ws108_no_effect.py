@@ -1,7 +1,7 @@
-from l5x_lint.domain.checks.st.ws108_no_effect import ws108_no_effect
-from l5x_lint.domain.models import Location, Routine
-from l5x_lint.domain.st_models import StCall, StLiteral, StProgram
-from l5x_lint.domain.symbols import SymbolTable
+from domain.checks.st.ws108_no_effect import ws108_no_effect
+from domain.models import Location, Routine
+from domain.st_models import StCall, StLiteral, StProgram
+from domain.symbols import SymbolTable
 
 
 def test_no_effect_call_emits_ws108():

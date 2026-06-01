@@ -1,9 +1,9 @@
-from l5x_lint.domain.checks.rll.wr002_afi_rung import wr002_afi_rung
-from l5x_lint.domain.models import Controller, Location, Program, Routine
-from l5x_lint.domain.rll_models import Instruction, Operand, ParsedRung
-from l5x_lint.domain.st_models import StProgram
-from l5x_lint.application import analyze
-from l5x_lint.domain.symbols import build_symbol_table
+from domain.checks.rll.wr002_afi_rung import wr002_afi_rung
+from domain.models import Controller, Location, Program, Routine
+from domain.rll_models import Instruction, Operand, ParsedRung
+from domain.st_models import StProgram
+from application import analyze
+from domain.symbols import build_symbol_table
 
 
 def _reset_registry():

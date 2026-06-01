@@ -1,4 +1,4 @@
-from l5x_lint.domain.errors import (
+from domain.errors import (
     AdapterArgumentError,
     L5XStructureError,
     RLLParseError,

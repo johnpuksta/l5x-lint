@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from l5x_lint.presentation.cli import validate
+from presentation.cli import validate
 
 TEST_DATA = Path(__file__).parent.parent / "data"
 VALID_DIR = TEST_DATA / "valid"

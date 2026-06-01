@@ -1,8 +1,8 @@
 import importlib
 
-from l5x_lint.domain.checks.cross import ec015_invalid_data_type
-from l5x_lint.domain.models import Location, Routine, Tag
-from l5x_lint.domain.symbols import SymbolTable
+from domain.checks.cross import ec015_invalid_data_type
+from domain.models import Location, Routine, Tag
+from domain.symbols import SymbolTable
 
 
 def _reset():
@@ -38,7 +38,7 @@ def test_undefined_type_emits_ec015():
 
 def test_user_defined_type_no_diagnostic():
     _reset()
-    from l5x_lint.domain.models import DataType
+    from domain.models import DataType
 
     symbols = SymbolTable(
         controller_tags={"X": Tag(name="X", data_type="MyType")},

@@ -15,8 +15,8 @@ where = ["src"]
 exclude = ["references*"]
 
 [project.scripts]
-l5x-lint = "l5x_lint.presentation.cli:main"
-l5x-lint-mcp = "l5x_lint.presentation.mcp_server:main"
+l5x-lint = "presentation.cli:main"
+l5x-lint-mcp = "presentation.mcp_server:main"
 
 [project.optional-dependencies]
 dev = [
@@ -33,7 +33,7 @@ exclude = ["references/", "schemas/"]
 select = ["E", "F", "I", "N", "W"]
 
 [tool.ruff.lint.per-file-ignores]
-"src/l5x_lint/pipeline/st_parser.py" = ["E501"]
+"src/infrastructure/st_parser.py" = ["E501"]
 
 [tool.ruff.format]
 line-ending = "auto"

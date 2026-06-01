@@ -1,5 +1,5 @@
-from l5x_lint.domain.checks.st.ws104_non_bool_condition import ws104_non_bool_condition
-from l5x_lint.domain.models import (
+from domain.checks.st.ws104_non_bool_condition import ws104_non_bool_condition
+from domain.models import (
     Controller,
     DataType,
     Location,
@@ -9,8 +9,8 @@ from l5x_lint.domain.models import (
     TagPath,
     TagPathSegment,
 )
-from l5x_lint.domain.st_models import StIf, StProgram, StTagRef, StWhile
-from l5x_lint.domain.symbols import build_symbol_table
+from domain.st_models import StIf, StProgram, StTagRef, StWhile
+from domain.symbols import build_symbol_table
 
 
 def _loc(program="Prog", routine=""):

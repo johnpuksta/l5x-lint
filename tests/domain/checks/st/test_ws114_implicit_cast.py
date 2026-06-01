@@ -1,7 +1,7 @@
-from l5x_lint.domain.checks.st.ws114_implicit_cast import ws114_implicit_cast
-from l5x_lint.domain.models import Location, Routine, TagPath, TagPathSegment
-from l5x_lint.domain.st_models import StAssignment, StBinaryOp, StLiteral, StProgram
-from l5x_lint.domain.symbols import SymbolTable
+from domain.checks.st.ws114_implicit_cast import ws114_implicit_cast
+from domain.models import Location, Routine, TagPath, TagPathSegment
+from domain.st_models import StAssignment, StBinaryOp, StLiteral, StProgram
+from domain.symbols import SymbolTable
 
 
 def _make_routine(stmts) -> Routine:

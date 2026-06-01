@@ -1,0 +1,37 @@
+from dataclasses import dataclass, field
+
+from domain.models import Location
+
+
+@dataclass
+class RelatedInfo:
+    location: Location
+    message: str
+
+
+@dataclass
+class Diagnostic:
+    code: str
+    severity: str
+    location: Location
+    message: str
+    hint: str | None = None
+    fix_suggestion: str | None = None
+    related: list[RelatedInfo] = field(default_factory=list)
+    iec_reference: str | None = None
+
+
+@dataclass
+class FixSuggestion:
+    code: str
+    description: str
+    replacement: str | None = None
+    target_tag: str | None = None
+
+
+@dataclass
+class AnalysisResult:
+    passed: bool
+    error_count: int
+    warning_count: int
+    diagnostics: list[Diagnostic] = field(default_factory=list)

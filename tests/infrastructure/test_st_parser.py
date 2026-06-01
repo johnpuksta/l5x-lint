@@ -1,6 +1,6 @@
 from returns.result import Failure
 
-from l5x_lint.domain.st_models import (
+from domain.st_models import (
     StAssignment,
     StBinaryOp,
     StCall,
@@ -16,7 +16,7 @@ from l5x_lint.domain.st_models import (
     StUnaryOp,
     StWhile,
 )
-from l5x_lint.infrastructure.st_parser import parse
+from infrastructure.st_parser import parse
 
 
 def test_empty_text():
