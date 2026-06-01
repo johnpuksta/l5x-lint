@@ -13,20 +13,26 @@ def _loc(program="Prog", routine="Main", rung=None):
 
 
 def test_no_duplicates():
-    c = Controller(name="Test", tags=[
-        Tag(name="A", data_type="DINT"),
-        Tag(name="B", data_type="BOOL"),
-    ])
+    c = Controller(
+        name="Test",
+        tags=[
+            Tag(name="A", data_type="DINT"),
+            Tag(name="B", data_type="BOOL"),
+        ],
+    )
     table = build_symbol_table(c)
     result = ec007_duplicate_tag(Routine(name="Main", type="RLL"), table, _loc())
     assert result == []
 
 
 def test_duplicate_controller_tags():
-    c = Controller(name="Test", tags=[
-        Tag(name="A", data_type="DINT"),
-        Tag(name="a", data_type="BOOL"),
-    ])
+    c = Controller(
+        name="Test",
+        tags=[
+            Tag(name="A", data_type="DINT"),
+            Tag(name="a", data_type="BOOL"),
+        ],
+    )
     table = build_symbol_table(c)
     result = ec007_duplicate_tag(Routine(name="Main", type="RLL"), table, _loc())
     assert result == []

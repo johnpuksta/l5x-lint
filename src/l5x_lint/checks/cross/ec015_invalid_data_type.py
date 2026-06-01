@@ -4,12 +4,25 @@ from l5x_lint.domain.models import Location, Routine
 from l5x_lint.pipeline.analyze import register
 from l5x_lint.pipeline.symbols import SymbolTable
 
-_BUILTIN_TYPES: frozenset[str] = frozenset({
-    "BOOL", "SINT", "INT", "DINT", "LINT",
-    "USINT", "UINT", "UDINT", "ULINT",
-    "REAL", "LREAL", "STRING",
-    "TIMER", "COUNTER", "CONTROL",
-})
+_BUILTIN_TYPES: frozenset[str] = frozenset(
+    {
+        "BOOL",
+        "SINT",
+        "INT",
+        "DINT",
+        "LINT",
+        "USINT",
+        "UINT",
+        "UDINT",
+        "ULINT",
+        "REAL",
+        "LREAL",
+        "STRING",
+        "TIMER",
+        "COUNTER",
+        "CONTROL",
+    }
+)
 
 _processed: bool = False
 _reported: set[str] = set()
@@ -23,7 +36,9 @@ def _reset():
 
 @register
 def ec015_invalid_data_type(
-    _routine: Routine, symbols: SymbolTable, loc: Location,
+    _routine: Routine,
+    symbols: SymbolTable,
+    loc: Location,
 ) -> list[Diagnostic]:
     global _processed, _reported
     result: list[Diagnostic] = []
@@ -47,14 +62,20 @@ def ec015_invalid_data_type(
 
 
 def _check_report(
-    tag_name: str, data_type: str, loc: Location, result: list[Diagnostic],
+    tag_name: str,
+    data_type: str,
+    loc: Location,
+    result: list[Diagnostic],
 ):
     key = f"{tag_name}:{data_type}"
     if key in _reported:
         return
     _reported.add(key)
-    result.append(Diagnostic(
-        code=EC015.code, severity=EC015.severity,
-        location=loc,
-        message=EC015(tag_name=tag_name, data_type=data_type).message,
-    ))
+    result.append(
+        Diagnostic(
+            code=EC015.code,
+            severity=EC015.severity,
+            location=loc,
+            message=EC015(tag_name=tag_name, data_type=data_type).message,
+        )
+    )

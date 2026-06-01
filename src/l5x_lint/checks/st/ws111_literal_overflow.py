@@ -45,14 +45,16 @@ class Ws111Check(StWalker):
             case int(v):
                 if v > _DINT_MAX or v < _DINT_MIN:
                     self.add_diagnostic(
-                        WS111.code, WS111.severity,
+                        WS111.code,
+                        WS111.severity,
                         WS111(value=str(v), line=self._current_line).message,
                         line=self._current_line,
                     )
             case float(v):
                 if v > 3.4e38 or v < -3.4e38:
                     self.add_diagnostic(
-                        WS111.code, WS111.severity,
+                        WS111.code,
+                        WS111.severity,
                         WS111(value=str(v), line=self._current_line).message,
                         line=self._current_line,
                     )

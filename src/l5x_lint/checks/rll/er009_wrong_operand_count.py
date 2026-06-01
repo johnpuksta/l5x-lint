@@ -8,7 +8,9 @@ from l5x_lint.pipeline.symbols import SymbolTable
 
 @register
 def er009_wrong_operand_count(
-    routine: Routine, _symbols: SymbolTable, loc: Location,
+    routine: Routine,
+    _symbols: SymbolTable,
+    loc: Location,
 ) -> list[Diagnostic]:
     result: list[Diagnostic] = []
 

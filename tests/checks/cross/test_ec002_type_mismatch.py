@@ -51,11 +51,17 @@ def test_no_expected_type_no_diagnostic():
 def test_st_call_type_mismatch():
     from l5x_lint.domain.models import TagPath, TagPathSegment
     from l5x_lint.domain.st_models import StCall, StProgram, StTagRef
-    prog = StProgram(statements=[
-        StCall(name="TON", args=[
-            StTagRef(path=TagPath(segments=[TagPathSegment(name="MyDint")])),
-        ]),
-    ])
+
+    prog = StProgram(
+        statements=[
+            StCall(
+                name="TON",
+                args=[
+                    StTagRef(path=TagPath(segments=[TagPathSegment(name="MyDint")])),
+                ],
+            ),
+        ]
+    )
     r = Routine(name="Main", type="ST", st_body=prog)
     c = Controller(name="Test", tags=[Tag(name="MyDint", data_type="DINT")])
     table = build_symbol_table(c)

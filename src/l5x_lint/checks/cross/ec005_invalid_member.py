@@ -14,7 +14,9 @@ _MEMBER_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*\.([A-Za-z_][A-Za-z0-9_]*)")
 
 @register
 def ec005_invalid_member(
-    routine: Routine, symbols: SymbolTable, loc: Location,
+    routine: Routine,
+    symbols: SymbolTable,
+    loc: Location,
 ) -> list[Diagnostic]:
     result: list[Diagnostic] = []
 
@@ -65,6 +67,7 @@ def _check_operand(value, symbols, loc, result, rung_num=None):
 
 def _check_st(body, symbols, loc, result):
     from l5x_lint.domain.st_models import StAssignment
+
     for stmt in body.statements:
         if isinstance(stmt, StAssignment):
             target = stmt.target
@@ -77,6 +80,7 @@ def _check_st(body, symbols, loc, result):
 
 def _check_expr_members(expr, symbols, loc, result):
     from l5x_lint.domain.st_models import StBinaryOp, StCall, StTagRef, StUnaryOp
+
     match expr:
         case StTagRef():
             if len(expr.path.segments) >= 2:

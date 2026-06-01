@@ -215,7 +215,7 @@ class _StTransformer(Transformer):
                 colon_idx = idx
                 break
         selectors = [items[i] for i in range(colon_idx)]
-        body = [it for it in items[colon_idx + 1:] if not isinstance(it, str)]
+        body = [it for it in items[colon_idx + 1 :] if not isinstance(it, str)]
         return (selectors, body)
 
     def for_loop(self, items):
@@ -260,7 +260,8 @@ class _StTransformer(Transformer):
         name = str(items[0])
         separators = frozenset({",", ")"})
         args = [
-            item for item in items[2:]
+            item
+            for item in items[2:]
             if not (isinstance(item, str) and item in separators)
         ]
         if name.lower() == "jsr":

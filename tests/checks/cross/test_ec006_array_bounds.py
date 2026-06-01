@@ -25,7 +25,9 @@ def _inst(opcode, *operand_values):
 
 def test_valid_array_index_no_diagnostic():
     r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("MOV", "MyArr[0]"))])
-    c = Controller(name="Test", tags=[Tag(name="MyArr", data_type="DINT", dimensions=(10,))])  # noqa: E501
+    c = Controller(
+        name="Test", tags=[Tag(name="MyArr", data_type="DINT", dimensions=(10,))]
+    )  # noqa: E501
     table = build_symbol_table(c)
     result = ec006_array_bounds(r, table, _loc())
     assert result == []
@@ -33,7 +35,9 @@ def test_valid_array_index_no_diagnostic():
 
 def test_oor_array_index_emits_ec006():
     r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("MOV", "MyArr[10]"))])
-    c = Controller(name="Test", tags=[Tag(name="MyArr", data_type="DINT", dimensions=(10,))])  # noqa: E501
+    c = Controller(
+        name="Test", tags=[Tag(name="MyArr", data_type="DINT", dimensions=(10,))]
+    )  # noqa: E501
     table = build_symbol_table(c)
     result = ec006_array_bounds(r, table, _loc())
     assert len(result) == 1
@@ -66,7 +70,9 @@ def test_empty_routine():
 
 def test_member_with_array():
     r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("MOV", "MyArr[5]"))])
-    c = Controller(name="Test", tags=[Tag(name="MyArr", data_type="MyUDT", dimensions=(6,))])  # noqa: E501
+    c = Controller(
+        name="Test", tags=[Tag(name="MyArr", data_type="MyUDT", dimensions=(6,))]
+    )  # noqa: E501
     table = build_symbol_table(c)
     result = ec006_array_bounds(r, table, _loc())
     assert result == []
@@ -74,7 +80,9 @@ def test_member_with_array():
 
 def test_negative_index_not_flagged():
     r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("MOV", "Arr[-1]"))])
-    c = Controller(name="Test", tags=[Tag(name="Arr", data_type="DINT", dimensions=(10,))])  # noqa: E501
+    c = Controller(
+        name="Test", tags=[Tag(name="Arr", data_type="DINT", dimensions=(10,))]
+    )  # noqa: E501
     table = build_symbol_table(c)
     result = ec006_array_bounds(r, table, _loc())
     assert result == []

@@ -3,9 +3,7 @@ from __future__ import annotations
 
 def suggest_did_you_mean(name: str, known_names: list[str]) -> str | None:
     candidates = [
-        (n, _levenshtein(name.lower(), n.lower()))
-        for n in known_names
-        if n != name
+        (n, _levenshtein(name.lower(), n.lower())) for n in known_names if n != name
     ]
     candidates.sort(key=lambda x: x[1])
     if not candidates:

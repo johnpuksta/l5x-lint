@@ -16,20 +16,30 @@ def _make_st_routine(body_stmts) -> Routine:
 
 
 def test_if_with_body_no_diagnostic():
-    r = _make_st_routine([
-        StIf(condition=StLiteral(value=True),
-             body=[StAssignment(target=TagPath(segments=[TagPathSegment(name="X")]),
-                                expression=StLiteral(value=1))],
-             line=1),
-    ])
+    r = _make_st_routine(
+        [
+            StIf(
+                condition=StLiteral(value=True),
+                body=[
+                    StAssignment(
+                        target=TagPath(segments=[TagPathSegment(name="X")]),
+                        expression=StLiteral(value=1),
+                    )
+                ],
+                line=1,
+            ),
+        ]
+    )
     diags = wc107_empty_body(r, SymbolTable(), Location(program="P", routine="Test"))
     assert diags == []
 
 
 def test_empty_if_body_emits_wc107():
-    r = _make_st_routine([
-        StIf(condition=StLiteral(value=True), body=[], line=3),
-    ])
+    r = _make_st_routine(
+        [
+            StIf(condition=StLiteral(value=True), body=[], line=3),
+        ]
+    )
     diags = wc107_empty_body(r, SymbolTable(), Location(program="P", routine="Test"))
     assert len(diags) == 1
     assert diags[0].code == "WC107"
@@ -37,25 +47,39 @@ def test_empty_if_body_emits_wc107():
 
 
 def test_empty_elsif_body():
-    r = _make_st_routine([
-        StIf(condition=StLiteral(value=True),
-             body=[StAssignment(target=TagPath(segments=[TagPathSegment(name="X")]),
-                                expression=StLiteral(value=1))],
-             elsif_pairs=[(StLiteral(value=False), [])],
-             line=5),
-    ])
+    r = _make_st_routine(
+        [
+            StIf(
+                condition=StLiteral(value=True),
+                body=[
+                    StAssignment(
+                        target=TagPath(segments=[TagPathSegment(name="X")]),
+                        expression=StLiteral(value=1),
+                    )
+                ],
+                elsif_pairs=[(StLiteral(value=False), [])],
+                line=5,
+            ),
+        ]
+    )
     diags = wc107_empty_body(r, SymbolTable(), Location(program="P", routine="Test"))
     assert len(diags) == 1
     assert "ELSIF" in diags[0].message
 
 
 def test_empty_case_branch():
-    r = _make_st_routine([
-        StCase(expression=StLiteral(value=1),
-               cases=[([StLiteral(value=1)], []),
-                      ([StLiteral(value=2)], [StLiteral(value=42)])],
-               line=7),
-    ])
+    r = _make_st_routine(
+        [
+            StCase(
+                expression=StLiteral(value=1),
+                cases=[
+                    ([StLiteral(value=1)], []),
+                    ([StLiteral(value=2)], [StLiteral(value=42)]),
+                ],
+                line=7,
+            ),
+        ]
+    )
     diags = wc107_empty_body(r, SymbolTable(), Location(program="P", routine="Test"))
     assert len(diags) == 1
     assert "CASE" in diags[0].message

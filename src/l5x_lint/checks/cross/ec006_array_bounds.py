@@ -15,7 +15,9 @@ _ARRAY_INDEX_DOT = re.compile(r"^([A-Za-z_][A-Za-z0-9_:]*)\.(\d+)(?:\.|$)")
 
 @register
 def ec006_array_bounds(
-    routine: Routine, symbols: SymbolTable, loc: Location,
+    routine: Routine,
+    symbols: SymbolTable,
+    loc: Location,
 ) -> list[Diagnostic]:
     result: list[Diagnostic] = []
 
@@ -75,11 +77,14 @@ def _check_st(body, symbols, loc, result):
 
 def _check_st_exprs(node, symbols, loc, _line, result):
     from l5x_lint.domain.st_models import StAssignment, StTagRef
+
     if isinstance(node, StAssignment):
         if node.target.segments:
             seg = node.target.segments[0]
             if seg.index is not None:
-                _check_index(node.target.segments[0].name, seg.index, symbols, loc, result)
+                _check_index(
+                    node.target.segments[0].name, seg.index, symbols, loc, result
+                )
         _check_st_exprs(node.expression, symbols, loc, None, result)
     elif isinstance(node, StTagRef):
         if node.path.segments:
@@ -95,7 +100,11 @@ def _check_st_exprs(node, symbols, loc, _line, result):
 
 
 def _check_index(
-    name: str, index: int, symbols: SymbolTable, loc: Location, result: list,
+    name: str,
+    index: int,
+    symbols: SymbolTable,
+    loc: Location,
+    result: list,
 ) -> None:
     match symbols.resolve(name, loc.program):
         case Some(tag):

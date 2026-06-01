@@ -46,7 +46,8 @@ class Ws114Check(StWalker):
         if left_t and right_t and left_t != right_t:
             if {left_t, right_t} == {"INT", "REAL"}:
                 self.add_diagnostic(
-                    WS114.code, WS114.severity,
+                    WS114.code,
+                    WS114.severity,
                     WS114(
                         line=self._current_line,
                         left_type=left_t,

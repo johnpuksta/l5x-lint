@@ -43,12 +43,14 @@ def analyze(
             filtered = filter_diagnostics(ar.diagnostics, config)
             errors = sum(1 for d in filtered if d.severity == "error")
             warnings = sum(1 for d in filtered if d.severity == "warning")
-            return Success(AnalysisResult(
-                passed=errors == 0,
-                error_count=errors,
-                warning_count=warnings,
-                diagnostics=filtered,
-            ))
+            return Success(
+                AnalysisResult(
+                    passed=errors == 0,
+                    error_count=errors,
+                    warning_count=warnings,
+                    diagnostics=filtered,
+                )
+            )
         case _:
             return result
 
@@ -64,18 +66,23 @@ def _run_checks(controller: Controller) -> Result[AnalysisResult, LintInternalEr
                 try:
                     diagnostics.extend(check(r, symbols, loc))
                 except Exception as e:
-                    name = getattr(check, '__name__', type(check).__name__)
-                    diagnostics.append(Diagnostic(
-                        code="EX101", severity="error",
-                        message=f"Check '{name}' crashed: {e}",
-                        location=loc,
-                    ))
+                    name = getattr(check, "__name__", type(check).__name__)
+                    diagnostics.append(
+                        Diagnostic(
+                            code="EX101",
+                            severity="error",
+                            message=f"Check '{name}' crashed: {e}",
+                            location=loc,
+                        )
+                    )
 
     errors = sum(1 for d in diagnostics if d.severity == "error")
     warnings = sum(1 for d in diagnostics if d.severity == "warning")
-    return Success(AnalysisResult(
-        passed=errors == 0,
-        error_count=errors,
-        warning_count=warnings,
-        diagnostics=diagnostics,
-    ))
+    return Success(
+        AnalysisResult(
+            passed=errors == 0,
+            error_count=errors,
+            warning_count=warnings,
+            diagnostics=diagnostics,
+        )
+    )

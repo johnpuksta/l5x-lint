@@ -8,7 +8,9 @@ from l5x_lint.pipeline.symbols import SymbolTable
 
 @register
 def ec004_invalid_subroutine(
-    routine: Routine, symbols: SymbolTable, loc: Location,
+    routine: Routine,
+    symbols: SymbolTable,
+    loc: Location,
 ) -> list[Diagnostic]:
     valid_routines = symbols.routine_names
     result: list[Diagnostic] = []
@@ -23,7 +25,9 @@ def ec004_invalid_subroutine(
                                 code=EC004.code,
                                 severity=EC004.severity,
                                 location=Location(
-                                    program=loc.program, routine=loc.routine, rung=rung.number
+                                    program=loc.program,
+                                    routine=loc.routine,
+                                    rung=rung.number,
                                 ),
                                 message=EC004(routine=inst.operands[0].value).message,
                             )

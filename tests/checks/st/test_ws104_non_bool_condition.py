@@ -1,6 +1,13 @@
 from l5x_lint.checks.st.ws104_non_bool_condition import ws104_non_bool_condition
 from l5x_lint.domain.models import (
-    Controller, DataType, Location, Program, Routine, Tag, TagPath, TagPathSegment,
+    Controller,
+    DataType,
+    Location,
+    Program,
+    Routine,
+    Tag,
+    TagPath,
+    TagPathSegment,
 )
 from l5x_lint.domain.st_models import StIf, StProgram, StTagRef, StWhile
 from l5x_lint.pipeline.symbols import build_symbol_table
@@ -11,12 +18,15 @@ def _loc(program="Prog", routine=""):
 
 
 def test_if_with_bool_condition_no_diagnostic():
-    prog = StProgram(statements=[
-        StIf(
-            condition=StTagRef(path=TagPath(segments=[TagPathSegment(name="ok")])),
-            body=[], line=1,
-        ),
-    ])
+    prog = StProgram(
+        statements=[
+            StIf(
+                condition=StTagRef(path=TagPath(segments=[TagPathSegment(name="ok")])),
+                body=[],
+                line=1,
+            ),
+        ]
+    )
     r = Routine(name="Main", type="ST", st_body=prog)
     c = Controller(
         name="Test",
@@ -30,12 +40,15 @@ def test_if_with_bool_condition_no_diagnostic():
 
 
 def test_if_with_dint_condition_emits_ws104():
-    prog = StProgram(statements=[
-        StIf(
-            condition=StTagRef(path=TagPath(segments=[TagPathSegment(name="x")])),
-            body=[], line=1,
-        ),
-    ])
+    prog = StProgram(
+        statements=[
+            StIf(
+                condition=StTagRef(path=TagPath(segments=[TagPathSegment(name="x")])),
+                body=[],
+                line=1,
+            ),
+        ]
+    )
     r = Routine(name="Main", type="ST", st_body=prog)
     c = Controller(
         name="Test",
@@ -50,12 +63,17 @@ def test_if_with_dint_condition_emits_ws104():
 
 
 def test_while_with_bool_no_diagnostic():
-    prog = StProgram(statements=[
-        StWhile(
-            condition=StTagRef(path=TagPath(segments=[TagPathSegment(name="running")])),
-            body=[], line=1,
-        ),
-    ])
+    prog = StProgram(
+        statements=[
+            StWhile(
+                condition=StTagRef(
+                    path=TagPath(segments=[TagPathSegment(name="running")])
+                ),
+                body=[],
+                line=1,
+            ),
+        ]
+    )
     r = Routine(name="Main", type="ST", st_body=prog)
     c = Controller(
         name="Test",

@@ -143,7 +143,9 @@ def test_valid_xml_structure():
 
         tree = ET.parse(path)
         root = tree.getroot()
-        assert root.tag == "RSLogix5000Content", f"{filename}: unexpected root tag {root.tag}"
+        assert root.tag == "RSLogix5000Content", (
+            f"{filename}: unexpected root tag {root.tag}"
+        )
         assert root.find("Controller") is not None, f"{filename}: missing Controller"
 
         ctrl = root.find("Controller")
@@ -155,12 +157,20 @@ def test_valid_xml_structure():
         assert len(list(programs)) > 0, f"{filename}: no programs"
 
         for prog in programs:
-            assert prog.find("Routines") is not None, f"{filename}: {prog.get('Name')} missing Routines"
+            assert prog.find("Routines") is not None, (
+                f"{filename}: {prog.get('Name')} missing Routines"
+            )
             routines = prog.find("Routines")
             for routine in routines:
                 rtype = routine.get("Type")
-                assert rtype in ("RLL", "ST"), f"{filename}: {routine.get('Name')} unknown type {rtype}"
+                assert rtype in ("RLL", "ST"), (
+                    f"{filename}: {routine.get('Name')} unknown type {rtype}"
+                )
                 if rtype == "RLL":
-                    assert routine.find("RLLContent") is not None, f"{filename}: {routine.get('Name')} missing RLLContent"
+                    assert routine.find("RLLContent") is not None, (
+                        f"{filename}: {routine.get('Name')} missing RLLContent"
+                    )
                 elif rtype == "ST":
-                    assert routine.find("STContent") is not None, f"{filename}: {routine.get('Name')} missing STContent"
+                    assert routine.find("STContent") is not None, (
+                        f"{filename}: {routine.get('Name')} missing STContent"
+                    )

@@ -64,7 +64,9 @@ def test_multiple_routines():
     def _demo_check(routine, symbols, location):
         return [
             Diagnostic(
-                code="DEMO", severity="warning", location=location,
+                code="DEMO",
+                severity="warning",
+                location=location,
                 message=str(routine.name),
             ),
         ]
@@ -118,7 +120,9 @@ def test_mixed_severity():
     def _demo_check(routine, symbols, location):
         return [
             Diagnostic(code="EC001", severity="error", location=location, message="e"),
-            Diagnostic(code="WC001", severity="warning", location=location, message="w"),
+            Diagnostic(
+                code="WC001", severity="warning", location=location, message="w"
+            ),
         ]
 
     analyze.register(_demo_check)
@@ -140,7 +144,9 @@ def test_all_warnings_still_passes():
 
     def _demo_check(routine, symbols, location):
         return [
-            Diagnostic(code="WC001", severity="warning", location=location, message="w"),
+            Diagnostic(
+                code="WC001", severity="warning", location=location, message="w"
+            ),
         ]
 
     analyze.register(_demo_check)

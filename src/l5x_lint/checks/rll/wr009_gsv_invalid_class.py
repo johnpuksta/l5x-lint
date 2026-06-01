@@ -3,17 +3,35 @@ from l5x_lint.checks._walkers import RllWalker
 from l5x_lint.pipeline.analyze import register
 
 
-_KNOWN_OBJECT_CLASSES: frozenset[str] = frozenset({
-    "Program", "Controller", "Task", "Module",
-    "SerialPort", "DF1Port", "Message", "FaultLog",
-    "Axis", "CoordinateSystem",
-    "InputData", "OutputData",
-    "CSNX_Backplane", "SafetyPartner",
-    "WallClockTime", "CST", "DateTime", "LocalDateTime",
-    "MotionGroup", "Drive", "Axis_Grouped",
-    "AnalogInput", "AnalogOutput",
-    "DigitalInput", "DigitalOutput",
-})
+_KNOWN_OBJECT_CLASSES: frozenset[str] = frozenset(
+    {
+        "Program",
+        "Controller",
+        "Task",
+        "Module",
+        "SerialPort",
+        "DF1Port",
+        "Message",
+        "FaultLog",
+        "Axis",
+        "CoordinateSystem",
+        "InputData",
+        "OutputData",
+        "CSNX_Backplane",
+        "SafetyPartner",
+        "WallClockTime",
+        "CST",
+        "DateTime",
+        "LocalDateTime",
+        "MotionGroup",
+        "Drive",
+        "Axis_Grouped",
+        "AnalogInput",
+        "AnalogOutput",
+        "DigitalInput",
+        "DigitalOutput",
+    }
+)
 
 
 class Wr009Check(RllWalker):
@@ -23,7 +41,8 @@ class Wr009Check(RllWalker):
             obj_class = inst.operands[0].value
             if obj_class not in _KNOWN_OBJECT_CLASSES:
                 self.add_diagnostic(
-                    WR009.code, WR009.severity,
+                    WR009.code,
+                    WR009.severity,
                     WR009(
                         obj_class=obj_class,
                         rung=self.rung_num,

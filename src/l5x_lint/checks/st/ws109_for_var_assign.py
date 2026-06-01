@@ -13,7 +13,8 @@ class ForVarAssignCheck(StWalker):
             if isinstance(stmt, StAssignment) and stmt.target.segments:
                 if stmt.target.segments[0].name.upper() == for_var:
                     self.add_diagnostic(
-                        code=WS109.code, severity=WS109.severity,
+                        code=WS109.code,
+                        severity=WS109.severity,
                         message=WS109(name=for_var.lower(), line=stmt.line).message,
                         line=stmt.line,
                     )

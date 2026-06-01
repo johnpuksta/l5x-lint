@@ -13,49 +13,55 @@ def _tp(name: str) -> TagPath:
 
 
 def test_int_int_no_diagnostic():
-    r = _make_routine([
-        StAssignment(
-            target=_tp("x"),
-            expression=StBinaryOp(
-                left=StLiteral(value=1),
-                op="+",
-                right=StLiteral(value=2),
+    r = _make_routine(
+        [
+            StAssignment(
+                target=_tp("x"),
+                expression=StBinaryOp(
+                    left=StLiteral(value=1),
+                    op="+",
+                    right=StLiteral(value=2),
+                ),
+                line=1,
             ),
-            line=1,
-        ),
-    ])
+        ]
+    )
     diags = ws114_implicit_cast(r, SymbolTable(), Location(program="P", routine="Test"))
     assert diags == []
 
 
 def test_float_float_no_diagnostic():
-    r = _make_routine([
-        StAssignment(
-            target=_tp("x"),
-            expression=StBinaryOp(
-                left=StLiteral(value=1.0),
-                op="+",
-                right=StLiteral(value=2.0),
+    r = _make_routine(
+        [
+            StAssignment(
+                target=_tp("x"),
+                expression=StBinaryOp(
+                    left=StLiteral(value=1.0),
+                    op="+",
+                    right=StLiteral(value=2.0),
+                ),
+                line=1,
             ),
-            line=1,
-        ),
-    ])
+        ]
+    )
     diags = ws114_implicit_cast(r, SymbolTable(), Location(program="P", routine="Test"))
     assert diags == []
 
 
 def test_int_float_emits_ws114():
-    r = _make_routine([
-        StAssignment(
-            target=_tp("x"),
-            expression=StBinaryOp(
-                left=StLiteral(value=1),
-                op="+",
-                right=StLiteral(value=2.5),
+    r = _make_routine(
+        [
+            StAssignment(
+                target=_tp("x"),
+                expression=StBinaryOp(
+                    left=StLiteral(value=1),
+                    op="+",
+                    right=StLiteral(value=2.5),
+                ),
+                line=5,
             ),
-            line=5,
-        ),
-    ])
+        ]
+    )
     diags = ws114_implicit_cast(r, SymbolTable(), Location(program="P", routine="Test"))
     assert len(diags) == 1
     assert diags[0].code == "WS114"
@@ -64,17 +70,19 @@ def test_int_float_emits_ws114():
 
 
 def test_float_int_emits_ws114():
-    r = _make_routine([
-        StAssignment(
-            target=_tp("x"),
-            expression=StBinaryOp(
-                left=StLiteral(value=3.14),
-                op="*",
-                right=StLiteral(value=2),
+    r = _make_routine(
+        [
+            StAssignment(
+                target=_tp("x"),
+                expression=StBinaryOp(
+                    left=StLiteral(value=3.14),
+                    op="*",
+                    right=StLiteral(value=2),
+                ),
+                line=10,
             ),
-            line=10,
-        ),
-    ])
+        ]
+    )
     diags = ws114_implicit_cast(r, SymbolTable(), Location(program="P", routine="Test"))
     assert len(diags) == 1
 

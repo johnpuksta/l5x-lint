@@ -15,7 +15,8 @@ class Ws113Check(StWalker):
             t = expression_type(expr, self.loc.program, self.symbols)
             if t is not None and t.upper() != "BOOL":
                 self.add_diagnostic(
-                    WS113.code, WS113.severity,
+                    WS113.code,
+                    WS113.severity,
                     WS113(op=node.op.upper(), actual=t).message,
                 )
 

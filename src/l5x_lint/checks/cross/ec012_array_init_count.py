@@ -13,7 +13,9 @@ def _reset():
 
 @register
 def ec012_array_init_count(
-    routine: Routine, symbols: SymbolTable, loc: Location,
+    routine: Routine,
+    symbols: SymbolTable,
+    loc: Location,
 ) -> list[Diagnostic]:
     result: list[Diagnostic] = []
 
@@ -27,13 +29,18 @@ def ec012_array_init_count(
             expected *= d
         if tag.initial_values != expected:
             _reported.add(name)
-            result.append(Diagnostic(
-                code=EC012.code, severity=EC012.severity,
-                location=loc,
-                message=EC012(
-                    name=name, expected=expected, actual=tag.initial_values,
-                ).message,
-            ))
+            result.append(
+                Diagnostic(
+                    code=EC012.code,
+                    severity=EC012.severity,
+                    location=loc,
+                    message=EC012(
+                        name=name,
+                        expected=expected,
+                        actual=tag.initial_values,
+                    ).message,
+                )
+            )
 
     for prog_name, tags in symbols.program_tags.items():
         for name, tag in tags.items():
@@ -46,12 +53,17 @@ def ec012_array_init_count(
                 expected *= d
             if tag.initial_values != expected:
                 _reported.add(name)
-                result.append(Diagnostic(
-                    code=EC012.code, severity=EC012.severity,
-                    location=loc,
-                    message=EC012(
-                        name=name, expected=expected, actual=tag.initial_values,
-                    ).message,
-                ))
+                result.append(
+                    Diagnostic(
+                        code=EC012.code,
+                        severity=EC012.severity,
+                        location=loc,
+                        message=EC012(
+                            name=name,
+                            expected=expected,
+                            actual=tag.initial_values,
+                        ).message,
+                    )
+                )
 
     return result

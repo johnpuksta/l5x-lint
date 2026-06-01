@@ -435,6 +435,7 @@ def test_parser_stores_revision_metadata():
 # Malformed XML — well-formedness errors (ET.parse failures)
 # ---------------------------------------------------------------------------
 
+
 class TestMalformedXml:
     def test_truncated_xml(self):
         result = parse_l5x("<RSLogix5000Content>")
@@ -491,6 +492,7 @@ class TestMalformedXml:
 # (parse_l5x only extracts XML; analyze() triggers RLL/ST parsing)
 # ---------------------------------------------------------------------------
 
+
 class TestBadRllCode:
     def test_garbage_rll_through_pipeline(self):
         """CDATA wrapping prevents XML-level failure; Lark parser rejects bad RLL."""
@@ -508,7 +510,9 @@ class TestBadRllCode:
         <AddOnInstructionDefinitions/>
         <Modules/>""")
         result = parse_and_analyze(xml)
-        assert isinstance(result, Failure), f"Expected Failure for bad RLL, got {result}"
+        assert isinstance(result, Failure), (
+            f"Expected Failure for bad RLL, got {result}"
+        )
 
     def test_truncated_rll_in_cdata(self):
         """CDATA wrapping; truncated RLL inside CDATA."""
@@ -526,7 +530,9 @@ class TestBadRllCode:
         <AddOnInstructionDefinitions/>
         <Modules/>""")
         result = parse_and_analyze(xml)
-        assert isinstance(result, Failure), f"Expected Failure for truncated RLL, got {result}"
+        assert isinstance(result, Failure), (
+            f"Expected Failure for truncated RLL, got {result}"
+        )
 
     def test_empty_rll_text(self):
         xml = l5x_with_rll("Main", "")
@@ -571,13 +577,16 @@ class TestBadRllCode:
         <AddOnInstructionDefinitions/>
         <Modules/>""")
         result = parse_and_analyze(xml)
-        assert isinstance(result, Failure), f"Expected Failure for two bad routines, got {result}"
+        assert isinstance(result, Failure), (
+            f"Expected Failure for two bad routines, got {result}"
+        )
 
 
 # ---------------------------------------------------------------------------
 # Bad ST code — should stop analysis with STParseError
 # (parse_l5x only extracts XML; analyze() triggers RLL/ST parsing)
 # ---------------------------------------------------------------------------
+
 
 class TestBadStCode:
     def test_garbage_st_through_pipeline(self):
@@ -614,7 +623,9 @@ class TestBadStCode:
         <AddOnInstructionDefinitions/>
         <Modules/>""")
         result = parse_and_analyze(xml)
-        assert isinstance(result, Failure), f"Expected Failure for truncated ST, got {result}"
+        assert isinstance(result, Failure), (
+            f"Expected Failure for truncated ST, got {result}"
+        )
 
     def test_st_missing_rhs(self):
         """Missing RHS in assignment — ST parser should reject."""
@@ -632,7 +643,9 @@ class TestBadStCode:
         <AddOnInstructionDefinitions/>
         <Modules/>""")
         result = parse_and_analyze(xml)
-        assert isinstance(result, Failure), f"Expected Failure for missing RHS, got {result}"
+        assert isinstance(result, Failure), (
+            f"Expected Failure for missing RHS, got {result}"
+        )
 
     def test_st_with_xml_special_chars(self):
         xml = minimal_l5x(f"""
@@ -656,6 +669,7 @@ class TestBadStCode:
 # ---------------------------------------------------------------------------
 # CDATA edge cases
 # ---------------------------------------------------------------------------
+
 
 class TestCdataEdgeCases:
     def test_rll_in_cdata_section(self):
@@ -717,6 +731,7 @@ class TestCdataEdgeCases:
 # Bad SoftwareRevision — should fail gracefully
 # ---------------------------------------------------------------------------
 
+
 class TestBadSoftwareRevision:
     def test_empty_software_revision(self):
         xml = '<?xml version="1.0"?><RSLogix5000Content SchemaRevision="1.0" SoftwareRevision=""><Controller Name="T"/></RSLogix5000Content>'
@@ -746,6 +761,7 @@ class TestBadSoftwareRevision:
 # XSD validation failures — missing required structure
 # ---------------------------------------------------------------------------
 
+
 class TestXsdValidationFailures:
     def test_missing_controller_element(self):
         xml = """<?xml version="1.0"?>
@@ -756,7 +772,9 @@ class TestXsdValidationFailures:
             case Failure(L5XStructureError(element="Controller")):
                 pass
             case _:
-                assert False, f"Expected L5XStructureError(element='Controller'), got {result}"
+                assert False, (
+                    f"Expected L5XStructureError(element='Controller'), got {result}"
+                )
 
     def test_routine_missing_type_attribute(self):
         xml = minimal_l5x("""
@@ -797,6 +815,7 @@ class TestXsdValidationFailures:
 # Error type assertions — confirm correct error wrapper
 # ---------------------------------------------------------------------------
 
+
 class TestErrorTypes:
     def test_well_formedness_error_is_structure_error(self):
         result = parse_l5x("<bad>")
@@ -822,7 +841,9 @@ class TestErrorTypes:
         <AddOnInstructionDefinitions/>
         <Modules/>""")
         result = parse_and_analyze(xml)
-        assert isinstance(result, Failure), f"Expected Failure for bad RLL, got {result}"
+        assert isinstance(result, Failure), (
+            f"Expected Failure for bad RLL, got {result}"
+        )
 
     def test_st_parse_error_type(self):
         """CDATA-wrapped bad ST triggers parse failure through analyze()."""

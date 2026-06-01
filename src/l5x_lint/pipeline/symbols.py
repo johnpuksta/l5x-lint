@@ -5,11 +5,26 @@ from returns.maybe import Maybe, Nothing, Some
 from l5x_lint.domain.models import AOI, Controller, DataType, Member, Tag
 
 BUILTIN_TYPES: set[str] = {
-    "BOOL", "SINT", "INT", "DINT", "LINT",
-    "USINT", "UINT", "UDINT", "ULINT",
-    "REAL", "LREAL",
-    "STRING", "BYTE", "WORD", "DWORD", "LWORD",
-    "TIMER", "COUNTER", "CONTROL", "MESSAGE",
+    "BOOL",
+    "SINT",
+    "INT",
+    "DINT",
+    "LINT",
+    "USINT",
+    "UINT",
+    "UDINT",
+    "ULINT",
+    "REAL",
+    "LREAL",
+    "STRING",
+    "BYTE",
+    "WORD",
+    "DWORD",
+    "LWORD",
+    "TIMER",
+    "COUNTER",
+    "CONTROL",
+    "MESSAGE",
 }
 
 

@@ -13,18 +13,22 @@ def _loc(program="Prog", routine="Main", rung=None):
 
 
 def test_no_shadowing():
-    c = Controller(name="Test",
-                   tags=[Tag(name="CtrlTag", data_type="DINT")],
-                   programs=[Program(name="Prog", tags=[Tag(name="ProgTag", data_type="BOOL")])])  # noqa: E501
+    c = Controller(
+        name="Test",
+        tags=[Tag(name="CtrlTag", data_type="DINT")],
+        programs=[Program(name="Prog", tags=[Tag(name="ProgTag", data_type="BOOL")])],
+    )  # noqa: E501
     table = build_symbol_table(c)
     result = wc005_shadowed_tag(Routine(name="Main", type="RLL"), table, _loc())
     assert result == []
 
 
 def test_program_tag_shadows_controller():
-    c = Controller(name="Test",
-                   tags=[Tag(name="Shared", data_type="DINT")],
-                   programs=[Program(name="Prog", tags=[Tag(name="Shared", data_type="BOOL")])])  # noqa: E501
+    c = Controller(
+        name="Test",
+        tags=[Tag(name="Shared", data_type="DINT")],
+        programs=[Program(name="Prog", tags=[Tag(name="Shared", data_type="BOOL")])],
+    )  # noqa: E501
     table = build_symbol_table(c)
     result = wc005_shadowed_tag(Routine(name="Main", type="RLL"), table, _loc())
     assert len(result) == 1
@@ -32,20 +36,24 @@ def test_program_tag_shadows_controller():
 
 
 def test_multiple_programs_one_shadow():
-    c = Controller(name="Test",
-                   tags=[Tag(name="Shared", data_type="DINT")],
-                   programs=[
-                       Program(name="A", tags=[Tag(name="Shared", data_type="BOOL")]),
-                       Program(name="B"),
-                   ])
+    c = Controller(
+        name="Test",
+        tags=[Tag(name="Shared", data_type="DINT")],
+        programs=[
+            Program(name="A", tags=[Tag(name="Shared", data_type="BOOL")]),
+            Program(name="B"),
+        ],
+    )
     table = build_symbol_table(c)
     result = wc005_shadowed_tag(Routine(name="Main", type="RLL"), table, _loc())
     assert len(result) == 1
 
 
 def test_no_controller_tags():
-    c = Controller(name="Test",
-                   programs=[Program(name="Prog", tags=[Tag(name="MyTag", data_type="DINT")])])  # noqa: E501
+    c = Controller(
+        name="Test",
+        programs=[Program(name="Prog", tags=[Tag(name="MyTag", data_type="DINT")])],
+    )  # noqa: E501
     table = build_symbol_table(c)
     result = wc005_shadowed_tag(Routine(name="Main", type="RLL"), table, _loc())
     assert result == []

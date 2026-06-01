@@ -8,7 +8,11 @@ from returns.result import Failure, Success
 import l5x_lint.checks  # noqa: F401 — registers all check functions
 from l5x_lint.infrastructure.adapter import parse_l5x
 from l5x_lint.pipeline.analyze import analyze
-from l5x_lint.pipeline.config import LintConfig, apply_severity_overrides, apply_warning_toggles
+from l5x_lint.pipeline.config import (
+    LintConfig,
+    apply_severity_overrides,
+    apply_warning_toggles,
+)
 from l5x_lint.presentation._format import diagnostic_to_dict, find_xml_line
 
 try:
@@ -46,12 +50,15 @@ def _validate(path: Path, config: LintConfig | None = None) -> str:
             entry["xml_line"] = xml_line
         diagnostics.append(entry)
 
-    return json.dumps({
-        "passed": ar.passed,
-        "error_count": ar.error_count,
-        "warning_count": ar.warning_count,
-        "diagnostics": diagnostics,
-    }, indent=2)
+    return json.dumps(
+        {
+            "passed": ar.passed,
+            "error_count": ar.error_count,
+            "warning_count": ar.warning_count,
+            "diagnostics": diagnostics,
+        },
+        indent=2,
+    )
 
 
 def _split(s: str | None) -> list[str] | None:
@@ -78,7 +85,9 @@ def create_server() -> FastMCP:
     ) -> str:
         config = LintConfig(rule_pack=rule_pack, dialect=dialect)
         config.apply_rule_pack()
-        apply_warning_toggles(config, disable=_split(disable_warnings), enable=_split(enable_warnings))
+        apply_warning_toggles(
+            config, disable=_split(disable_warnings), enable=_split(enable_warnings)
+        )
         apply_severity_overrides(config, _split(severity_overrides))
         return _validate(Path(file_path), config=config)
 

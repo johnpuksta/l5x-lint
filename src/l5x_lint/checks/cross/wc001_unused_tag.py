@@ -14,7 +14,9 @@ def _reset():
 
 @register
 def wc001_unused_tag(
-    routine: Routine, symbols: SymbolTable, loc: Location,
+    routine: Routine,
+    symbols: SymbolTable,
+    loc: Location,
 ) -> list[Diagnostic]:
     used = collect_all_tag_refs(routine)
     result: list[Diagnostic] = []

@@ -15,7 +15,9 @@ def _reset():
 
 @register
 def ec013_duplicate_jmp_label(
-    routine: Routine, _symbols: SymbolTable, loc: Location,
+    routine: Routine,
+    _symbols: SymbolTable,
+    loc: Location,
 ) -> list[Diagnostic]:
     global _label_counts, _reported
     result: list[Diagnostic] = []
@@ -28,11 +30,14 @@ def ec013_duplicate_jmp_label(
     for label, count in list(_label_counts.items()):
         if count > 1 and label not in _reported:
             _reported.add(label)
-            result.append(Diagnostic(
-                code=EC013.code, severity=EC013.severity,
-                location=loc,
-                message=EC013(label=label).message,
-            ))
+            result.append(
+                Diagnostic(
+                    code=EC013.code,
+                    severity=EC013.severity,
+                    location=loc,
+                    message=EC013(label=label).message,
+                )
+            )
 
     return result
 

@@ -231,13 +231,13 @@ class WC005(LintErrorBase):
     hidden_by: str
 
 
-
-
 @dataclass
 class EC011(LintErrorBase):
     code: ClassVar[str] = "EC011"
     severity: ClassVar[str] = "error"
-    message_template: ClassVar[str] = "Reserved name collision: '{name}' shadows built-in"
+    message_template: ClassVar[str] = (
+        "Reserved name collision: '{name}' shadows built-in"
+    )
     description: ClassVar[str] = (
         "A user-defined POU (AOI, program, function block) has the same "
         "name as a built-in instruction or type, causing name shadowing."
@@ -251,8 +251,7 @@ class EC012(LintErrorBase):
     code: ClassVar[str] = "EC012"
     severity: ClassVar[str] = "error"
     message_template: ClassVar[str] = (
-        "Array initializer element count mismatch: got {actual}, "
-        "expected {expected}"
+        "Array initializer element count mismatch: got {actual}, expected {expected}"
     )
     description: ClassVar[str] = (
         "The number of initializer elements in a tag's <Data> does not "
@@ -309,7 +308,9 @@ class WC103(LintErrorBase):
 class WS104(LintErrorBase):
     code: ClassVar[str] = "WS104"
     severity: ClassVar[str] = "warning"
-    message_template: ClassVar[str] = "Non-BOOL condition in {construct}: got '{actual}'"
+    message_template: ClassVar[str] = (
+        "Non-BOOL condition in {construct}: got '{actual}'"
+    )
     description: ClassVar[str] = (
         "A control-flow construct (IF, WHILE, UNTIL) uses a condition "
         "that is not BOOL. Only BOOL expressions are valid conditions."
@@ -364,7 +365,6 @@ class WS107(LintErrorBase):
     construct: str
 
 
-
 @dataclass
 class ER013(LintErrorBase):
     code: ClassVar[str] = "ER013"
@@ -397,8 +397,7 @@ class EC013(LintErrorBase):
     severity: ClassVar[str] = "error"
     message_template: ClassVar[str] = "Duplicate JMP label '{label}'"
     description: ClassVar[str] = (
-        "Two or more LBL instructions use the same label name "
-        "within the same program."
+        "Two or more LBL instructions use the same label name within the same program."
     )
     label: str
 
@@ -447,8 +446,7 @@ class WR006(LintErrorBase):
     code: ClassVar[str] = "WR006"
     severity: ClassVar[str] = "warning"
     message_template: ClassVar[str] = (
-        "SUS instruction present at rung {rung} — "
-        "should not be in production"
+        "SUS instruction present at rung {rung} — should not be in production"
     )
     description: ClassVar[str] = (
         "A SUS (Suspend) instruction is present. SUS is a debug "
@@ -475,12 +473,9 @@ class WR007(LintErrorBase):
 class WS108(LintErrorBase):
     code: ClassVar[str] = "WS108"
     severity: ClassVar[str] = "warning"
-    message_template: ClassVar[str] = (
-        "Statement with no effect at line {line}"
-    )
+    message_template: ClassVar[str] = "Statement with no effect at line {line}"
     description: ClassVar[str] = (
-        "An expression statement has no side effects and its "
-        "result is discarded."
+        "An expression statement has no side effects and its result is discarded."
     )
     line: int
 
@@ -504,12 +499,9 @@ class WS109(LintErrorBase):
 class WS110(LintErrorBase):
     code: ClassVar[str] = "WS110"
     severity: ClassVar[str] = "warning"
-    message_template: ClassVar[str] = (
-        "Dead code after {construct} at line {line}"
-    )
+    message_template: ClassVar[str] = "Dead code after {construct} at line {line}"
     description: ClassVar[str] = (
-        "Statements after RETURN or EXIT are unreachable and "
-        "will never execute."
+        "Statements after RETURN or EXIT are unreachable and will never execute."
     )
     construct: str
     line: int
@@ -519,12 +511,9 @@ class WS110(LintErrorBase):
 class WS113(LintErrorBase):
     code: ClassVar[str] = "WS113"
     severity: ClassVar[str] = "warning"
-    message_template: ClassVar[str] = (
-        "Non-BOOL operand for {op}: operand is '{actual}'"
-    )
+    message_template: ClassVar[str] = "Non-BOOL operand for {op}: operand is '{actual}'"
     description: ClassVar[str] = (
-        "The AND_THEN and OR_ELSE short-circuit operators require "
-        "BOOL operands."
+        "The AND_THEN and OR_ELSE short-circuit operators require BOOL operands."
     )
     op: str
     actual: str
@@ -563,9 +552,7 @@ class ES002(LintErrorBase):
 class EC014(LintErrorBase):
     code: ClassVar[str] = "EC014"
     severity: ClassVar[str] = "error"
-    message_template: ClassVar[str] = (
-        "Constant tag '{name}' has no initializer value"
-    )
+    message_template: ClassVar[str] = "Constant tag '{name}' has no initializer value"
     description: ClassVar[str] = (
         "A CONSTANT tag must have an initializer value. "
         "Constant tags without initial values are unresolved."
@@ -577,9 +564,7 @@ class EC014(LintErrorBase):
 class EC016(LintErrorBase):
     code: ClassVar[str] = "EC016"
     severity: ClassVar[str] = "error"
-    message_template: ClassVar[str] = (
-        "Invalid array dimension {dim} for tag '{name}'"
-    )
+    message_template: ClassVar[str] = "Invalid array dimension {dim} for tag '{name}'"
     description: ClassVar[str] = (
         "Array dimension must be a positive integer. "
         "Zero or negative dimensions are not valid."
@@ -615,9 +600,7 @@ class WC107(LintErrorBase):
 class WC108(LintErrorBase):
     code: ClassVar[str] = "WC108"
     severity: ClassVar[str] = "warning"
-    message_template: ClassVar[str] = (
-        "Deprecated instruction '{opcode}' at line {line}"
-    )
+    message_template: ClassVar[str] = "Deprecated instruction '{opcode}' at line {line}"
     description: ClassVar[str] = (
         "The instruction used is deprecated in the current Logix version."
     )
@@ -629,9 +612,7 @@ class WC108(LintErrorBase):
 class ER015(LintErrorBase):
     code: ClassVar[str] = "ER015"
     severity: ClassVar[str] = "error"
-    message_template: ClassVar[str] = (
-        "Unpaired MCR instruction in routine '{routine}'"
-    )
+    message_template: ClassVar[str] = "Unpaired MCR instruction in routine '{routine}'"
     description: ClassVar[str] = (
         "MCR (Master Control Relay) must be used in pairs to open "
         "and close a zone. An unpaired MCR has no matching zone end."
@@ -724,12 +705,9 @@ class WS111(LintErrorBase):
 class WS112(LintErrorBase):
     code: ClassVar[str] = "WS112"
     severity: ClassVar[str] = "warning"
-    message_template: ClassVar[str] = (
-        "Empty branch body in CASE at line {line}"
-    )
+    message_template: ClassVar[str] = "Empty branch body in CASE at line {line}"
     description: ClassVar[str] = (
-        "A CASE branch contains no statements. "
-        "This may indicate incomplete logic."
+        "A CASE branch contains no statements. This may indicate incomplete logic."
     )
     line: int
 
@@ -810,9 +788,7 @@ class WS118(LintErrorBase):
 class EX100(LintErrorBase):
     code: ClassVar[str] = "EX100"
     severity: ClassVar[str] = "error"
-    message_template: ClassVar[str] = (
-        "Parse failure in routine '{routine}': {detail}"
-    )
+    message_template: ClassVar[str] = "Parse failure in routine '{routine}': {detail}"
     description: ClassVar[str] = (
         "A routine's code (RLL or ST) could not be parsed. "
         "The file may contain malformed neutral text."
@@ -835,18 +811,61 @@ class EX101(LintErrorBase):
 
 
 LintError = (
-    EC001 | EC002 | EC003 | EC004 | EC005
-    | EC006 | EC007 | EC008 | ER009 | EC010
-    | EC011 | EC012 | EC013 | EC014 | EC015
-    | EC016 | EC017 | EC018
-    | ER013 | ER014 | ER015 | ER016
-    | WC001 | WR002 | WR003 | WR004 | WC005
-    | WC103 | WC106 | WC107 | WC108
-    | WR008 | WR009
-    | WR005 | WR006 | WR007
-    | WS101 | WS102 | WS104 | WS105 | WS107
-    | WS108 | WS109 | WS110 | WS111 | WS112 | WS113 | WS114
-    | WS115 | WS116 | WS117 | WS118
-    | ES001 | ES002 | ES003
-    | EX100 | EX101
+    EC001
+    | EC002
+    | EC003
+    | EC004
+    | EC005
+    | EC006
+    | EC007
+    | EC008
+    | ER009
+    | EC010
+    | EC011
+    | EC012
+    | EC013
+    | EC014
+    | EC015
+    | EC016
+    | EC017
+    | EC018
+    | ER013
+    | ER014
+    | ER015
+    | ER016
+    | WC001
+    | WR002
+    | WR003
+    | WR004
+    | WC005
+    | WC103
+    | WC106
+    | WC107
+    | WC108
+    | WR008
+    | WR009
+    | WR005
+    | WR006
+    | WR007
+    | WS101
+    | WS102
+    | WS104
+    | WS105
+    | WS107
+    | WS108
+    | WS109
+    | WS110
+    | WS111
+    | WS112
+    | WS113
+    | WS114
+    | WS115
+    | WS116
+    | WS117
+    | WS118
+    | ES001
+    | ES002
+    | ES003
+    | EX100
+    | EX101
 )

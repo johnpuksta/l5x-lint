@@ -59,10 +59,12 @@ def test_st_routine():
 
 
 def test_mixed_rll_and_st():
-    c = _controller([
-        Routine(name="RLLRoutine", type="RLL", cdata="XIC(A)OTE(B);"),
-        Routine(name="STRoutine", type="ST", cdata="x := 1;"),
-    ])
+    c = _controller(
+        [
+            Routine(name="RLLRoutine", type="RLL", cdata="XIC(A)OTE(B);"),
+            Routine(name="STRoutine", type="ST", cdata="x := 1;"),
+        ]
+    )
     result = route_routines(c)
     assert isinstance(result, Success)
     prog = result.unwrap().programs[0]
@@ -76,12 +78,18 @@ def test_multiple_programs():
     c = Controller(
         name="TestPLC",
         programs=[
-            Program(name="ProgA", routines=[
-                Routine(name="Main", type="RLL", cdata="XIC(A)OTE(B);"),
-            ]),
-            Program(name="ProgB", routines=[
-                Routine(name="Main", type="ST", cdata="y := 99;"),
-            ]),
+            Program(
+                name="ProgA",
+                routines=[
+                    Routine(name="Main", type="RLL", cdata="XIC(A)OTE(B);"),
+                ],
+            ),
+            Program(
+                name="ProgB",
+                routines=[
+                    Routine(name="Main", type="ST", cdata="y := 99;"),
+                ],
+            ),
         ],
     )
     result = route_routines(c)
@@ -119,15 +127,24 @@ def test_first_failure_stops():
     c = Controller(
         name="TestPLC",
         programs=[
-            Program(name="ProgA", routines=[
-                Routine(name="R1", type="RLL", cdata="XIC(A)OTE(B);"),
-            ]),
-            Program(name="ProgB", routines=[
-                Routine(name="R2", type="ST", cdata="x := bad syntax;"),
-            ]),
-            Program(name="ProgC", routines=[
-                Routine(name="R3", type="RLL", cdata="XIC(C)OTE(D);"),
-            ]),
+            Program(
+                name="ProgA",
+                routines=[
+                    Routine(name="R1", type="RLL", cdata="XIC(A)OTE(B);"),
+                ],
+            ),
+            Program(
+                name="ProgB",
+                routines=[
+                    Routine(name="R2", type="ST", cdata="x := bad syntax;"),
+                ],
+            ),
+            Program(
+                name="ProgC",
+                routines=[
+                    Routine(name="R3", type="RLL", cdata="XIC(C)OTE(D);"),
+                ],
+            ),
         ],
     )
     result = route_routines(c)

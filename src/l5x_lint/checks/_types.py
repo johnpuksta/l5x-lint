@@ -11,7 +11,9 @@ from l5x_lint.pipeline.symbols import BUILTIN_TYPES, SymbolTable
 
 _REAL_OPS: frozenset[str] = frozenset({"ADD", "SUB", "MUL", "DIV", "NEG", "MOV", "CPT"})
 _BOOL_OPS: frozenset[str] = frozenset({"XIC", "XIO", "OTE", "OTL", "OTU"})
-_COMPARE_OPS: frozenset[str] = frozenset({"EQU", "NEQ", "LES", "LEQ", "GRT", "GEQ", "CMP", "LIM", "GT"})
+_COMPARE_OPS: frozenset[str] = frozenset(
+    {"EQU", "NEQ", "LES", "LEQ", "GRT", "GEQ", "CMP", "LIM", "GT"}
+)
 
 
 def _call_return_type(name: str, symbols: SymbolTable) -> str | None:
@@ -21,7 +23,6 @@ def _call_return_type(name: str, symbols: SymbolTable) -> str | None:
     if upper in _REAL_OPS:
         return None
     return None
-
 
 
 def _tag_ref_type(segments, program: str, symbols: SymbolTable) -> str | None:

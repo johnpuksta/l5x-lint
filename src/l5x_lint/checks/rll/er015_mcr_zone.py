@@ -16,7 +16,8 @@ class Er015Check(RllWalker):
                 mcr_count += _count_mcr(rung.instructions)
             if mcr_count % 2 != 0:
                 self.add_diagnostic(
-                    ER015.code, ER015.severity,
+                    ER015.code,
+                    ER015.severity,
                     ER015(routine=routine.name).message,
                 )
         return self.result

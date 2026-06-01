@@ -1,4 +1,5 @@
 """Shared test helpers for building minimal L5X XML."""
+
 from returns.result import Failure, Success
 
 from l5x_lint.infrastructure.adapter import parse_l5x

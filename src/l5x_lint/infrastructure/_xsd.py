@@ -17,17 +17,21 @@ def _get_schema(major: int) -> Result[xmlschema.XMLSchema, LintInternalError]:
     if major not in _schema_cache:
         xsd_path = _SCHEMAS_DIR / f"l5x-v{major}.xsd"
         if not xsd_path.exists():
-            return Failure(L5XStructureError(
-                element="Schema",
-                detail=f"No XSD schema for version v{major}",
-            ))
+            return Failure(
+                L5XStructureError(
+                    element="Schema",
+                    detail=f"No XSD schema for version v{major}",
+                )
+            )
         try:
             _schema_cache[major] = xmlschema.XMLSchema(xsd_path)
         except Exception as e:
-            return Failure(L5XStructureError(
-                element="Schema",
-                detail=f"Failed to load XSD for v{major}: {e}",
-            ))
+            return Failure(
+                L5XStructureError(
+                    element="Schema",
+                    detail=f"Failed to load XSD for v{major}: {e}",
+                )
+            )
     return Success(_schema_cache[major])
 
 
@@ -77,10 +81,12 @@ def validate_l5x_xml(
     try:
         major = int(software_revision.split(".")[0])
     except (ValueError, IndexError):
-        return Failure(L5XStructureError(
-            element="Schema",
-            detail=f"Cannot parse software revision '{software_revision}'",
-        ))
+        return Failure(
+            L5XStructureError(
+                element="Schema",
+                detail=f"Cannot parse software revision '{software_revision}'",
+            )
+        )
 
     schema_result = _get_schema(major)
     match schema_result:

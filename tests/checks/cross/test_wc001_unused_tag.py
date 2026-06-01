@@ -46,9 +46,12 @@ def test_unused_controller_tag_emits_wc001():
 def test_used_program_tag_no_diagnostic():
     _reset()
     r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("XIC", "ProgTag"))])
-    c = Controller(name="Test", programs=[
-        Program(name="Prog", tags=[Tag(name="ProgTag", data_type="DINT")]),
-    ])
+    c = Controller(
+        name="Test",
+        programs=[
+            Program(name="Prog", tags=[Tag(name="ProgTag", data_type="DINT")]),
+        ],
+    )
     table = build_symbol_table(c)
     result = wc001_unused_tag(r, table, _loc(program="Prog"))
     assert result == []
@@ -58,17 +61,23 @@ def test_st_routine():
     _reset()
     from l5x_lint.domain.models import TagPath, TagPathSegment
     from l5x_lint.domain.st_models import StAssignment, StProgram, StTagRef
-    prog = StProgram(statements=[
-        StAssignment(
-            target=TagPath(segments=[TagPathSegment(name="Out")]),
-            expression=StTagRef(path=TagPath(segments=[TagPathSegment(name="In")])),
-        ),
-    ])
+
+    prog = StProgram(
+        statements=[
+            StAssignment(
+                target=TagPath(segments=[TagPathSegment(name="Out")]),
+                expression=StTagRef(path=TagPath(segments=[TagPathSegment(name="In")])),
+            ),
+        ]
+    )
     r = Routine(name="Main", type="ST", st_body=prog)
-    c = Controller(name="Test", tags=[
-        Tag(name="Out", data_type="DINT"),
-        Tag(name="In", data_type="DINT"),
-    ])
+    c = Controller(
+        name="Test",
+        tags=[
+            Tag(name="Out", data_type="DINT"),
+            Tag(name="In", data_type="DINT"),
+        ],
+    )
     table = build_symbol_table(c)
     result = wc001_unused_tag(r, table, _loc())
     assert result == []

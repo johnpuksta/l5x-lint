@@ -30,7 +30,7 @@ def _count_st_branches(stmt) -> int:
                 count += _count_st_branches(s)
         case StFor() | StWhile():
             count += 1
-            body = stmt.body if hasattr(stmt, 'body') else []
+            body = stmt.body if hasattr(stmt, "body") else []
             for s in body:
                 count += _count_st_branches(s)
         case _:
@@ -40,7 +40,9 @@ def _count_st_branches(stmt) -> int:
 
 @register
 def wc103_cyclomatic_complexity(
-    routine: Routine, symbols: SymbolTable, loc: Location,
+    routine: Routine,
+    symbols: SymbolTable,
+    loc: Location,
 ) -> list[Diagnostic]:
     result: list[Diagnostic] = []
     if routine.type == "ST":
@@ -50,11 +52,14 @@ def wc103_cyclomatic_complexity(
             for stmt in bod.statements:
                 total += _count_st_branches(stmt)
             if total >= _THRESHOLD:
-                result.append(Diagnostic(
-                    code=WC103.code, severity=WC103.severity,
-                    location=loc,
-                    message=WC103(complexity=total, threshold=_THRESHOLD).message,
-                ))
+                result.append(
+                    Diagnostic(
+                        code=WC103.code,
+                        severity=WC103.severity,
+                        location=loc,
+                        message=WC103(complexity=total, threshold=_THRESHOLD).message,
+                    )
+                )
     if routine.type == "RLL":
         branch_count = 0
         for rung in routine.rll_rungs:
@@ -67,9 +72,14 @@ def wc103_cyclomatic_complexity(
                             if bi.opcode.upper() in ("XIC", "XIO", "OTE", "OTL", "OTU"):
                                 branch_count += 1
         if branch_count >= _THRESHOLD:
-            result.append(Diagnostic(
-                code=WC103.code, severity=WC103.severity,
-                location=loc,
-                message=WC103(complexity=branch_count, threshold=_THRESHOLD).message,
-            ))
+            result.append(
+                Diagnostic(
+                    code=WC103.code,
+                    severity=WC103.severity,
+                    location=loc,
+                    message=WC103(
+                        complexity=branch_count, threshold=_THRESHOLD
+                    ).message,
+                )
+            )
     return result

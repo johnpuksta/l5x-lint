@@ -9,7 +9,9 @@ from l5x_lint.pipeline.symbols import SymbolTable
 
 @register
 def wr004_timer_pre(
-    routine: Routine, symbols: SymbolTable, loc: Location,
+    routine: Routine,
+    symbols: SymbolTable,
+    loc: Location,
 ) -> list[Diagnostic]:
     result: list[Diagnostic] = []
 

@@ -1,4 +1,9 @@
-from l5x_lint.domain.diagnostics import AnalysisResult, Diagnostic, FixSuggestion, RelatedInfo
+from l5x_lint.domain.diagnostics import (
+    AnalysisResult,
+    Diagnostic,
+    FixSuggestion,
+    RelatedInfo,
+)
 from l5x_lint.domain.models import Location
 
 
@@ -16,8 +21,13 @@ def test_diagnostic_minimal():
 def test_diagnostic_with_related():
     loc = Location("P", "R", rung=0)
     related_loc = Location("P", "R2", rung=1)
-    d = Diagnostic("EC007", "error", loc, "Duplicate tag",
-                   related=[RelatedInfo(related_loc, "Previously declared here")])
+    d = Diagnostic(
+        "EC007",
+        "error",
+        loc,
+        "Duplicate tag",
+        related=[RelatedInfo(related_loc, "Previously declared here")],
+    )
     assert len(d.related) == 1
     assert d.related[0].message == "Previously declared here"
     assert d.related[0].location.rung == 1
@@ -25,15 +35,17 @@ def test_diagnostic_with_related():
 
 def test_diagnostic_with_iec_ref():
     loc = Location("P", "R")
-    d = Diagnostic("WS101", "warning", loc, "Float eq",
-                   iec_reference="IEC 61131-3 §6.3.2")
+    d = Diagnostic(
+        "WS101", "warning", loc, "Float eq", iec_reference="IEC 61131-3 §6.3.2"
+    )
     assert d.iec_reference == "IEC 61131-3 §6.3.2"
 
 
 def test_diagnostic_with_hint():
     loc = Location("P", "R", rung=0)
-    d = Diagnostic("EC001", "error", loc, "Undefined tag",
-                    hint="Did you mean 'Motor_Run'?")
+    d = Diagnostic(
+        "EC001", "error", loc, "Undefined tag", hint="Did you mean 'Motor_Run'?"
+    )
     assert d.hint is not None
 
 
@@ -45,8 +57,7 @@ def test_analysis_result_passed():
 
 def test_analysis_result_failed():
     diag = Diagnostic(Location("P", "R"), "EC001", "error", "bad")
-    r = AnalysisResult(passed=False, error_count=1, warning_count=0,
-                       diagnostics=[diag])
+    r = AnalysisResult(passed=False, error_count=1, warning_count=0, diagnostics=[diag])
     assert not r.passed
     assert len(r.diagnostics) == 1
 

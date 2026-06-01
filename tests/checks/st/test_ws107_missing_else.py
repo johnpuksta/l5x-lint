@@ -11,12 +11,22 @@ def _loc(program="", routine=""):
 def test_if_with_else_no_diagnostic():
     from l5x_lint.domain.st_models import StAssignment
     from l5x_lint.domain.models import TagPath, TagPathSegment
-    prog = StProgram(statements=[
-        StIf(condition=None, body=[], else_body=[StAssignment(
-            target=TagPath(segments=[TagPathSegment(name="x")]),
-            expression=None,
-        )], line=1),
-    ])
+
+    prog = StProgram(
+        statements=[
+            StIf(
+                condition=None,
+                body=[],
+                else_body=[
+                    StAssignment(
+                        target=TagPath(segments=[TagPathSegment(name="x")]),
+                        expression=None,
+                    )
+                ],
+                line=1,
+            ),
+        ]
+    )
     r = Routine(name="Main", type="ST", st_body=prog)
     c = Controller(name="Test")
     table = build_symbol_table(c)
@@ -25,9 +35,11 @@ def test_if_with_else_no_diagnostic():
 
 
 def test_if_without_else_emits_ws107():
-    prog = StProgram(statements=[
-        StIf(condition=None, body=[], line=1),
-    ])
+    prog = StProgram(
+        statements=[
+            StIf(condition=None, body=[], line=1),
+        ]
+    )
     r = Routine(name="Main", type="ST", st_body=prog)
     c = Controller(name="Test")
     table = build_symbol_table(c)
@@ -37,9 +49,11 @@ def test_if_without_else_emits_ws107():
 
 
 def test_case_without_else_emits_ws107():
-    prog = StProgram(statements=[
-        StCase(expression=None, cases=[], line=1),
-    ])
+    prog = StProgram(
+        statements=[
+            StCase(expression=None, cases=[], line=1),
+        ]
+    )
     r = Routine(name="Main", type="ST", st_body=prog)
     c = Controller(name="Test")
     table = build_symbol_table(c)
@@ -51,12 +65,22 @@ def test_case_without_else_emits_ws107():
 def test_case_with_else_no_diagnostic():
     from l5x_lint.domain.st_models import StAssignment
     from l5x_lint.domain.models import TagPath, TagPathSegment
-    prog = StProgram(statements=[
-        StCase(expression=None, cases=[], else_body=[StAssignment(
-            target=TagPath(segments=[TagPathSegment(name="x")]),
-            expression=None,
-        )], line=1),
-    ])
+
+    prog = StProgram(
+        statements=[
+            StCase(
+                expression=None,
+                cases=[],
+                else_body=[
+                    StAssignment(
+                        target=TagPath(segments=[TagPathSegment(name="x")]),
+                        expression=None,
+                    )
+                ],
+                line=1,
+            ),
+        ]
+    )
     r = Routine(name="Main", type="ST", st_body=prog)
     c = Controller(name="Test")
     table = build_symbol_table(c)

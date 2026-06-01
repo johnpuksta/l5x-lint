@@ -8,7 +8,9 @@ from l5x_lint.pipeline.symbols import SymbolTable
 
 @register
 def ec010_cross_scope_violation(
-    routine: Routine, symbols: SymbolTable, loc: Location,
+    routine: Routine,
+    symbols: SymbolTable,
+    loc: Location,
 ) -> list[Diagnostic]:
     result: list[Diagnostic] = []
 
@@ -18,6 +20,7 @@ def ec010_cross_scope_violation(
 
     if routine.type == "ST" and hasattr(routine.st_body, "statements"):
         from l5x_lint.checks.tag_refs import st_tag_refs
+
         names = st_tag_refs(routine)
         for name in names:
             if symbols.tag_in_other_program(name, loc.program):

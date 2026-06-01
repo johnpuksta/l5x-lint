@@ -4,10 +4,17 @@ from l5x_lint.domain.st_models import StAssignment, StTagRef
 from l5x_lint.pipeline.analyze import register
 
 _NARROW_TO_WIDE: dict[str, int] = {
-    "SINT": 1, "INT": 2, "DINT": 4, "LINT": 8,
-    "USINT": 1, "UINT": 2, "UDINT": 4, "ULINT": 8,
+    "SINT": 1,
+    "INT": 2,
+    "DINT": 4,
+    "LINT": 8,
+    "USINT": 1,
+    "UINT": 2,
+    "UDINT": 4,
+    "ULINT": 8,
     "BOOL": 0,
-    "REAL": 4, "LREAL": 8,
+    "REAL": 4,
+    "LREAL": 8,
 }
 
 
@@ -31,7 +38,9 @@ class Ws105ImplicitDowncast(StWalker):
             case StTagRef() if node.expression.path.segments:
                 src_name = node.expression.path.segments[0].name
                 src_type = self.symbols.resolve_type(src_name, self.loc.program)
-                if src_type is not None and _is_downcast(src_type.name, target_type.name):
+                if src_type is not None and _is_downcast(
+                    src_type.name, target_type.name
+                ):
                     self.add_diagnostic(
                         code=WS105.code,
                         severity=WS105.severity,

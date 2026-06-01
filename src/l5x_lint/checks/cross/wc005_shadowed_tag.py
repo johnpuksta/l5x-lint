@@ -7,7 +7,9 @@ from l5x_lint.pipeline.symbols import SymbolTable
 
 @register
 def wc005_shadowed_tag(
-    _routine: Routine, symbols: SymbolTable, _loc: Location,
+    _routine: Routine,
+    symbols: SymbolTable,
+    _loc: Location,
 ) -> list[Diagnostic]:
     result: list[Diagnostic] = []
     for prog_name, tags in symbols.program_tags.items():

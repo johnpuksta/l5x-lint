@@ -3,16 +3,21 @@ from l5x_lint.checks._walkers import RllWalker, StWalker
 from l5x_lint.domain.st_models import StCall
 from l5x_lint.pipeline.analyze import register
 
-_DEPRECATED_INSTRUCTIONS: frozenset[str] = frozenset({
-    "MSG", "PID", "DDT",
-})
+_DEPRECATED_INSTRUCTIONS: frozenset[str] = frozenset(
+    {
+        "MSG",
+        "PID",
+        "DDT",
+    }
+)
 
 
 class _StWc108Check(StWalker):
     def visit_call(self, node: StCall) -> None:
         if node.name.upper() in _DEPRECATED_INSTRUCTIONS:
             self.add_diagnostic(
-                WC108.code, WC108.severity,
+                WC108.code,
+                WC108.severity,
                 WC108(opcode=node.name, line=node.line).message,
                 line=node.line,
             )
@@ -22,7 +27,8 @@ class _RllWc108Check(RllWalker):
     def visit_instruction(self, inst) -> None:
         if inst.opcode.upper() in _DEPRECATED_INSTRUCTIONS:
             self.add_diagnostic(
-                WC108.code, WC108.severity,
+                WC108.code,
+                WC108.severity,
                 WC108(opcode=inst.opcode, line=0).message,
                 rung=self.rung_num,
             )

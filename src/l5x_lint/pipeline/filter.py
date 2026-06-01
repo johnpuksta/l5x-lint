@@ -16,14 +16,16 @@ def filter_diagnostics(
         if resolved == "off":
             continue
         if resolved != d.severity:
-            result.append(Diagnostic(
-                code=d.code,
-                severity=resolved,
-                location=d.location,
-                message=d.message,
-                hint=d.hint,
-                fix_suggestion=d.fix_suggestion,
-            ))
+            result.append(
+                Diagnostic(
+                    code=d.code,
+                    severity=resolved,
+                    location=d.location,
+                    message=d.message,
+                    hint=d.hint,
+                    fix_suggestion=d.fix_suggestion,
+                )
+            )
         else:
             result.append(d)
     return result

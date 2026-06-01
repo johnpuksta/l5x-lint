@@ -58,7 +58,9 @@ def test_mov_two_operands_no_diagnostic():
 
 
 def test_unknown_opcode_skipped():
-    r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("CUSTOM", "A", "B", "C"))])  # noqa: E501
+    r = Routine(
+        name="Main", type="RLL", rll_rungs=[_rung(_inst("CUSTOM", "A", "B", "C"))]
+    )  # noqa: E501
     c = Controller(name="Test")
     table = build_symbol_table(c)
     result = er009_wrong_operand_count(r, table, _loc())

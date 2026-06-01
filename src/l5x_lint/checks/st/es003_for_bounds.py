@@ -28,7 +28,8 @@ class Es003Check(StWalker):
             detail = _check_bound(bound, label)
             if detail is not None:
                 self.add_diagnostic(
-                    ES003.code, ES003.severity,
+                    ES003.code,
+                    ES003.severity,
                     ES003(line=node.line, detail=detail).message,
                     line=node.line,
                 )
@@ -36,7 +37,8 @@ class Es003Check(StWalker):
             detail = _check_bound(node.step, "step")
             if detail is not None:
                 self.add_diagnostic(
-                    ES003.code, ES003.severity,
+                    ES003.code,
+                    ES003.severity,
                     ES003(line=node.line, detail=detail).message,
                     line=node.line,
                 )

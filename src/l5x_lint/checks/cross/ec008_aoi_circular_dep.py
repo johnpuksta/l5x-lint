@@ -7,7 +7,9 @@ from l5x_lint.pipeline.symbols import SymbolTable
 
 @register
 def ec008_aoi_circular_dep(
-    _routine: Routine, symbols: SymbolTable, _loc: Location,
+    _routine: Routine,
+    symbols: SymbolTable,
+    _loc: Location,
 ) -> list[Diagnostic]:
     if not symbols.aoi_list:
         return []
@@ -22,7 +24,7 @@ def ec008_aoi_circular_dep(
 
     def dfs(node: str) -> None:
         if node in path:
-            cycle = path[path.index(node):] + [node]
+            cycle = path[path.index(node) :] + [node]
             result.append(
                 Diagnostic(
                     code=EC008.code,

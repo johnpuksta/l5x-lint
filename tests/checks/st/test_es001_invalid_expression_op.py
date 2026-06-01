@@ -1,6 +1,11 @@
 from l5x_lint.checks.st.es001_invalid_expression_op import es001_invalid_expression_op
 from l5x_lint.domain.models import (
-    DataType, Location, Routine, Tag, TagPath, TagPathSegment,
+    DataType,
+    Location,
+    Routine,
+    Tag,
+    TagPath,
+    TagPathSegment,
 )
 from l5x_lint.domain.st_models import StBinaryOp, StProgram, StTagRef
 from l5x_lint.pipeline.symbols import SymbolTable
@@ -26,11 +31,18 @@ def test_string_plus_dint_emits_es001():
             "DINT": DataType(name="DINT", family="", class_=""),
         },
     )
-    r = Routine(name="Test", type="ST",
-                st_body=StProgram(statements=[
-                    StBinaryOp(left=_make_ref("S"), op="+", right=_make_ref("X")),
-                ]))
-    diags = es001_invalid_expression_op(r, symbols, Location(program="P", routine="Test"))
+    r = Routine(
+        name="Test",
+        type="ST",
+        st_body=StProgram(
+            statements=[
+                StBinaryOp(left=_make_ref("S"), op="+", right=_make_ref("X")),
+            ]
+        ),
+    )
+    diags = es001_invalid_expression_op(
+        r, symbols, Location(program="P", routine="Test")
+    )
     assert len(diags) >= 1
     assert diags[0].code == "ES001"
 
@@ -40,21 +52,32 @@ def test_dint_plus_dint_no_diagnostic():
         controller_tags={"A": _make_dint_tag("A"), "B": _make_dint_tag("B")},
         data_types={"DINT": DataType(name="DINT", family="", class_="")},
     )
-    r = Routine(name="Test", type="ST",
-                st_body=StProgram(statements=[
-                    StBinaryOp(left=_make_ref("A"), op="+", right=_make_ref("B")),
-                ]))
-    diags = es001_invalid_expression_op(r, symbols, Location(program="P", routine="Test"))
+    r = Routine(
+        name="Test",
+        type="ST",
+        st_body=StProgram(
+            statements=[
+                StBinaryOp(left=_make_ref("A"), op="+", right=_make_ref("B")),
+            ]
+        ),
+    )
+    diags = es001_invalid_expression_op(
+        r, symbols, Location(program="P", routine="Test")
+    )
     assert diags == []
 
 
 def test_no_body():
     r = Routine(name="Test", type="ST", st_body=None)
-    diags = es001_invalid_expression_op(r, SymbolTable(), Location(program="P", routine="Test"))
+    diags = es001_invalid_expression_op(
+        r, SymbolTable(), Location(program="P", routine="Test")
+    )
     assert diags == []
 
 
 def test_non_st_ignored():
     r = Routine(name="Test", type="RLL", rll_rungs=[])
-    diags = es001_invalid_expression_op(r, SymbolTable(), Location(program="P", routine="Test"))
+    diags = es001_invalid_expression_op(
+        r, SymbolTable(), Location(program="P", routine="Test")
+    )
     assert diags == []

@@ -9,29 +9,33 @@ def _make_routine(stmts) -> Routine:
 
 
 def test_for_within_range_no_diagnostic():
-    r = _make_routine([
-        StFor(
-            variable=_tp("i"),
-            start=StLiteral(value=0),
-            end=StLiteral(value=100),
-            body=[],
-            line=1,
-        ),
-    ])
+    r = _make_routine(
+        [
+            StFor(
+                variable=_tp("i"),
+                start=StLiteral(value=0),
+                end=StLiteral(value=100),
+                body=[],
+                line=1,
+            ),
+        ]
+    )
     diags = es003_for_bounds(r, SymbolTable(), Location(program="P", routine="Test"))
     assert diags == []
 
 
 def test_for_end_exceeds_dint_max_emits_es003():
-    r = _make_routine([
-        StFor(
-            variable=_tp("i"),
-            start=StLiteral(value=0),
-            end=StLiteral(value=9_999_999_999),
-            body=[],
-            line=5,
-        ),
-    ])
+    r = _make_routine(
+        [
+            StFor(
+                variable=_tp("i"),
+                start=StLiteral(value=0),
+                end=StLiteral(value=9_999_999_999),
+                body=[],
+                line=5,
+            ),
+        ]
+    )
     diags = es003_for_bounds(r, SymbolTable(), Location(program="P", routine="Test"))
     assert len(diags) == 1
     assert diags[0].code == "ES003"
@@ -40,45 +44,51 @@ def test_for_end_exceeds_dint_max_emits_es003():
 
 
 def test_for_start_below_dint_min_emits_es003():
-    r = _make_routine([
-        StFor(
-            variable=_tp("i"),
-            start=StLiteral(value=-9_999_999_999_999),
-            end=StLiteral(value=0),
-            body=[],
-            line=10,
-        ),
-    ])
+    r = _make_routine(
+        [
+            StFor(
+                variable=_tp("i"),
+                start=StLiteral(value=-9_999_999_999_999),
+                end=StLiteral(value=0),
+                body=[],
+                line=10,
+            ),
+        ]
+    )
     diags = es003_for_bounds(r, SymbolTable(), Location(program="P", routine="Test"))
     assert len(diags) == 1
     assert diags[0].code == "ES003"
 
 
 def test_for_step_out_of_range():
-    r = _make_routine([
-        StFor(
-            variable=_tp("i"),
-            start=StLiteral(value=0),
-            end=StLiteral(value=10),
-            step=StLiteral(value=9_999_999_999_999),
-            body=[],
-            line=15,
-        ),
-    ])
+    r = _make_routine(
+        [
+            StFor(
+                variable=_tp("i"),
+                start=StLiteral(value=0),
+                end=StLiteral(value=10),
+                step=StLiteral(value=9_999_999_999_999),
+                body=[],
+                line=15,
+            ),
+        ]
+    )
     diags = es003_for_bounds(r, SymbolTable(), Location(program="P", routine="Test"))
     assert len(diags) == 1
 
 
 def test_for_float_bounds_out_of_range():
-    r = _make_routine([
-        StFor(
-            variable=_tp("i"),
-            start=StLiteral(value=0.0),
-            end=StLiteral(value=1e40),
-            body=[],
-            line=20,
-        ),
-    ])
+    r = _make_routine(
+        [
+            StFor(
+                variable=_tp("i"),
+                start=StLiteral(value=0.0),
+                end=StLiteral(value=1e40),
+                body=[],
+                line=20,
+            ),
+        ]
+    )
     diags = es003_for_bounds(r, SymbolTable(), Location(program="P", routine="Test"))
     assert len(diags) == 1
 

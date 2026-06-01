@@ -1,7 +1,14 @@
 from l5x_lint.checks._codes import WS110
 from l5x_lint.checks._walkers import StWalker
 from l5x_lint.domain.st_models import (
-    StCase, StExit, StFor, StIf, StProgram, StRepeat, StReturn, StWhile,
+    StCase,
+    StExit,
+    StFor,
+    StIf,
+    StProgram,
+    StRepeat,
+    StReturn,
+    StWhile,
 )
 from l5x_lint.pipeline.analyze import register
 
@@ -20,11 +27,11 @@ class Ws110DeadCode(StWalker):
         for i, stmt in enumerate(stmts):
             match stmt:
                 case StReturn():
-                    self._remaining = stmts[i + 1:]
+                    self._remaining = stmts[i + 1 :]
                     self.visit_return(stmt)
                     return
                 case StExit():
-                    self._remaining = stmts[i + 1:]
+                    self._remaining = stmts[i + 1 :]
                     self.visit_exit(stmt)
                     return
                 case StIf():
@@ -51,17 +58,19 @@ class Ws110DeadCode(StWalker):
     def visit_return(self, node: StReturn) -> None:
         for dead in self._remaining:
             self.add_diagnostic(
-                WS110.code, WS110.severity,
+                WS110.code,
+                WS110.severity,
                 WS110(construct="RETURN", line=node.line).message,
-                line=getattr(dead, 'line', 0),
+                line=getattr(dead, "line", 0),
             )
 
     def visit_exit(self, node: StExit) -> None:
         for dead in self._remaining:
             self.add_diagnostic(
-                WS110.code, WS110.severity,
+                WS110.code,
+                WS110.severity,
                 WS110(construct="EXIT", line=node.line).message,
-                line=getattr(dead, 'line', 0),
+                line=getattr(dead, "line", 0),
             )
 
 

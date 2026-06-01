@@ -25,7 +25,12 @@ def _inst(opcode, *operand_values):
 
 def test_valid_jsr_no_diagnostic():
     r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("JSR", "SubRoutine"))])
-    c = Controller(name="Test", programs=[Program(name="Prog", routines=[Routine(name="SubRoutine", type="RLL")])])  # noqa: E501
+    c = Controller(
+        name="Test",
+        programs=[
+            Program(name="Prog", routines=[Routine(name="SubRoutine", type="RLL")])
+        ],
+    )  # noqa: E501
     table = build_symbol_table(c)
     result = ec004_invalid_subroutine(r, table, _loc())
     assert result == []
@@ -42,7 +47,12 @@ def test_invalid_jsr_emits_ec004():
 
 def test_jxr_valid():
     r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("JXR", "SubRoutine"))])
-    c = Controller(name="Test", programs=[Program(name="Prog", routines=[Routine(name="SubRoutine", type="RLL")])])  # noqa: E501
+    c = Controller(
+        name="Test",
+        programs=[
+            Program(name="Prog", routines=[Routine(name="SubRoutine", type="RLL")])
+        ],
+    )  # noqa: E501
     table = build_symbol_table(c)
     result = ec004_invalid_subroutine(r, table, _loc())
     assert result == []
@@ -50,9 +60,15 @@ def test_jxr_valid():
 
 def test_st_jsr_valid():
     from l5x_lint.domain.st_models import StJsr, StProgram
+
     prog = StProgram(statements=[StJsr(routine_name="SubRoutine")])
     r = Routine(name="Main", type="ST", st_body=prog)
-    c = Controller(name="Test", programs=[Program(name="Prog", routines=[Routine(name="SubRoutine", type="ST")])])  # noqa: E501
+    c = Controller(
+        name="Test",
+        programs=[
+            Program(name="Prog", routines=[Routine(name="SubRoutine", type="ST")])
+        ],
+    )  # noqa: E501
     table = build_symbol_table(c)
     result = ec004_invalid_subroutine(r, table, _loc())
     assert result == []
@@ -60,6 +76,7 @@ def test_st_jsr_valid():
 
 def test_st_jsr_invalid():
     from l5x_lint.domain.st_models import StJsr, StProgram
+
     prog = StProgram(statements=[StJsr(routine_name="NoSuch")])
     r = Routine(name="Main", type="ST", st_body=prog)
     c = Controller(name="Test")

@@ -10,7 +10,9 @@ from l5x_lint.pipeline.symbols import SymbolTable
 
 @register
 def ec002_type_mismatch(
-    routine: Routine, symbols: SymbolTable, loc: Location,
+    routine: Routine,
+    symbols: SymbolTable,
+    loc: Location,
 ) -> list[Diagnostic]:
     result: list[Diagnostic] = []
 
@@ -56,6 +58,7 @@ def _check_rll(instructions, symbols, loc, rung_num, result):
 
 def _check_st(body, symbols, loc, result):
     from l5x_lint.domain.st_models import StCall
+
     for stmt in body.statements:
         if isinstance(stmt, StCall):
             opcode = stmt.name.upper()
@@ -63,11 +66,14 @@ def _check_st(body, symbols, loc, result):
             if expected_types and stmt.args:
                 for idx, expected_type in expected_types.items():
                     if idx < len(stmt.args):
-                        _check_st_arg(stmt.args[idx], expected_type, symbols, loc, result)
+                        _check_st_arg(
+                            stmt.args[idx], expected_type, symbols, loc, result
+                        )
 
 
 def _check_st_arg(expr, expected_type, symbols, loc, result):
     from l5x_lint.domain.st_models import StTagRef
+
     if not isinstance(expr, StTagRef):
         return
     tag_name = expr.path.segments[0].name if expr.path.segments else ""

@@ -142,8 +142,12 @@ def test_resolve_type_udt():
         name="Test",
         tags=[Tag(name="MyTag", data_type="MyType")],
         data_types=[
-            DataType(name="MyType", family="NoFamily", class_="",
-                     members=[Member(name="FieldA", data_type="DINT")]),
+            DataType(
+                name="MyType",
+                family="NoFamily",
+                class_="",
+                members=[Member(name="FieldA", data_type="DINT")],
+            ),
             DataType(name="DINT", family="NoFamily", class_=""),
         ],
     )
@@ -172,8 +176,12 @@ def test_resolve_member_type_found():
     c = Controller(
         name="Test",
         data_types=[
-            DataType(name="MyType", family="NoFamily", class_="",
-                     members=[Member(name="FieldA", data_type="DINT")]),
+            DataType(
+                name="MyType",
+                family="NoFamily",
+                class_="",
+                members=[Member(name="FieldA", data_type="DINT")],
+            ),
             DataType(name="DINT", family="NoFamily", class_=""),
         ],
     )
@@ -187,8 +195,12 @@ def test_resolve_member_type_not_found():
     c = Controller(
         name="Test",
         data_types=[
-            DataType(name="MyType", family="NoFamily", class_="",
-                     members=[Member(name="FieldA", data_type="DINT")]),
+            DataType(
+                name="MyType",
+                family="NoFamily",
+                class_="",
+                members=[Member(name="FieldA", data_type="DINT")],
+            ),
         ],
     )
     table = build_symbol_table(c)

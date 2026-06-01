@@ -45,7 +45,11 @@ class SoftwareRevisionError:
 
 
 LintInternalError = (
-    L5XStructureError | RLLParseError | STParseError
-    | UnsupportedRoutineError | SymbolTableError
-    | AdapterArgumentError | SoftwareRevisionError
+    L5XStructureError
+    | RLLParseError
+    | STParseError
+    | UnsupportedRoutineError
+    | SymbolTableError
+    | AdapterArgumentError
+    | SoftwareRevisionError
 )

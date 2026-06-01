@@ -32,39 +32,44 @@ def _check_expr(expr, text: str, result: list[Diagnostic], loc: Location) -> Non
                 case _:
                     right_float = _has_float_literal(str(expr.right))
             if left_float or right_float:
-                result.append(Diagnostic(
-                    code=WS101.code, severity=WS101.severity,
-                    location=loc,
-                    message=WS101(text=text).message,
-                ))
+                result.append(
+                    Diagnostic(
+                        code=WS101.code,
+                        severity=WS101.severity,
+                        location=loc,
+                        message=WS101(text=text).message,
+                    )
+                )
         case StBinaryOp():
             _check_expr(expr.left, text, result, loc)
             _check_expr(expr.right, text, result, loc)
         case _:
-            for child in getattr(expr, 'args', []):
+            for child in getattr(expr, "args", []):
                 _check_expr(child, text, result, loc)
 
 
 def _check_stmt(stmt, result: list[Diagnostic], loc: Location) -> None:
-    for field_name in ('condition', 'expression', 'start', 'end', 'step', 'until'):
+    for field_name in ("condition", "expression", "start", "end", "step", "until"):
         child = getattr(stmt, field_name, None)
         if child is not None:
             _check_expr(child, str(child), result, loc)
-    for body_field in ('body', 'else_body'):
+    for body_field in ("body", "else_body"):
         children = getattr(stmt, body_field, [])
         for s in children:
             _check_stmt(s, result, loc)
-    for _, body in getattr(stmt, 'elsif_pairs', []):
+    for _, body in getattr(stmt, "elsif_pairs", []):
         for s in body:
             _check_stmt(s, result, loc)
-    for _, body in getattr(stmt, 'cases', []):
+    for _, body in getattr(stmt, "cases", []):
         for s in body:
             _check_stmt(s, result, loc)
 
 
 @register
 def ws101_float_equality(
-    routine: Routine, symbols: SymbolTable, loc: Location,
+    routine: Routine,
+    symbols: SymbolTable,
+    loc: Location,
 ) -> list[Diagnostic]:
     result: list[Diagnostic] = []
     if routine.type == "ST":
@@ -77,14 +82,29 @@ def ws101_float_equality(
             for inst in rung.instructions:
                 for op in inst.operands:
                     if _has_float_literal(op.value):
-                        for cmp_op in ("EQU", "NEQ", "GRT", "LES", "GEQ", "LEQ", "CMP", "GT"):
+                        for cmp_op in (
+                            "EQU",
+                            "NEQ",
+                            "GRT",
+                            "LES",
+                            "GEQ",
+                            "LEQ",
+                            "CMP",
+                            "GT",
+                        ):
                             if inst.opcode.upper() == cmp_op:
-                                result.append(Diagnostic(
-                                    code=WS101.code, severity=WS101.severity,
-                                    location=Location(
-                                        program=loc.program, routine=loc.routine,
-                                        rung=rung.number,
-                                    ),
-                                    message=WS101(text=f"{inst.opcode}({op.value})").message,
-                                ))
+                                result.append(
+                                    Diagnostic(
+                                        code=WS101.code,
+                                        severity=WS101.severity,
+                                        location=Location(
+                                            program=loc.program,
+                                            routine=loc.routine,
+                                            rung=rung.number,
+                                        ),
+                                        message=WS101(
+                                            text=f"{inst.opcode}({op.value})"
+                                        ).message,
+                                    )
+                                )
     return result

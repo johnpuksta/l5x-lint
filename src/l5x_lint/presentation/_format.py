@@ -1,4 +1,5 @@
 """Shared formatting helpers for CLI and MCP presentation layers."""
+
 from __future__ import annotations
 
 import re
@@ -52,7 +53,7 @@ def find_xml_line(source_lines: list[str], loc: Location) -> int | None:
                         if rung_pattern.search(source_lines[j]):
                             # Found the <Rung>, now find <Text> inside it
                             for k in range(j + 1, min(j + 10, len(source_lines))):
-                                if re.search(r'<Text>', source_lines[k], re.IGNORECASE):
+                                if re.search(r"<Text>", source_lines[k], re.IGNORECASE):
                                     return k + 1
                             return j + 1
                     return i + 1

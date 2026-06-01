@@ -8,14 +8,16 @@ class Ws107Check(StWalker):
     def visit_if(self, node: StIf) -> None:
         if not node.else_body:
             self.add_diagnostic(
-                WS107.code, WS107.severity,
+                WS107.code,
+                WS107.severity,
                 WS107(construct="IF").message,
             )
 
     def visit_case(self, node: StCase) -> None:
         if not node.else_body:
             self.add_diagnostic(
-                WS107.code, WS107.severity,
+                WS107.code,
+                WS107.severity,
                 WS107(construct="CASE").message,
             )
 

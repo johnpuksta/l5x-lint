@@ -29,11 +29,13 @@ def test_tag_path_segment_with_index():
 
 
 def test_tag_path_full_name():
-    path = TagPath([
-        TagPathSegment("Conveyor"),
-        TagPathSegment("Motor", 3),
-        TagPathSegment("Speed"),
-    ])
+    path = TagPath(
+        [
+            TagPathSegment("Conveyor"),
+            TagPathSegment("Motor", 3),
+            TagPathSegment("Speed"),
+        ]
+    )
     assert path.full_name == "Conveyor.Motor[3].Speed"
 
 
@@ -87,19 +89,29 @@ def test_data_type_no_members():
 
 
 def test_data_type_with_members():
-    dt = DataType("TIMER", "NoFamily", "ProductDefined", members=[
-        Member("PRE", "DINT"),
-        Member("ACC", "DINT"),
-    ])
+    dt = DataType(
+        "TIMER",
+        "NoFamily",
+        "ProductDefined",
+        members=[
+            Member("PRE", "DINT"),
+            Member("ACC", "DINT"),
+        ],
+    )
     assert len(dt.members) == 2
     assert dt.members[0].name == "PRE"
 
 
 def test_data_type_user_defined():
-    dt = DataType("MyUDT", "NoFamily", "User", members=[
-        Member("Speed", "REAL"),
-        Member("Enabled", "BOOL"),
-    ])
+    dt = DataType(
+        "MyUDT",
+        "NoFamily",
+        "User",
+        members=[
+            Member("Speed", "REAL"),
+            Member("Enabled", "BOOL"),
+        ],
+    )
     assert dt.class_ == "User"
 
 

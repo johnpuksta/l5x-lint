@@ -14,7 +14,9 @@ def _reset():
 
 @register
 def ec018_empty_pou(
-    routine: Routine, symbols: SymbolTable, loc: Location,
+    routine: Routine,
+    symbols: SymbolTable,
+    loc: Location,
 ) -> list[Diagnostic]:
     global _processed
     result: list[Diagnostic] = []
@@ -22,11 +24,14 @@ def ec018_empty_pou(
     if not _processed:
         _processed = True
         if not symbols.routine_names:
-            result.append(Diagnostic(
-                code=EC018.code, severity=EC018.severity,
-                location=loc,
-                message=EC018(detail="Controller has no defined routines").message,
-            ))
+            result.append(
+                Diagnostic(
+                    code=EC018.code,
+                    severity=EC018.severity,
+                    location=loc,
+                    message=EC018(detail="Controller has no defined routines").message,
+                )
+            )
             return result
 
     has_body = (
@@ -35,12 +40,15 @@ def ec018_empty_pou(
         or bool(routine.cdata)
     )
     if not has_body:
-        result.append(Diagnostic(
-            code=EC018.code, severity=EC018.severity,
-            location=loc,
-            message=EC018(
-                detail=f"Routine '{routine.name}' has no body content"
-            ).message,
-        ))
+        result.append(
+            Diagnostic(
+                code=EC018.code,
+                severity=EC018.severity,
+                location=loc,
+                message=EC018(
+                    detail=f"Routine '{routine.name}' has no body content"
+                ).message,
+            )
+        )
 
     return result

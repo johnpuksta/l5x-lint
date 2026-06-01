@@ -19,8 +19,8 @@ def wr002_afi_rung(routine: Routine, _symbols: SymbolTable, loc: Location) -> _D
                     code=WR002.code,
                     severity=WR002.severity,
                     location=Location(
-                            program=loc.program, routine=loc.routine, rung=rung.number
-                        ),
+                        program=loc.program, routine=loc.routine, rung=rung.number
+                    ),
                     message=WR002(rung=rung.number).message,
                 )
             )

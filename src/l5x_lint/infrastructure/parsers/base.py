@@ -97,18 +97,22 @@ class L5XParser:
                             m_bit = int(bit_str.strip())
                         except ValueError:
                             pass
-                    members.append(Member(
-                        name=m_name,
-                        data_type=m_dt,
-                        dimension=m_dim,
-                        bit_number=m_bit,
-                    ))
-            data_types.append(DataType(
-                name=name,
-                family=family,
-                class_=class_,
-                members=members,
-            ))
+                    members.append(
+                        Member(
+                            name=m_name,
+                            data_type=m_dt,
+                            dimension=m_dim,
+                            bit_number=m_bit,
+                        )
+                    )
+            data_types.append(
+                DataType(
+                    name=name,
+                    family=family,
+                    class_=class_,
+                    members=members,
+                )
+            )
         return data_types
 
     def parse_tags(
@@ -175,11 +179,13 @@ class L5XParser:
                     cdata = "\n".join(line_parts)
                 elif st_el.text and st_el.text.strip():
                     cdata = st_el.text.strip()
-            routines.append(Routine(
-                name=name,
-                type=type_,
-                cdata=cdata,
-            ))
+            routines.append(
+                Routine(
+                    name=name,
+                    type=type_,
+                    cdata=cdata,
+                )
+            )
         return routines
 
     def parse_tasks(self, tasks_el: ET.Element | None) -> list[Task]:
@@ -259,9 +265,11 @@ class L5XParser:
             tags = self.parse_tags(tags_el, scope=f"program:{name}")
             routines_el = p.find("Routines")
             routines = self.parse_routines(routines_el)
-            programs.append(Program(
-                name=name,
-                tags=tags,
-                routines=routines,
-            ))
+            programs.append(
+                Program(
+                    name=name,
+                    tags=tags,
+                    routines=routines,
+                )
+            )
         return programs

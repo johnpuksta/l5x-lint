@@ -58,6 +58,7 @@ def test_non_rll_ignored():
 
 def test_st_call_undefined_aoi():
     from l5x_lint.domain.st_models import StCall, StProgram
+
     prog = StProgram(statements=[StCall(name="NoSuchAOI")])
     r = Routine(name="Main", type="ST", st_body=prog)
     c = Controller(name="Test")
@@ -69,6 +70,7 @@ def test_st_call_undefined_aoi():
 
 def test_st_call_builtin_skipped():
     from l5x_lint.domain.st_models import StCall, StProgram
+
     prog = StProgram(statements=[StCall(name="TON")])
     r = Routine(name="Main", type="ST", st_body=prog)
     c = Controller(name="Test")

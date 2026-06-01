@@ -21,7 +21,8 @@ class ES002DuplicateCaseValueCheck(StWalker):
                 if val_str is not None:
                     if val_str in seen:
                         self.add_diagnostic(
-                            code=ES002.code, severity=ES002.severity,
+                            code=ES002.code,
+                            severity=ES002.severity,
                             message=ES002(value=val_str, line=node.line).message,
                             line=node.line,
                         )

@@ -9,9 +9,13 @@ def _make_rung(num: int, instructions: list[Instruction]) -> ParsedRung:
 
 
 def test_nop_present_emits_wr005():
-    r = Routine(name="Test", type="RLL", rll_rungs=[
-        _make_rung(3, [Instruction(opcode="NOP", operands=[])]),
-    ])
+    r = Routine(
+        name="Test",
+        type="RLL",
+        rll_rungs=[
+            _make_rung(3, [Instruction(opcode="NOP", operands=[])]),
+        ],
+    )
     diags = wr005_nop_present(r, SymbolTable(), Location(program="P", routine="Test"))
     assert len(diags) == 1
     assert diags[0].code == "WR005"
@@ -19,9 +23,13 @@ def test_nop_present_emits_wr005():
 
 
 def test_no_nop_no_diagnostic():
-    r = Routine(name="Test", type="RLL", rll_rungs=[
-        _make_rung(1, [Instruction(opcode="XIC", operands=[Operand(value="A")])]),
-    ])
+    r = Routine(
+        name="Test",
+        type="RLL",
+        rll_rungs=[
+            _make_rung(1, [Instruction(opcode="XIC", operands=[Operand(value="A")])]),
+        ],
+    )
     diags = wr005_nop_present(r, SymbolTable(), Location(program="P", routine="Test"))
     assert diags == []
 
@@ -33,11 +41,21 @@ def test_non_rll_ignored():
 
 
 def test_nop_in_branch():
-    r = Routine(name="Test", type="RLL", rll_rungs=[
-        _make_rung(1, [
-            Instruction(opcode="XIC", operands=[Operand(value="A")],
-                        branch=[[Instruction(opcode="NOP", operands=[])]]),
-        ]),
-    ])
+    r = Routine(
+        name="Test",
+        type="RLL",
+        rll_rungs=[
+            _make_rung(
+                1,
+                [
+                    Instruction(
+                        opcode="XIC",
+                        operands=[Operand(value="A")],
+                        branch=[[Instruction(opcode="NOP", operands=[])]],
+                    ),
+                ],
+            ),
+        ],
+    )
     diags = wr005_nop_present(r, SymbolTable(), Location(program="P", routine="Test"))
     assert len(diags) == 1

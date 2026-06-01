@@ -10,7 +10,8 @@ class Ws118CaseConstant(StWalker):
             for v in values:
                 if not isinstance(v, StLiteral):
                     self.add_diagnostic(
-                        WS118.code, WS118.severity,
+                        WS118.code,
+                        WS118.severity,
                         WS118(line=node.line).message,
                         line=node.line,
                     )

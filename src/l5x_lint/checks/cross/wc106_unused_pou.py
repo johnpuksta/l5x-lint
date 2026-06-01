@@ -18,7 +18,9 @@ def _reset():
 
 @register
 def wc106_unused_pou(
-    routine: Routine, symbols: SymbolTable, loc: Location,
+    routine: Routine,
+    symbols: SymbolTable,
+    loc: Location,
 ) -> list[Diagnostic]:
     global _used_aois, _used_programs, _done
     result: list[Diagnostic] = []
@@ -34,20 +36,70 @@ def wc106_unused_pou(
                 if inst.opcode.upper() == "JSR":
                     _used_programs.add("dummy")
                 if inst.opcode.upper() not in (
-                    "JSR", "JXR", "XIC", "XIO", "OTE", "OTL", "OTU",
-                    "TON", "TOF", "RTO", "CTU", "CTD",
-                    "ADD", "SUB", "MUL", "DIV", "MOV", "CLR", "CPT",
-                    "EQU", "NEQ", "LES", "LEQ", "GRT", "GEQ", "GT",
-                    "RES", "PID", "MSG", "GSV", "SSV",
-                    "COP", "CPS", "FAL", "FSC",
-                    "MCR", "JMP", "LBL", "AFI", "NOP", "TND",
-                    "BST", "BND", "NXB",
-                    "ONS", "OSR", "OSF",
-                    "SCL", "CPW", "SWPB",
-                    "MOD", "NEG", "SQR", "ABS",
-                    "CMP", "LIM", "SUS",
-                    "IOT", "SPP", "SRT", "SFP", "SFR",
-                    "DTOS", "STOD",
+                    "JSR",
+                    "JXR",
+                    "XIC",
+                    "XIO",
+                    "OTE",
+                    "OTL",
+                    "OTU",
+                    "TON",
+                    "TOF",
+                    "RTO",
+                    "CTU",
+                    "CTD",
+                    "ADD",
+                    "SUB",
+                    "MUL",
+                    "DIV",
+                    "MOV",
+                    "CLR",
+                    "CPT",
+                    "EQU",
+                    "NEQ",
+                    "LES",
+                    "LEQ",
+                    "GRT",
+                    "GEQ",
+                    "GT",
+                    "RES",
+                    "PID",
+                    "MSG",
+                    "GSV",
+                    "SSV",
+                    "COP",
+                    "CPS",
+                    "FAL",
+                    "FSC",
+                    "MCR",
+                    "JMP",
+                    "LBL",
+                    "AFI",
+                    "NOP",
+                    "TND",
+                    "BST",
+                    "BND",
+                    "NXB",
+                    "ONS",
+                    "OSR",
+                    "OSF",
+                    "SCL",
+                    "CPW",
+                    "SWPB",
+                    "MOD",
+                    "NEG",
+                    "SQR",
+                    "ABS",
+                    "CMP",
+                    "LIM",
+                    "SUS",
+                    "IOT",
+                    "SPP",
+                    "SRT",
+                    "SFP",
+                    "SFR",
+                    "DTOS",
+                    "STOD",
                 ):
                     _used_aois.add(inst.opcode)
 
@@ -55,14 +107,33 @@ def wc106_unused_pou(
         bod = routine.st_body
         if bod is not None:
             from l5x_lint.domain.st_models import StCall, StJsr, StProgram
+
             for stmt in bod.statements:
                 match stmt:
                     case StCall():
                         if stmt.name.upper() not in (
-                            "TON", "TOF", "RTO", "CTU", "CTD",
-                            "ADD", "SUB", "MUL", "DIV", "MOV", "CLR", "CPT",
-                            "EQU", "NEQ", "LES", "LEQ", "GRT", "GEQ", "GT",
-                            "RES", "PID", "MSG",
+                            "TON",
+                            "TOF",
+                            "RTO",
+                            "CTU",
+                            "CTD",
+                            "ADD",
+                            "SUB",
+                            "MUL",
+                            "DIV",
+                            "MOV",
+                            "CLR",
+                            "CPT",
+                            "EQU",
+                            "NEQ",
+                            "LES",
+                            "LEQ",
+                            "GRT",
+                            "GEQ",
+                            "GT",
+                            "RES",
+                            "PID",
+                            "MSG",
                         ):
                             _used_aois.add(stmt.name)
                     case StJsr():
@@ -72,9 +143,12 @@ def wc106_unused_pou(
     for aoi_name in symbols.aoi_names:
         if aoi_name not in _used_aois:
             unused.add(aoi_name)
-            result.append(Diagnostic(
-                code=WC106.code, severity=WC106.severity,
-                location=loc,
-                message=WC106(name=aoi_name, kind="AOI").message,
-            ))
+            result.append(
+                Diagnostic(
+                    code=WC106.code,
+                    severity=WC106.severity,
+                    location=loc,
+                    message=WC106(name=aoi_name, kind="AOI").message,
+                )
+            )
     return result

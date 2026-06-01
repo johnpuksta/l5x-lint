@@ -36,11 +36,20 @@ def test_st_variable_divisor_no_diagnostic():
 
 def test_rll_cpt_with_div_by_zero():
     r = Routine(
-        name="Main", type="RLL",
-        rll_rungs=[ParsedRung(
-            number=0, text="",
-            instructions=[Instruction(opcode="CPT", operands=[Operand(value="Dest"), Operand(value="A / 0")])],
-        )],
+        name="Main",
+        type="RLL",
+        rll_rungs=[
+            ParsedRung(
+                number=0,
+                text="",
+                instructions=[
+                    Instruction(
+                        opcode="CPT",
+                        operands=[Operand(value="Dest"), Operand(value="A / 0")],
+                    )
+                ],
+            )
+        ],
     )
     c = Controller(name="Test")
     table = build_symbol_table(c)

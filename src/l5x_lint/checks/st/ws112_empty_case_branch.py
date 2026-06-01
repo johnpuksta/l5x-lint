@@ -8,7 +8,8 @@ class Ws112Check(StWalker):
         for selectors, body in node.cases:
             if not body:
                 self.add_diagnostic(
-                    WS112.code, WS112.severity,
+                    WS112.code,
+                    WS112.severity,
                     WS112(line=node.line).message,
                     line=node.line,
                 )

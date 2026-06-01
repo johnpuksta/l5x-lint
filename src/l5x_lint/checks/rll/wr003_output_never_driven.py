@@ -9,7 +9,9 @@ from l5x_lint.pipeline.symbols import SymbolTable
 
 @register
 def wr003_output_never_driven(
-    routine: Routine, _symbols: SymbolTable, loc: Location,
+    routine: Routine,
+    _symbols: SymbolTable,
+    loc: Location,
 ) -> list[Diagnostic]:
     if routine.type != "RLL" or not routine.rll_rungs:
         return []

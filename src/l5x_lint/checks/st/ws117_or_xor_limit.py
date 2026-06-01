@@ -10,7 +10,8 @@ class Ws117OrXorLimit(StWalker):
     def visit_binary_op(self, node: StBinaryOp) -> None:
         if node.op.upper() in _OR_XOR:
             self.add_diagnostic(
-                WS117.code, WS117.severity,
+                WS117.code,
+                WS117.severity,
                 WS117().message,
             )
 

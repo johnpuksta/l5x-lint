@@ -45,7 +45,11 @@ def _extract_base(value: str) -> str | None:
 
 
 def _check_rll_instructions(
-    instructions, symbols: SymbolTable, loc: Location, rung_num: int, result: _DiagList,
+    instructions,
+    symbols: SymbolTable,
+    loc: Location,
+    rung_num: int,
+    result: _DiagList,
 ) -> None:
     for inst in instructions:
         operands = inst.operands
@@ -182,7 +186,9 @@ def _check_st(routine: Routine, symbols: SymbolTable, loc: Location) -> _DiagLis
 
 @register
 def ec001_undefined_tag(
-    routine: Routine, symbols: SymbolTable, loc: Location,
+    routine: Routine,
+    symbols: SymbolTable,
+    loc: Location,
 ) -> _DiagList:
     if routine.type == "RLL" and routine.rll_rungs:
         return _check_rll(routine, symbols, loc)

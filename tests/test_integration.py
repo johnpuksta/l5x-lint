@@ -16,13 +16,17 @@ def _reset_all_check_state():
     analyze_module._registry.clear()
 
     for mod_name in list(sys.modules):
-        if mod_name.startswith("l5x_lint.checks.") and mod_name != "l5x_lint.checks._codes":
+        if (
+            mod_name.startswith("l5x_lint.checks.")
+            and mod_name != "l5x_lint.checks._codes"
+        ):
             del sys.modules[mod_name]
 
     # Re-import all check packages to re-register
     import l5x_lint.checks.cross  # noqa: F401
-    import l5x_lint.checks.rll   # noqa: F401
-    import l5x_lint.checks.st    # noqa: F401
+    import l5x_lint.checks.rll  # noqa: F401
+    import l5x_lint.checks.st  # noqa: F401
+
 
 INVALID_DIR = Path(__file__).parent / "data" / "invalid"
 
@@ -89,9 +93,13 @@ INVALID_CASES = [
 def test_invalid_file_emits_code(stem_prefix, expected_code):
     _reset_all_check_state()
     files = list(INVALID_DIR.glob(f"{stem_prefix}_*.L5X"))
-    assert len(files) == 1, f"Expected 1 file matching {stem_prefix}_*.L5X, found {len(files)}"
+    assert len(files) == 1, (
+        f"Expected 1 file matching {stem_prefix}_*.L5X, found {len(files)}"
+    )
     result = parse_l5x(files[0])
-    assert isinstance(result, Success), f"Parse failed for {files[0].name}: {result.failure()}"
+    assert isinstance(result, Success), (
+        f"Parse failed for {files[0].name}: {result.failure()}"
+    )
     project = result.unwrap()
 
     ar = analyze(project.controller).unwrap()

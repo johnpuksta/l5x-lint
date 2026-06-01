@@ -247,9 +247,12 @@ def test_rll_program_scope_overrides_controller():
     controller = Controller(
         name="Test",
         tags=[Tag(name="SharedName", data_type="DINT")],
-        programs=[Program(
-            name="Prog", tags=[Tag(name="SharedName", data_type="BOOL")],
-        )],
+        programs=[
+            Program(
+                name="Prog",
+                tags=[Tag(name="SharedName", data_type="BOOL")],
+            )
+        ],
     )
     table = build_symbol_table(controller)
     loc = _loc()
@@ -260,11 +263,13 @@ def test_rll_program_scope_overrides_controller():
 def test_rll_multiple_rungs():
     rungs_list = [
         ParsedRung(
-            number=0, text="",
+            number=0,
+            text="",
             instructions=[_inst("XIC", "TagA")],
         ),
         ParsedRung(
-            number=1, text="",
+            number=1,
+            text="",
             instructions=[_inst("XIC", "TagB", "Missing")],
         ),
     ]
@@ -285,12 +290,14 @@ def test_rll_multiple_rungs():
 
 
 def test_st_known_tag_no_diagnostic():
-    prog = StProgram(statements=[
-        StAssignment(
-            target=TagPath(segments=[TagPathSegment(name="Out")]),
-            expression=StTagRef(path=TagPath(segments=[TagPathSegment(name="In")])),
-        ),
-    ])
+    prog = StProgram(
+        statements=[
+            StAssignment(
+                target=TagPath(segments=[TagPathSegment(name="Out")]),
+                expression=StTagRef(path=TagPath(segments=[TagPathSegment(name="In")])),
+            ),
+        ]
+    )
     r = _st_routine("Main", prog)
     controller = Controller(
         name="Test",
@@ -303,12 +310,16 @@ def test_st_known_tag_no_diagnostic():
 
 
 def test_st_unknown_tag_emits_ec001():
-    prog = StProgram(statements=[
-        StAssignment(
-            target=TagPath(segments=[TagPathSegment(name="Out")]),
-            expression=StTagRef(path=TagPath(segments=[TagPathSegment(name="MissingIn")])),
-        ),
-    ])
+    prog = StProgram(
+        statements=[
+            StAssignment(
+                target=TagPath(segments=[TagPathSegment(name="Out")]),
+                expression=StTagRef(
+                    path=TagPath(segments=[TagPathSegment(name="MissingIn")])
+                ),
+            ),
+        ]
+    )
     r = _st_routine("Main", prog)
     controller = Controller(name="Test", tags=[Tag(name="Out", data_type="DINT")])
     table = build_symbol_table(controller)
@@ -319,12 +330,14 @@ def test_st_unknown_tag_emits_ec001():
 
 
 def test_st_target_unknown():
-    prog = StProgram(statements=[
-        StAssignment(
-            target=TagPath(segments=[TagPathSegment(name="UndefTarget")]),
-            expression=StLiteral(value=1),
-        ),
-    ])
+    prog = StProgram(
+        statements=[
+            StAssignment(
+                target=TagPath(segments=[TagPathSegment(name="UndefTarget")]),
+                expression=StLiteral(value=1),
+            ),
+        ]
+    )
     r = _st_routine("Main", prog)
     controller = Controller(name="Test")
     table = build_symbol_table(controller)
@@ -335,17 +348,21 @@ def test_st_target_unknown():
 
 
 def test_st_if_condition_tags():
-    prog = StProgram(statements=[
-        StIf(
-            condition=StTagRef(path=TagPath(segments=[TagPathSegment(name="Cond")])),
-            body=[
-                StAssignment(
-                    target=TagPath(segments=[TagPathSegment(name="ThenTag")]),
-                    expression=StLiteral(value=0),
+    prog = StProgram(
+        statements=[
+            StIf(
+                condition=StTagRef(
+                    path=TagPath(segments=[TagPathSegment(name="Cond")])
                 ),
-            ],
-        ),
-    ])
+                body=[
+                    StAssignment(
+                        target=TagPath(segments=[TagPathSegment(name="ThenTag")]),
+                        expression=StLiteral(value=0),
+                    ),
+                ],
+            ),
+        ]
+    )
     r = _st_routine("Main", prog)
     controller = Controller(
         name="Test",
@@ -361,12 +378,16 @@ def test_st_if_condition_tags():
 
 
 def test_st_if_unknown_condition():
-    prog = StProgram(statements=[
-        StIf(
-            condition=StTagRef(path=TagPath(segments=[TagPathSegment(name="NoCond")])),
-            body=[],
-        ),
-    ])
+    prog = StProgram(
+        statements=[
+            StIf(
+                condition=StTagRef(
+                    path=TagPath(segments=[TagPathSegment(name="NoCond")])
+                ),
+                body=[],
+            ),
+        ]
+    )
     r = _st_routine("Main", prog)
     controller = Controller(name="Test")
     table = build_symbol_table(controller)
@@ -376,16 +397,20 @@ def test_st_if_unknown_condition():
 
 
 def test_st_binary_op_tags():
-    prog = StProgram(statements=[
-        StAssignment(
-            target=TagPath(segments=[TagPathSegment(name="Result")]),
-            expression=StBinaryOp(
-                left=StTagRef(path=TagPath(segments=[TagPathSegment(name="A")])),
-                op="+",
-                right=StTagRef(path=TagPath(segments=[TagPathSegment(name="MissingB")])),
+    prog = StProgram(
+        statements=[
+            StAssignment(
+                target=TagPath(segments=[TagPathSegment(name="Result")]),
+                expression=StBinaryOp(
+                    left=StTagRef(path=TagPath(segments=[TagPathSegment(name="A")])),
+                    op="+",
+                    right=StTagRef(
+                        path=TagPath(segments=[TagPathSegment(name="MissingB")])
+                    ),
+                ),
             ),
-        ),
-    ])
+        ]
+    )
     r = _st_routine("Main", prog)
     controller = Controller(
         name="Test",
@@ -399,21 +424,27 @@ def test_st_binary_op_tags():
 
 
 def test_st_while():
-    prog = StProgram(statements=[
-        StWhile(
-            condition=StTagRef(path=TagPath(segments=[TagPathSegment(name="Flag")])),
-            body=[
-                StAssignment(
-                    target=TagPath(segments=[TagPathSegment(name="Counter")]),
-                    expression=StBinaryOp(
-                        left=StTagRef(path=TagPath(segments=[TagPathSegment(name="Counter")])),
-                        op="+",
-                        right=StLiteral(value=1),
-                    ),
+    prog = StProgram(
+        statements=[
+            StWhile(
+                condition=StTagRef(
+                    path=TagPath(segments=[TagPathSegment(name="Flag")])
                 ),
-            ],
-        ),
-    ])
+                body=[
+                    StAssignment(
+                        target=TagPath(segments=[TagPathSegment(name="Counter")]),
+                        expression=StBinaryOp(
+                            left=StTagRef(
+                                path=TagPath(segments=[TagPathSegment(name="Counter")])
+                            ),
+                            op="+",
+                            right=StLiteral(value=1),
+                        ),
+                    ),
+                ],
+            ),
+        ]
+    )
     r = _st_routine("Main", prog)
     controller = Controller(
         name="Test",
@@ -429,15 +460,17 @@ def test_st_while():
 
 
 def test_st_for():
-    prog = StProgram(statements=[
-        StFor(
-            variable=TagPath(segments=[TagPathSegment(name="i")]),
-            start=StLiteral(value=0),
-            end=StLiteral(value=10),
-            step=None,
-            body=[],
-        ),
-    ])
+    prog = StProgram(
+        statements=[
+            StFor(
+                variable=TagPath(segments=[TagPathSegment(name="i")]),
+                start=StLiteral(value=0),
+                end=StLiteral(value=10),
+                step=None,
+                body=[],
+            ),
+        ]
+    )
     r = _st_routine("Main", prog)
     controller = Controller(name="Test", tags=[Tag(name="i", data_type="DINT")])
     table = build_symbol_table(controller)
@@ -447,22 +480,29 @@ def test_st_for():
 
 
 def test_st_for_with_exprs():
-    prog = StProgram(statements=[
-        StFor(
-            variable=TagPath(segments=[TagPathSegment(name="LoopVar")]),
-            start=StTagRef(path=TagPath(segments=[TagPathSegment(name="StartVal")])),
-            end=StTagRef(path=TagPath(segments=[TagPathSegment(name="EndVal")])),
-            step=StTagRef(path=TagPath(segments=[TagPathSegment(name="StepVal")])),
-            body=[],
-        ),
-    ])
+    prog = StProgram(
+        statements=[
+            StFor(
+                variable=TagPath(segments=[TagPathSegment(name="LoopVar")]),
+                start=StTagRef(
+                    path=TagPath(segments=[TagPathSegment(name="StartVal")])
+                ),
+                end=StTagRef(path=TagPath(segments=[TagPathSegment(name="EndVal")])),
+                step=StTagRef(path=TagPath(segments=[TagPathSegment(name="StepVal")])),
+                body=[],
+            ),
+        ]
+    )
     r = _st_routine("Main", prog)
-    controller = Controller(name="Test", tags=[
-        Tag(name="LoopVar", data_type="DINT"),
-        Tag(name="StartVal", data_type="DINT"),
-        Tag(name="EndVal", data_type="DINT"),
-        Tag(name="StepVal", data_type="DINT"),
-    ])
+    controller = Controller(
+        name="Test",
+        tags=[
+            Tag(name="LoopVar", data_type="DINT"),
+            Tag(name="StartVal", data_type="DINT"),
+            Tag(name="EndVal", data_type="DINT"),
+            Tag(name="StepVal", data_type="DINT"),
+        ],
+    )
     table = build_symbol_table(controller)
     loc = _loc()
     result = _check_st(r, table, loc)
@@ -470,16 +510,18 @@ def test_st_for_with_exprs():
 
 
 def test_st_call_args():
-    prog = StProgram(statements=[
-        StCall(
-            name="TON",
-            args=[
-                StTagRef(path=TagPath(segments=[TagPathSegment(name="Timer0")])),
-                StLiteral(value=10000),
-                StLiteral(value=0),
-            ],
-        ),
-    ])
+    prog = StProgram(
+        statements=[
+            StCall(
+                name="TON",
+                args=[
+                    StTagRef(path=TagPath(segments=[TagPathSegment(name="Timer0")])),
+                    StLiteral(value=10000),
+                    StLiteral(value=0),
+                ],
+            ),
+        ]
+    )
     r = _st_routine("Main", prog)
     controller = Controller(name="Test", tags=[Tag(name="Timer0", data_type="TIMER")])
     table = build_symbol_table(controller)
@@ -489,14 +531,18 @@ def test_st_call_args():
 
 
 def test_st_call_unknown_arg():
-    prog = StProgram(statements=[
-        StCall(
-            name="TON",
-            args=[
-                StTagRef(path=TagPath(segments=[TagPathSegment(name="MissingTimer")])),
-            ],
-        ),
-    ])
+    prog = StProgram(
+        statements=[
+            StCall(
+                name="TON",
+                args=[
+                    StTagRef(
+                        path=TagPath(segments=[TagPathSegment(name="MissingTimer")])
+                    ),
+                ],
+            ),
+        ]
+    )
     r = _st_routine("Main", prog)
     controller = Controller(name="Test")
     table = build_symbol_table(controller)
@@ -530,16 +576,19 @@ def test_ec001_via_analyze_pipeline():
     _reset_registry()
     analyze.register(ec001_undefined_tag)
     rung = ParsedRung(
-        number=0, text="",
+        number=0,
+        text="",
         instructions=[_inst("XIC", "Good", "Bad")],
     )
     controller = Controller(
         name="Test",
         tags=[Tag(name="Good", data_type="DINT")],
-        programs=[Program(
-            name="Prog",
-            routines=[Routine(name="Main", type="RLL", rll_rungs=[rung])],
-        )],
+        programs=[
+            Program(
+                name="Prog",
+                routines=[Routine(name="Main", type="RLL", rll_rungs=[rung])],
+            )
+        ],
     )
     result = analyze.analyze(controller)
     ar = result.unwrap()
@@ -552,15 +601,18 @@ def test_ec001_no_duplicates_for_same_tag():
     _reset_registry()
     analyze.register(ec001_undefined_tag)
     rung = ParsedRung(
-        number=0, text="",
+        number=0,
+        text="",
         instructions=[_inst("XIC", "Missing", "Missing")],
     )
     controller = Controller(
         name="Test",
-        programs=[Program(
-            name="Prog",
-            routines=[Routine(name="Main", type="RLL", rll_rungs=[rung])],
-        )],
+        programs=[
+            Program(
+                name="Prog",
+                routines=[Routine(name="Main", type="RLL", rll_rungs=[rung])],
+            )
+        ],
     )
     result = analyze.analyze(controller)
     ar = result.unwrap()
@@ -579,12 +631,14 @@ def test_rll_non_rll_routine_ignored():
 
 
 def test_st_jsr_args():
-    prog = StProgram(statements=[
-        StJsr(
-            routine_name="SubRoutine",
-            args=[StTagRef(path=TagPath(segments=[TagPathSegment(name="Arg1")]))],
-        ),
-    ])
+    prog = StProgram(
+        statements=[
+            StJsr(
+                routine_name="SubRoutine",
+                args=[StTagRef(path=TagPath(segments=[TagPathSegment(name="Arg1")]))],
+            ),
+        ]
+    )
     r = _st_routine("Main", prog)
     controller = Controller(name="Test", tags=[Tag(name="Arg1", data_type="DINT")])
     table = build_symbol_table(controller)

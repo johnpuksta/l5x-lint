@@ -106,8 +106,16 @@ class StReturn:
 
 
 StStatement = (
-    StAssignment | StIf | StCase | StFor | StWhile | StRepeat
-    | StCall | StJsr | StExit | StReturn
+    StAssignment
+    | StIf
+    | StCase
+    | StFor
+    | StWhile
+    | StRepeat
+    | StCall
+    | StJsr
+    | StExit
+    | StReturn
 )
 
 

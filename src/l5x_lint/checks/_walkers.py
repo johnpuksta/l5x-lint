@@ -28,7 +28,10 @@ class StWalker:
     loc: Location
 
     def __call__(
-        self, routine: Routine, symbols: SymbolTable, loc: Location,
+        self,
+        routine: Routine,
+        symbols: SymbolTable,
+        loc: Location,
     ) -> list[Diagnostic]:
         self.result = []
         self.symbols = symbols
@@ -46,16 +49,18 @@ class StWalker:
         message: str,
         line: int | None = None,
     ) -> None:
-        self.result.append(Diagnostic(
-            code=code,
-            severity=severity,
-            location=Location(
-                program=self.loc.program,
-                routine=self.loc.routine,
-                line=line,
-            ),
-            message=message,
-        ))
+        self.result.append(
+            Diagnostic(
+                code=code,
+                severity=severity,
+                location=Location(
+                    program=self.loc.program,
+                    routine=self.loc.routine,
+                    line=line,
+                ),
+                message=message,
+            )
+        )
 
     def _walk_stmt(self, stmt) -> None:
         match stmt:
@@ -188,7 +193,10 @@ class RllWalker:
     rung_num: int
 
     def __call__(
-        self, routine: Routine, symbols: SymbolTable, loc: Location,
+        self,
+        routine: Routine,
+        symbols: SymbolTable,
+        loc: Location,
     ) -> list[Diagnostic]:
         self.result = []
         self.symbols = symbols
@@ -207,16 +215,18 @@ class RllWalker:
         message: str,
         rung: int | None = None,
     ) -> None:
-        self.result.append(Diagnostic(
-            code=code,
-            severity=severity,
-            location=Location(
-                program=self.loc.program,
-                routine=self.loc.routine,
-                rung=rung,
-            ),
-            message=message,
-        ))
+        self.result.append(
+            Diagnostic(
+                code=code,
+                severity=severity,
+                location=Location(
+                    program=self.loc.program,
+                    routine=self.loc.routine,
+                    rung=rung,
+                ),
+                message=message,
+            )
+        )
 
     def _walk_instructions(self, instructions) -> None:
         for inst in instructions:

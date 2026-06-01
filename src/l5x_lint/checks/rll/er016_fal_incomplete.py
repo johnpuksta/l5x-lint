@@ -12,7 +12,8 @@ class Er016Check(RllWalker):
         opcode = inst.opcode.upper()
         if opcode in _FILE_OPS and len(inst.operands) < _MIN_OPERANDS:
             self.add_diagnostic(
-                ER016.code, ER016.severity,
+                ER016.code,
+                ER016.severity,
                 ER016(
                     opcode=opcode,
                     rung=self.rung_num,

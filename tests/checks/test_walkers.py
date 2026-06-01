@@ -37,6 +37,7 @@ def _loc(program="", routine=""):
 # StWalker – visit ordering
 # ---------------------------------------------------------------------------
 
+
 class _VisitRecorder(StWalker):
     def __init__(self):
         self.visited: list[str] = []
@@ -89,9 +90,11 @@ TP = lambda name: TagPath(segments=[TagPathSegment(name=name)])  # noqa: E731
 
 def test_st_walks_assignment():
     w = _VisitRecorder()
-    prog = StProgram(statements=[
-        StAssignment(target=TP("x"), expression=StLiteral(value=1)),
-    ])
+    prog = StProgram(
+        statements=[
+            StAssignment(target=TP("x"), expression=StLiteral(value=1)),
+        ]
+    )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
     w(r, build_symbol_table(c), _loc())
@@ -100,29 +103,41 @@ def test_st_walks_assignment():
 
 def test_st_walks_if():
     w = _VisitRecorder()
-    prog = StProgram(statements=[
-        StIf(
-            condition=StLiteral(value=True),
-            body=[StReturn()],
-            elsif_pairs=[(StLiteral(value=False), [StExit()])],
-            else_body=[StAssignment(target=TP("x"), expression=StLiteral(value=0))],
-        ),
-    ])
+    prog = StProgram(
+        statements=[
+            StIf(
+                condition=StLiteral(value=True),
+                body=[StReturn()],
+                elsif_pairs=[(StLiteral(value=False), [StExit()])],
+                else_body=[StAssignment(target=TP("x"), expression=StLiteral(value=0))],
+            ),
+        ]
+    )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
     w(r, build_symbol_table(c), _loc())
-    assert w.visited == ["if", "literal", "return", "literal", "exit", "assignment", "literal"]
+    assert w.visited == [
+        "if",
+        "literal",
+        "return",
+        "literal",
+        "exit",
+        "assignment",
+        "literal",
+    ]
 
 
 def test_st_walks_case():
     w = _VisitRecorder()
-    prog = StProgram(statements=[
-        StCase(
-            expression=StTagRef(TP("x")),
-            cases=[([StLiteral(1)], [StReturn()])],
-            else_body=[StExit()],
-        ),
-    ])
+    prog = StProgram(
+        statements=[
+            StCase(
+                expression=StTagRef(TP("x")),
+                cases=[([StLiteral(1)], [StReturn()])],
+                else_body=[StExit()],
+            ),
+        ]
+    )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
     w(r, build_symbol_table(c), _loc())
@@ -131,15 +146,17 @@ def test_st_walks_case():
 
 def test_st_walks_for():
     w = _VisitRecorder()
-    prog = StProgram(statements=[
-        StFor(
-            variable=TP("i"),
-            start=StLiteral(0),
-            end=StLiteral(10),
-            step=StLiteral(1),
-            body=[StReturn()],
-        ),
-    ])
+    prog = StProgram(
+        statements=[
+            StFor(
+                variable=TP("i"),
+                start=StLiteral(0),
+                end=StLiteral(10),
+                step=StLiteral(1),
+                body=[StReturn()],
+            ),
+        ]
+    )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
     w(r, build_symbol_table(c), _loc())
@@ -148,9 +165,14 @@ def test_st_walks_for():
 
 def test_st_walks_while():
     w = _VisitRecorder()
-    prog = StProgram(statements=[
-        StWhile(condition=StTagRef(TP("ok")), body=[StAssignment(target=TP("x"), expression=StLiteral(1))]),
-    ])
+    prog = StProgram(
+        statements=[
+            StWhile(
+                condition=StTagRef(TP("ok")),
+                body=[StAssignment(target=TP("x"), expression=StLiteral(1))],
+            ),
+        ]
+    )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
     w(r, build_symbol_table(c), _loc())
@@ -159,9 +181,11 @@ def test_st_walks_while():
 
 def test_st_walks_repeat():
     w = _VisitRecorder()
-    prog = StProgram(statements=[
-        StRepeat(body=[StReturn()], until=StLiteral(True)),
-    ])
+    prog = StProgram(
+        statements=[
+            StRepeat(body=[StReturn()], until=StLiteral(True)),
+        ]
+    )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
     w(r, build_symbol_table(c), _loc())
@@ -170,9 +194,11 @@ def test_st_walks_repeat():
 
 def test_st_walks_call():
     w = _VisitRecorder()
-    prog = StProgram(statements=[
-        StCall(name="ADD", args=[StLiteral(1), StLiteral(2)]),
-    ])
+    prog = StProgram(
+        statements=[
+            StCall(name="ADD", args=[StLiteral(1), StLiteral(2)]),
+        ]
+    )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
     w(r, build_symbol_table(c), _loc())
@@ -181,9 +207,11 @@ def test_st_walks_call():
 
 def test_st_walks_jsr():
     w = _VisitRecorder()
-    prog = StProgram(statements=[
-        StJsr(routine_name="Sub", args=[StLiteral(99)]),
-    ])
+    prog = StProgram(
+        statements=[
+            StJsr(routine_name="Sub", args=[StLiteral(99)]),
+        ]
+    )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
     w(r, build_symbol_table(c), _loc())
@@ -210,12 +238,14 @@ def test_st_walks_return():
 
 def test_st_walks_expr_binary_op():
     w = _VisitRecorder()
-    prog = StProgram(statements=[
-        StAssignment(
-            target=TP("x"),
-            expression=StBinaryOp(left=StLiteral(1), op="+", right=StLiteral(2)),
-        ),
-    ])
+    prog = StProgram(
+        statements=[
+            StAssignment(
+                target=TP("x"),
+                expression=StBinaryOp(left=StLiteral(1), op="+", right=StLiteral(2)),
+            ),
+        ]
+    )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
     w(r, build_symbol_table(c), _loc())
@@ -224,12 +254,14 @@ def test_st_walks_expr_binary_op():
 
 def test_st_walks_expr_unary_op():
     w = _VisitRecorder()
-    prog = StProgram(statements=[
-        StAssignment(
-            target=TP("x"),
-            expression=StUnaryOp(op="-", operand=StLiteral(5)),
-        ),
-    ])
+    prog = StProgram(
+        statements=[
+            StAssignment(
+                target=TP("x"),
+                expression=StUnaryOp(op="-", operand=StLiteral(5)),
+            ),
+        ]
+    )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
     w(r, build_symbol_table(c), _loc())
@@ -238,12 +270,14 @@ def test_st_walks_expr_unary_op():
 
 def test_st_walks_expr_call():
     w = _VisitRecorder()
-    prog = StProgram(statements=[
-        StAssignment(
-            target=TP("x"),
-            expression=StCall(name="ABS", args=[StLiteral(-1)]),
-        ),
-    ])
+    prog = StProgram(
+        statements=[
+            StAssignment(
+                target=TP("x"),
+                expression=StCall(name="ABS", args=[StLiteral(-1)]),
+            ),
+        ]
+    )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
     w(r, build_symbol_table(c), _loc())
@@ -262,6 +296,7 @@ def test_st_non_st_ignored():
 # StWalker – add_diagnostic helper
 # ---------------------------------------------------------------------------
 
+
 class _StDiagCollector(StWalker):
     def visit_if(self, node):
         self.add_diagnostic("WS107", "warning", "missing else", line=node.line)
@@ -269,9 +304,11 @@ class _StDiagCollector(StWalker):
 
 def test_st_walker_add_diagnostic():
     w = _StDiagCollector()
-    prog = StProgram(statements=[
-        StIf(condition=StLiteral(True), body=[], line=5),
-    ])
+    prog = StProgram(
+        statements=[
+            StIf(condition=StLiteral(True), body=[], line=5),
+        ]
+    )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
     result = w(r, build_symbol_table(c), _loc(program="P", routine="R"))
@@ -288,6 +325,7 @@ def test_st_walker_add_diagnostic():
 # RllWalker – visit ordering
 # ---------------------------------------------------------------------------
 
+
 class _RllVisitRecorder(RllWalker):
     def __init__(self):
         self.visited: list[str] = []
@@ -301,37 +339,67 @@ class _RllVisitRecorder(RllWalker):
 
 def test_rll_walks_basic():
     w = _RllVisitRecorder()
-    prog = Routine(name="R", type="RLL", rll_rungs=[
-        ParsedRung(number=1, text="", instructions=[
-            Instruction(opcode="XIC", operands=[Operand("In1")]),
-            Instruction(opcode="OTE", operands=[Operand("Out1")]),
-        ]),
-        ParsedRung(number=2, text="", instructions=[
-            Instruction(opcode="TON", operands=[Operand("T1")]),
-        ]),
-    ])
+    prog = Routine(
+        name="R",
+        type="RLL",
+        rll_rungs=[
+            ParsedRung(
+                number=1,
+                text="",
+                instructions=[
+                    Instruction(opcode="XIC", operands=[Operand("In1")]),
+                    Instruction(opcode="OTE", operands=[Operand("Out1")]),
+                ],
+            ),
+            ParsedRung(
+                number=2,
+                text="",
+                instructions=[
+                    Instruction(opcode="TON", operands=[Operand("T1")]),
+                ],
+            ),
+        ],
+    )
     c = Controller(name="C")
     w(prog, build_symbol_table(c), _loc())
     assert w.visited == [
-        "rung(1)", "inst(XIC)", "inst(OTE)",
-        "rung(2)", "inst(TON)",
+        "rung(1)",
+        "inst(XIC)",
+        "inst(OTE)",
+        "rung(2)",
+        "inst(TON)",
     ]
 
 
 def test_rll_walks_branches():
     w = _RllVisitRecorder()
-    prog = Routine(name="R", type="RLL", rll_rungs=[
-        ParsedRung(number=1, text="", instructions=[
-            Instruction(opcode="XIC", operands=[Operand("A")], branch=[
-                [Instruction(opcode="OTE", operands=[Operand("B")])],
-                [Instruction(opcode="OTL", operands=[Operand("C")])],
-            ]),
-        ]),
-    ])
+    prog = Routine(
+        name="R",
+        type="RLL",
+        rll_rungs=[
+            ParsedRung(
+                number=1,
+                text="",
+                instructions=[
+                    Instruction(
+                        opcode="XIC",
+                        operands=[Operand("A")],
+                        branch=[
+                            [Instruction(opcode="OTE", operands=[Operand("B")])],
+                            [Instruction(opcode="OTL", operands=[Operand("C")])],
+                        ],
+                    ),
+                ],
+            ),
+        ],
+    )
     c = Controller(name="C")
     w(prog, build_symbol_table(c), _loc())
     assert w.visited == [
-        "rung(1)", "inst(XIC)", "inst(OTE)", "inst(OTL)",
+        "rung(1)",
+        "inst(XIC)",
+        "inst(OTE)",
+        "inst(OTL)",
     ]
 
 
@@ -347,6 +415,7 @@ def test_rll_non_rll_ignored():
 # RllWalker – add_diagnostic helper
 # ---------------------------------------------------------------------------
 
+
 class _RllDiagCollector(RllWalker):
     def visit_instruction(self, node):
         if node.opcode == "NOP":
@@ -355,11 +424,19 @@ class _RllDiagCollector(RllWalker):
 
 def test_rll_walker_add_diagnostic():
     w = _RllDiagCollector()
-    prog = Routine(name="R", type="RLL", rll_rungs=[
-        ParsedRung(number=3, text="", instructions=[
-            Instruction(opcode="NOP", operands=[]),
-        ]),
-    ])
+    prog = Routine(
+        name="R",
+        type="RLL",
+        rll_rungs=[
+            ParsedRung(
+                number=3,
+                text="",
+                instructions=[
+                    Instruction(opcode="NOP", operands=[]),
+                ],
+            ),
+        ],
+    )
     c = Controller(name="C")
     result = w(prog, build_symbol_table(c), _loc(program="P", routine="R"))
     assert len(result) == 1
@@ -372,11 +449,19 @@ def test_rll_walker_add_diagnostic():
 
 def test_rll_walker_add_diagnostic_default_rung():
     w = _RllDiagCollector()
-    prog = Routine(name="R", type="RLL", rll_rungs=[
-        ParsedRung(number=7, text="", instructions=[
-            Instruction(opcode="NOP", operands=[]),
-        ]),
-    ])
+    prog = Routine(
+        name="R",
+        type="RLL",
+        rll_rungs=[
+            ParsedRung(
+                number=7,
+                text="",
+                instructions=[
+                    Instruction(opcode="NOP", operands=[]),
+                ],
+            ),
+        ],
+    )
     c = Controller(name="C")
     result = w(prog, build_symbol_table(c), _loc())
     assert result[0].location.rung == 7

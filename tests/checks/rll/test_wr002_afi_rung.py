@@ -26,7 +26,8 @@ def _inst(opcode, *operand_values):
 
 def test_afi_first_instruction():
     r = Routine(
-        name="Main", type="RLL",
+        name="Main",
+        type="RLL",
         rll_rungs=[
             _rung(Instruction(opcode="AFI")),
             _rung(_inst("XIC", "TagA")),
@@ -45,7 +46,8 @@ def test_afi_first_instruction():
 
 def test_no_afi():
     r = Routine(
-        name="Main", type="RLL",
+        name="Main",
+        type="RLL",
         rll_rungs=[_rung(_inst("XIC", "TagA"))],
     )
     controller = Controller(name="Test")
@@ -57,11 +59,14 @@ def test_no_afi():
 
 def test_afi_not_first_instruction():
     r = Routine(
-        name="Main", type="RLL",
-        rll_rungs=[_rung(
-            _inst("XIC", "TagA"),
-            Instruction(opcode="AFI"),
-        )],
+        name="Main",
+        type="RLL",
+        rll_rungs=[
+            _rung(
+                _inst("XIC", "TagA"),
+                Instruction(opcode="AFI"),
+            )
+        ],
     )
     controller = Controller(name="Test")
     table = build_symbol_table(controller)
@@ -74,7 +79,8 @@ def test_afi_multiple_rungs():
     rungs = [
         ParsedRung(number=0, text="", instructions=[Instruction(opcode="AFI")]),
         ParsedRung(
-            number=1, text="",
+            number=1,
+            text="",
             instructions=[_inst("XIC", "TagA")],
         ),
         ParsedRung(number=2, text="", instructions=[Instruction(opcode="AFI")]),
@@ -111,7 +117,8 @@ def test_afi_in_branch_not_flagged():
 
 def test_afi_with_operands():
     r = Routine(
-        name="Main", type="RLL",
+        name="Main",
+        type="RLL",
         rll_rungs=[_rung(Instruction(opcode="AFI", operands=[Operand(value="X")]))],
     )
     controller = Controller(name="Test")
@@ -136,15 +143,18 @@ def test_wr002_via_analyze_pipeline():
 
     rung0 = ParsedRung(number=0, text="", instructions=[Instruction(opcode="AFI")])
     rung1 = ParsedRung(
-        number=1, text="",
+        number=1,
+        text="",
         instructions=[_inst("XIC", "TagA")],
     )
     controller = Controller(
         name="Test",
-        programs=[Program(
-            name="Prog",
-            routines=[Routine(name="Main", type="RLL", rll_rungs=[rung0, rung1])],
-        )],
+        programs=[
+            Program(
+                name="Prog",
+                routines=[Routine(name="Main", type="RLL", rll_rungs=[rung0, rung1])],
+            )
+        ],
     )
 
     result = analyze.analyze(controller)

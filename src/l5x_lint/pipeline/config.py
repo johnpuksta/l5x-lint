@@ -3,10 +3,19 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 
-_WARNING_NAMES = frozenset({
-    "unused", "unreachable", "output", "timer", "shadowed",
-    "numeric", "complexity", "conversion", "missing-else",
-})
+_WARNING_NAMES = frozenset(
+    {
+        "unused",
+        "unreachable",
+        "output",
+        "timer",
+        "shadowed",
+        "numeric",
+        "complexity",
+        "conversion",
+        "missing-else",
+    }
+)
 
 _ENABLEABLE = frozenset({"numeric", "complexity"})
 
@@ -31,12 +40,14 @@ class LintConfig:
             case "safety":
                 self.warn_numeric_hazards = True
                 self.warn_unreachable = True
-                self.severity_overrides.update({
-                    "WC103": "error",
-                    "WR002": "error",
-                    "WS101": "error",
-                    "WS102": "error",
-                })
+                self.severity_overrides.update(
+                    {
+                        "WC103": "error",
+                        "WR002": "error",
+                        "WS101": "error",
+                        "WS102": "error",
+                    }
+                )
             case "rockwell":
                 self.warn_numeric_hazards = False
             case "iec-61131-3":

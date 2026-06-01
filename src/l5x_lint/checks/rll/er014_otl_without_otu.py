@@ -7,7 +7,9 @@ from l5x_lint.pipeline.symbols import SymbolTable
 
 @register
 def er014_otl_without_otu(
-    routine: Routine, _symbols: SymbolTable, loc: Location,
+    routine: Routine,
+    _symbols: SymbolTable,
+    loc: Location,
 ) -> list[Diagnostic]:
     result: list[Diagnostic] = []
     if routine.type != "RLL" or not routine.rll_rungs:
@@ -20,11 +22,14 @@ def er014_otl_without_otu(
         _collect_latch_ops(rung.instructions, otl_tags, otu_tags)
 
     for tag in sorted(otl_tags - otu_tags):
-        result.append(Diagnostic(
-            code=ER014.code, severity=ER014.severity,
-            location=Location(program=loc.program, routine=loc.routine),
-            message=ER014(name=tag).message,
-        ))
+        result.append(
+            Diagnostic(
+                code=ER014.code,
+                severity=ER014.severity,
+                location=Location(program=loc.program, routine=loc.routine),
+                message=ER014(name=tag).message,
+            )
+        )
 
     return result
 

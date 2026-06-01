@@ -31,22 +31,36 @@ def _inst(opcode, *operand_values):
 
 
 def test_valid_member_no_diagnostic():
-    dt = DataType(name="MyUDT", family="NoFamily", class_="",
-                  members=[Member(name="Field1", data_type="DINT")])
-    r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("XIC", "MyTag.Field1"))])  # noqa: E501
-    c = Controller(name="Test", tags=[Tag(name="MyTag", data_type="MyUDT")],
-                   data_types=[dt])
+    dt = DataType(
+        name="MyUDT",
+        family="NoFamily",
+        class_="",
+        members=[Member(name="Field1", data_type="DINT")],
+    )
+    r = Routine(
+        name="Main", type="RLL", rll_rungs=[_rung(_inst("XIC", "MyTag.Field1"))]
+    )  # noqa: E501
+    c = Controller(
+        name="Test", tags=[Tag(name="MyTag", data_type="MyUDT")], data_types=[dt]
+    )
     table = build_symbol_table(c)
     result = ec005_invalid_member(r, table, _loc())
     assert result == []
 
 
 def test_invalid_member_emits_ec005():
-    dt = DataType(name="MyUDT", family="NoFamily", class_="",
-                  members=[Member(name="Field1", data_type="DINT")])
-    r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("XIC", "MyTag.NoSuch"))])  # noqa: E501
-    c = Controller(name="Test", tags=[Tag(name="MyTag", data_type="MyUDT")],
-                   data_types=[dt])
+    dt = DataType(
+        name="MyUDT",
+        family="NoFamily",
+        class_="",
+        members=[Member(name="Field1", data_type="DINT")],
+    )
+    r = Routine(
+        name="Main", type="RLL", rll_rungs=[_rung(_inst("XIC", "MyTag.NoSuch"))]
+    )  # noqa: E501
+    c = Controller(
+        name="Test", tags=[Tag(name="MyTag", data_type="MyUDT")], data_types=[dt]
+    )
     table = build_symbol_table(c)
     result = ec005_invalid_member(r, table, _loc())
     assert len(result) == 1
@@ -54,7 +68,9 @@ def test_invalid_member_emits_ec005():
 
 
 def test_unknown_tag_skipped():
-    r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("XIC", "NoTag.Field1"))])  # noqa: E501
+    r = Routine(
+        name="Main", type="RLL", rll_rungs=[_rung(_inst("XIC", "NoTag.Field1"))]
+    )  # noqa: E501
     c = Controller(name="Test")
     table = build_symbol_table(c)
     result = ec005_invalid_member(r, table, _loc())
@@ -62,7 +78,9 @@ def test_unknown_tag_skipped():
 
 
 def test_no_members_on_type_skipped():
-    r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("XIC", "MyTag.Field1"))])  # noqa: E501
+    r = Routine(
+        name="Main", type="RLL", rll_rungs=[_rung(_inst("XIC", "MyTag.Field1"))]
+    )  # noqa: E501
     c = Controller(name="Test", tags=[Tag(name="MyTag", data_type="DINT")])
     table = build_symbol_table(c)
     result = ec005_invalid_member(r, table, _loc())

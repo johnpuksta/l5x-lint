@@ -1,4 +1,6 @@
-from l5x_lint.checks.cross.wc103_cyclomatic_complexity import wc103_cyclomatic_complexity
+from l5x_lint.checks.cross.wc103_cyclomatic_complexity import (
+    wc103_cyclomatic_complexity,
+)
 from l5x_lint.domain.models import Controller, Location, Routine
 from l5x_lint.domain.rll_models import Instruction, ParsedRung
 from l5x_lint.domain.st_models import StIf, StProgram
@@ -10,9 +12,11 @@ def _loc(program="", routine=""):
 
 
 def test_st_simple_no_diagnostic():
-    prog = StProgram(statements=[
-        StIf(condition=None, body=[], line=1),
-    ])
+    prog = StProgram(
+        statements=[
+            StIf(condition=None, body=[], line=1),
+        ]
+    )
     r = Routine(name="Main", type="ST", st_body=prog)
     c = Controller(name="Test")
     table = build_symbol_table(c)
@@ -45,7 +49,10 @@ def test_rll_below_threshold():
 
 def test_rll_above_threshold():
     instructions = [Instruction(opcode="XIC") for _ in range(20)]
-    rungs = [ParsedRung(number=i, text="", instructions=[inst]) for i, inst in enumerate(instructions)]
+    rungs = [
+        ParsedRung(number=i, text="", instructions=[inst])
+        for i, inst in enumerate(instructions)
+    ]
     r = Routine(name="Main", type="RLL", rll_rungs=rungs)
     c = Controller(name="Test")
     table = build_symbol_table(c)

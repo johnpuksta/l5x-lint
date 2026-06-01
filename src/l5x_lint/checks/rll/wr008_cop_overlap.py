@@ -23,7 +23,8 @@ class Wr008Check(RllWalker):
             dst = _base_tag(inst.operands[1].value)
             if src and dst and src == dst:
                 self.add_diagnostic(
-                    WR008.code, WR008.severity,
+                    WR008.code,
+                    WR008.severity,
                     WR008(
                         source=inst.operands[0].value,
                         dest=inst.operands[1].value,

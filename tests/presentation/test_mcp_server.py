@@ -18,7 +18,10 @@ def _register_demo_check():
     def _demo_check(routine, symbols, location):
         return [
             Diagnostic(
-                code="DEMO", severity="warning", location=location, message="test",
+                code="DEMO",
+                severity="warning",
+                location=location,
+                message="test",
             ),
         ]
 

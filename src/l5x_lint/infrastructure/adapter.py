@@ -52,9 +52,12 @@ def parse_l5x(source: str | Path) -> Result[L5XProject, LintInternalError]:
 
     controller_el = root.find("Controller")
     if controller_el is None:
-        return Failure(L5XStructureError(
-            element="Controller", detail="Not found in L5X root",
-        ))
+        return Failure(
+            L5XStructureError(
+                element="Controller",
+                detail="Not found in L5X root",
+            )
+        )
 
     parser_result = create_parser(software_revision, schema_revision)
     match parser_result:
@@ -65,8 +68,10 @@ def parse_l5x(source: str | Path) -> Result[L5XProject, LintInternalError]:
 
     controller.source_lines = source_lines
 
-    return Success(L5XProject(
-        schema_revision=schema_revision,
-        software_revision=software_revision,
-        controller=controller,
-    ))
+    return Success(
+        L5XProject(
+            schema_revision=schema_revision,
+            software_revision=software_revision,
+            controller=controller,
+        )
+    )

@@ -19,11 +19,19 @@ def test_unused_aoi_emits_wc106():
     _reset()
     c = Controller(name="Test", aois=[AOI(name="UnusedAOI")])
     table = build_symbol_table(c)
-    r = Routine(name="Main", type="RLL", rll_rungs=[
-        ParsedRung(number=0, text="", instructions=[
-            Instruction(opcode="XIC", operands=[Operand(value="TagA")]),
-        ]),
-    ])
+    r = Routine(
+        name="Main",
+        type="RLL",
+        rll_rungs=[
+            ParsedRung(
+                number=0,
+                text="",
+                instructions=[
+                    Instruction(opcode="XIC", operands=[Operand(value="TagA")]),
+                ],
+            ),
+        ],
+    )
     result = wc106_unused_pou(r, table, _loc())
     assert len(result) == 1
     assert result[0].code == "WC106"
@@ -33,11 +41,19 @@ def test_used_aoi_no_diagnostic():
     _reset()
     c = Controller(name="Test", aois=[AOI(name="MyAOI")])
     table = build_symbol_table(c)
-    r = Routine(name="Main", type="RLL", rll_rungs=[
-        ParsedRung(number=0, text="", instructions=[
-            Instruction(opcode="MyAOI", operands=[Operand(value="Inst")]),
-        ]),
-    ])
+    r = Routine(
+        name="Main",
+        type="RLL",
+        rll_rungs=[
+            ParsedRung(
+                number=0,
+                text="",
+                instructions=[
+                    Instruction(opcode="MyAOI", operands=[Operand(value="Inst")]),
+                ],
+            ),
+        ],
+    )
     result = wc106_unused_pou(r, table, _loc())
     assert result == []
 

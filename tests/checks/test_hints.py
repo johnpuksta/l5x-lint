@@ -1,4 +1,8 @@
-from l5x_lint.checks._hints import suggest_did_you_mean, syntax_habit_hints, _levenshtein
+from l5x_lint.checks._hints import (
+    suggest_did_you_mean,
+    syntax_habit_hints,
+    _levenshtein,
+)
 
 
 def test_levenshtein_identical():
