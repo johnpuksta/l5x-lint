@@ -367,7 +367,7 @@ presentation/ → application/ → domain/
 
 ---
 
-### Step 8: Restructure test directory
+### Step 8: Restructure test directory ✅ DONE
 
 **Goal:** Mirror the new source layout in tests.
 
