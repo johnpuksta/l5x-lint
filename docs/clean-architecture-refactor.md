@@ -297,7 +297,7 @@ presentation/ → application/ → domain/
 
 ---
 
-### Step 5: Move schemas/ to project root
+### Step 5: Move schemas/ to project root ✅ DONE
 
 **Goal:** Static XSD data files don't belong in the Python package source tree.
 
@@ -321,7 +321,7 @@ presentation/ → application/ → domain/
 
 ---
 
-### Step 6: Remove dead global dialect state
+### Step 6: Remove dead global dialect state ✅ DONE
 
 **Goal:** The `_current_dialect` global in `dialect.py` is set by `analyze()` but never read by any check. Remove it.
 
@@ -353,7 +353,7 @@ presentation/ → application/ → domain/
 
 ---
 
-### Step 7: Delete pipeline/
+### Step 7: Delete pipeline/ ✅ DONE
 
 **Goal:** The `pipeline/` module is now empty — delete it.
 

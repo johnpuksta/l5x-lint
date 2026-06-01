@@ -10,9 +10,9 @@ from l5x_lint.domain.errors import (
 )
 from l5x_lint.domain.models import L5XProject
 from l5x_lint.infrastructure.adapter import parse_l5x
-from l5x_lint.infrastructure.parsers._factory import create_parser
-from l5x_lint.infrastructure.parsers.base import L5XParser
-from l5x_lint.infrastructure.parsers.v38 import L5XParserV38
+from l5x_lint.infrastructure.xml_parsers._factory import create_parser
+from l5x_lint.infrastructure.xml_parsers.base import L5XParser
+from l5x_lint.infrastructure.xml_parsers.v38 import L5XParserV38
 
 from helpers import l5x_with_rll, l5x_with_st, minimal_l5x, parse_and_analyze
 

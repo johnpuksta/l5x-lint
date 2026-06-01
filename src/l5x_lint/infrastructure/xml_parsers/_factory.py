@@ -5,8 +5,8 @@ import warnings
 from returns.result import Failure, Result, Success
 
 from l5x_lint.domain.errors import LintInternalError, SoftwareRevisionError
-from l5x_lint.infrastructure.parsers.base import L5XParser
-from l5x_lint.infrastructure.parsers.v38 import L5XParserV38
+from l5x_lint.infrastructure.xml_parsers.base import L5XParser
+from l5x_lint.infrastructure.xml_parsers.v38 import L5XParserV38
 
 _MAX_KNOWN_VERSION = 38
 

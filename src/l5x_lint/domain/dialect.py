@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
 @dataclass
@@ -47,17 +47,6 @@ DIALECT_PRESETS: dict[str, DialectConfig] = {
         allow_cross_family_widening=True,
     ),
 }
-
-_current_dialect: DialectConfig = DIALECT_PRESETS["rockwell"]
-
-
-def get_dialect() -> DialectConfig:
-    return _current_dialect
-
-
-def set_dialect(d: DialectConfig) -> None:
-    global _current_dialect
-    _current_dialect = d
 
 
 def resolve_dialect(name: str) -> DialectConfig:

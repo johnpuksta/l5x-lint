@@ -12,7 +12,7 @@ from l5x_lint.domain.errors import (
 )
 from l5x_lint.domain.models import L5XProject
 from l5x_lint.infrastructure._xsd import validate_l5x_xml
-from l5x_lint.infrastructure.parsers._factory import create_parser
+from l5x_lint.infrastructure.xml_parsers._factory import create_parser
 
 
 def parse_l5x(source: str | Path) -> Result[L5XProject, LintInternalError]:

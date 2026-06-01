@@ -1,9 +1,7 @@
 from l5x_lint.domain.dialect import (
     DIALECT_PRESETS,
     DialectConfig,
-    get_dialect,
     resolve_dialect,
-    set_dialect,
 )
 
 
@@ -55,25 +53,6 @@ def test_resolve_unknown_dialect():
         assert False, "expected ValueError"
     except ValueError:
         pass
-
-
-def test_session_get_set():
-    orig = get_dialect()
-    assert orig.name == "rockwell"
-    iec = DIALECT_PRESETS["iec-61131-3"]
-    set_dialect(iec)
-    try:
-        assert get_dialect().name == "iec-61131-3"
-        assert not get_dialect().allow_jsr
-    finally:
-        set_dialect(orig)
-
-
-def test_session_reset_after():
-    orig = get_dialect()
-    set_dialect(DIALECT_PRESETS["codesys"])
-    set_dialect(orig)
-    assert get_dialect().name == "rockwell"
 
 
 def test_dialect_config_defaults():

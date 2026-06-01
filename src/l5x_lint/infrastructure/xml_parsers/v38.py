@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import xml.etree.ElementTree as ET
 
-from l5x_lint.infrastructure.parsers.base import L5XParser
+from l5x_lint.infrastructure.xml_parsers.base import L5XParser
 
 
 class L5XParserV38(L5XParser):

@@ -8,7 +8,7 @@ from returns.result import Failure, Result, Success
 
 from l5x_lint.domain.errors import L5XStructureError, LintInternalError
 
-_SCHEMAS_DIR = Path(__file__).parent.parent / "schemas"
+_SCHEMAS_DIR = Path(__file__).parent.parent.parent.parent / "schemas"
 
 _schema_cache: dict[int, xmlschema.XMLSchema] = {}
 
