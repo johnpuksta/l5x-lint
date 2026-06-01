@@ -2,7 +2,7 @@ from l5x_lint.checks.cross.wc001_unused_tag import _reset, wc001_unused_tag
 from l5x_lint.domain.models import Controller, Location, Program, Routine, Tag
 from l5x_lint.domain.rll_models import Instruction, Operand, ParsedRung
 from l5x_lint.pipeline import analyze
-from l5x_lint.pipeline.symbols import build_symbol_table
+from l5x_lint.domain.symbols import build_symbol_table
 
 
 def _reset_registry():

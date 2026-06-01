@@ -14,7 +14,7 @@ from l5x_lint.domain.st_models import (
     StProgram,
     StTagRef,
 )
-from l5x_lint.pipeline.symbols import build_symbol_table
+from l5x_lint.domain.symbols import build_symbol_table
 
 
 def _loc(program="", routine=""):

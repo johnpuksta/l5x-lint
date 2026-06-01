@@ -23,7 +23,7 @@ from l5x_lint.domain.st_models import (
     StWhile,
 )
 from l5x_lint.pipeline.analyze import register
-from l5x_lint.pipeline.symbols import SymbolTable
+from l5x_lint.domain.symbols import SymbolTable
 
 _DiagList = list[Diagnostic]
 

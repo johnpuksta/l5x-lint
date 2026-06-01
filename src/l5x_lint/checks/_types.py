@@ -7,7 +7,7 @@ from l5x_lint.domain.st_models import (
     StTagRef,
     StUnaryOp,
 )
-from l5x_lint.pipeline.symbols import BUILTIN_TYPES, SymbolTable
+from l5x_lint.domain.symbols import BUILTIN_TYPES, SymbolTable
 
 _REAL_OPS: frozenset[str] = frozenset({"ADD", "SUB", "MUL", "DIV", "NEG", "MOV", "CPT"})
 _BOOL_OPS: frozenset[str] = frozenset({"XIC", "XIO", "OTE", "OTL", "OTU"})

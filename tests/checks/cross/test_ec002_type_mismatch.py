@@ -2,7 +2,7 @@ from l5x_lint.checks.cross.ec002_type_mismatch import ec002_type_mismatch
 from l5x_lint.domain.models import Controller, Location, Routine, Tag
 from l5x_lint.domain.rll_models import Instruction, Operand, ParsedRung
 from l5x_lint.pipeline import analyze
-from l5x_lint.pipeline.symbols import build_symbol_table
+from l5x_lint.domain.symbols import build_symbol_table
 
 
 def _reset_registry():

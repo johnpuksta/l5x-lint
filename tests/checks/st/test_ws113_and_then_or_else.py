@@ -8,7 +8,7 @@ from l5x_lint.domain.models import (
     TagPathSegment,
 )
 from l5x_lint.domain.st_models import StBinaryOp, StProgram, StTagRef
-from l5x_lint.pipeline.symbols import SymbolTable
+from l5x_lint.domain.symbols import SymbolTable
 
 
 def _make_bool_tag(name: str) -> Tag:

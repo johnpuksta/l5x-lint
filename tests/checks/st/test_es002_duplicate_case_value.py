@@ -1,7 +1,7 @@
 from l5x_lint.checks.st.es002_duplicate_case_value import es002_duplicate_case_value
 from l5x_lint.domain.models import Location, Routine, TagPath, TagPathSegment
 from l5x_lint.domain.st_models import StCase, StLiteral, StProgram, StTagRef
-from l5x_lint.pipeline.symbols import SymbolTable
+from l5x_lint.domain.symbols import SymbolTable
 
 
 def test_unique_case_values_no_diagnostic():

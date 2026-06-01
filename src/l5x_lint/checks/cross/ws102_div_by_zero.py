@@ -4,7 +4,7 @@ from l5x_lint.checks._codes import WS102
 from l5x_lint.domain.diagnostics import Diagnostic
 from l5x_lint.domain.models import Location, Routine
 from l5x_lint.pipeline.analyze import register
-from l5x_lint.pipeline.symbols import SymbolTable
+from l5x_lint.domain.symbols import SymbolTable
 
 _ZERO_DIV_RE = re.compile(r"/\s*0\b")
 _ZERO_MOD_RE = re.compile(r"\bMOD\s+0\b", re.IGNORECASE)

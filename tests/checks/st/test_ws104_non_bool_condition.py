@@ -10,7 +10,7 @@ from l5x_lint.domain.models import (
     TagPathSegment,
 )
 from l5x_lint.domain.st_models import StIf, StProgram, StTagRef, StWhile
-from l5x_lint.pipeline.symbols import build_symbol_table
+from l5x_lint.domain.symbols import build_symbol_table
 
 
 def _loc(program="Prog", routine=""):

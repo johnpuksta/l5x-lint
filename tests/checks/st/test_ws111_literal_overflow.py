@@ -8,7 +8,7 @@ from l5x_lint.domain.st_models import (
     StProgram,
     StTagRef,
 )
-from l5x_lint.pipeline.symbols import SymbolTable
+from l5x_lint.domain.symbols import SymbolTable
 
 
 def _make_routine(stmts) -> Routine:

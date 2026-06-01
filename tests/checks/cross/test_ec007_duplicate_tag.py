@@ -1,7 +1,7 @@
 from l5x_lint.checks.cross.ec007_duplicate_tag import ec007_duplicate_tag
 from l5x_lint.domain.models import Controller, Location, Routine, Tag
 from l5x_lint.pipeline import analyze
-from l5x_lint.pipeline.symbols import build_symbol_table
+from l5x_lint.domain.symbols import build_symbol_table
 
 
 def _reset_registry():

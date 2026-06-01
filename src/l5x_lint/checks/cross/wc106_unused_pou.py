@@ -2,7 +2,7 @@ from l5x_lint.checks._codes import WC106
 from l5x_lint.domain.diagnostics import Diagnostic
 from l5x_lint.domain.models import Location, Routine
 from l5x_lint.pipeline.analyze import register
-from l5x_lint.pipeline.symbols import SymbolTable
+from l5x_lint.domain.symbols import SymbolTable
 
 _used_aois: set[str] = set()
 _used_programs: set[str] = set()

@@ -1,7 +1,7 @@
 from l5x_lint.checks.st.ws112_empty_case_branch import ws112_empty_case_branch
 from l5x_lint.domain.models import Location, Routine
 from l5x_lint.domain.st_models import StCase, StLiteral, StProgram
-from l5x_lint.pipeline.symbols import SymbolTable
+from l5x_lint.domain.symbols import SymbolTable
 
 
 def _make_routine(stmts) -> Routine:

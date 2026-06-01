@@ -159,7 +159,7 @@ presentation/ → application/ → domain/
 
 ---
 
-### Step 1: Move domain concepts out of pipeline/
+### Step 1: Move domain concepts out of pipeline/ ✅ DONE
 
 **Goal:** `dialect.py` and `symbols.py` belong in `domain/`, not `pipeline/`.
 

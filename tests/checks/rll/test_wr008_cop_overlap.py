@@ -1,7 +1,7 @@
 from l5x_lint.checks.rll.wr008_cop_overlap import wr008_cop_overlap
 from l5x_lint.domain.models import Location, Routine
 from l5x_lint.domain.rll_models import Instruction, Operand, ParsedRung
-from l5x_lint.pipeline.symbols import SymbolTable
+from l5x_lint.domain.symbols import SymbolTable
 
 
 def _make_rung(num: int, instructions: list[Instruction]) -> ParsedRung:

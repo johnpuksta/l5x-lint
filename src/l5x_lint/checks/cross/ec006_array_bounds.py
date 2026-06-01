@@ -7,7 +7,7 @@ from l5x_lint.checks.tag_refs import extract_base
 from l5x_lint.domain.diagnostics import Diagnostic
 from l5x_lint.domain.models import Location, Routine
 from l5x_lint.pipeline.analyze import register
-from l5x_lint.pipeline.symbols import SymbolTable
+from l5x_lint.domain.symbols import SymbolTable
 
 _ARRAY_INDEX_BRACKET = re.compile(r"^[A-Za-z_][A-Za-z0-9_:]*\[(\d+)\]")
 _ARRAY_INDEX_DOT = re.compile(r"^([A-Za-z_][A-Za-z0-9_:]*)\.(\d+)(?:\.|$)")

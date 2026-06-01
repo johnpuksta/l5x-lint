@@ -1,7 +1,7 @@
 from l5x_lint.checks.rll.wr006_sus_production import wr006_sus_production
 from l5x_lint.domain.models import Location, Routine
 from l5x_lint.domain.rll_models import Instruction, Operand, ParsedRung
-from l5x_lint.pipeline.symbols import SymbolTable
+from l5x_lint.domain.symbols import SymbolTable
 
 
 def _make_rung(num: int, instructions: list[Instruction]) -> ParsedRung:

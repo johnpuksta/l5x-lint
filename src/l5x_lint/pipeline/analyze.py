@@ -10,10 +10,10 @@ from l5x_lint.domain.diagnostics import AnalysisResult, Diagnostic
 from l5x_lint.domain.errors import LintInternalError
 from l5x_lint.domain.models import Controller, Location, Routine
 from l5x_lint.pipeline.config import LintConfig
-from l5x_lint.pipeline.dialect import resolve_dialect, set_dialect
+from l5x_lint.domain.dialect import resolve_dialect, set_dialect
 from l5x_lint.pipeline.filter import filter_diagnostics
 from l5x_lint.pipeline.routine_router import route_routines
-from l5x_lint.pipeline.symbols import SymbolTable, build_symbol_table
+from l5x_lint.domain.symbols import SymbolTable, build_symbol_table
 
 CheckFn = Callable[[Routine, SymbolTable, Location], list[Diagnostic]]
 

@@ -2,7 +2,7 @@ import importlib
 
 from l5x_lint.checks.cross import ec018_empty_pou
 from l5x_lint.domain.models import Location, Routine
-from l5x_lint.pipeline.symbols import SymbolTable
+from l5x_lint.domain.symbols import SymbolTable
 
 
 def _reset():

@@ -8,7 +8,7 @@ from l5x_lint.domain.st_models import (
     StTagRef,
 )
 from l5x_lint.domain.models import TagPath, TagPathSegment
-from l5x_lint.pipeline.symbols import SymbolTable
+from l5x_lint.domain.symbols import SymbolTable
 
 
 def test_return_no_following_statements_no_diagnostic():

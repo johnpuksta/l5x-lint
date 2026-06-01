@@ -5,7 +5,7 @@ from returns.maybe import Some
 from l5x_lint.checks.cross import ec017_constant_modification
 from l5x_lint.domain.models import Location, Routine, Tag
 from l5x_lint.domain.st_models import StAssignment, StLiteral, StProgram, StTagRef
-from l5x_lint.pipeline.symbols import SymbolTable
+from l5x_lint.domain.symbols import SymbolTable
 from l5x_lint.domain.models import TagPath, TagPathSegment
 
 

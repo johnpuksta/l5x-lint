@@ -1,7 +1,7 @@
 from returns.maybe import Nothing, Some
 
 from l5x_lint.domain.models import AOI, Controller, DataType, Member, Program, Tag
-from l5x_lint.pipeline.symbols import build_symbol_table
+from l5x_lint.domain.symbols import build_symbol_table
 
 
 def test_empty_controller():

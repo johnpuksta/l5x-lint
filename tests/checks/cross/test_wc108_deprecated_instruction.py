@@ -5,7 +5,7 @@ from l5x_lint.checks.cross.wc108_deprecated_instruction import (
 from l5x_lint.domain.models import Location, Routine
 from l5x_lint.domain.rll_models import Instruction, Operand, ParsedRung
 from l5x_lint.domain.st_models import StCall, StLiteral, StProgram
-from l5x_lint.pipeline.symbols import SymbolTable
+from l5x_lint.domain.symbols import SymbolTable
 
 
 def test_st_deprecated_call_emits_wc108():

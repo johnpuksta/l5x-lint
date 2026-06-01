@@ -19,7 +19,7 @@ from l5x_lint.domain.st_models import (
     StUnaryOp,
     StWhile,
 )
-from l5x_lint.pipeline.symbols import SymbolTable
+from l5x_lint.domain.symbols import SymbolTable
 
 
 class StWalker:

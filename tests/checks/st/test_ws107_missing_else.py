@@ -1,7 +1,7 @@
 from l5x_lint.checks.st.ws107_missing_else import ws107_missing_else
 from l5x_lint.domain.models import Controller, Location, Routine
 from l5x_lint.domain.st_models import StCase, StIf, StProgram
-from l5x_lint.pipeline.symbols import build_symbol_table
+from l5x_lint.domain.symbols import build_symbol_table
 
 
 def _loc(program="", routine=""):

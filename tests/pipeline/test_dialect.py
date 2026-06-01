@@ -1,4 +1,4 @@
-from l5x_lint.pipeline.dialect import (
+from l5x_lint.domain.dialect import (
     DIALECT_PRESETS,
     DialectConfig,
     get_dialect,

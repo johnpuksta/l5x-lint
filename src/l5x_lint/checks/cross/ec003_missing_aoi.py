@@ -3,7 +3,7 @@ from l5x_lint.domain.diagnostics import Diagnostic
 from l5x_lint.domain.models import Location, Routine
 from l5x_lint.domain.st_models import StCall
 from l5x_lint.pipeline.analyze import register
-from l5x_lint.pipeline.symbols import SymbolTable
+from l5x_lint.domain.symbols import SymbolTable
 
 _BUILTIN_OPCODES: frozenset[str] = frozenset(
     {

@@ -1,6 +1,6 @@
 from l5x_lint.checks.cross.ec012_array_init_count import _reset, ec012_array_init_count
 from l5x_lint.domain.models import Controller, Location, Routine, Tag
-from l5x_lint.pipeline.symbols import build_symbol_table
+from l5x_lint.domain.symbols import build_symbol_table
 
 
 def _loc(program="", routine=""):

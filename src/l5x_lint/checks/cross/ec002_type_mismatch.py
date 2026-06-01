@@ -5,7 +5,7 @@ from l5x_lint.checks.opcodes import INSTRUCTION_TYPES
 from l5x_lint.domain.diagnostics import Diagnostic
 from l5x_lint.domain.models import Location, Routine
 from l5x_lint.pipeline.analyze import register
-from l5x_lint.pipeline.symbols import SymbolTable
+from l5x_lint.domain.symbols import SymbolTable
 
 
 @register

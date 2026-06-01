@@ -7,7 +7,7 @@ from l5x_lint.domain.st_models import (
     StProgram,
     StTagRef,
 )
-from l5x_lint.pipeline.symbols import SymbolTable
+from l5x_lint.domain.symbols import SymbolTable
 
 
 def test_for_var_not_assigned_no_diagnostic():

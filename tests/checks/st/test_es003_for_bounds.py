@@ -1,7 +1,7 @@
 from l5x_lint.checks.st.es003_for_bounds import es003_for_bounds
 from l5x_lint.domain.models import Location, Routine, TagPath, TagPathSegment
 from l5x_lint.domain.st_models import StFor, StLiteral, StProgram
-from l5x_lint.pipeline.symbols import SymbolTable
+from l5x_lint.domain.symbols import SymbolTable
 
 
 def _make_routine(stmts) -> Routine:

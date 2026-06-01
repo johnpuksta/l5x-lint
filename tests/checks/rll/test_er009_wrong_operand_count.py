@@ -2,7 +2,7 @@ from l5x_lint.checks.rll.er009_wrong_operand_count import er009_wrong_operand_co
 from l5x_lint.domain.models import Controller, Location, Routine
 from l5x_lint.domain.rll_models import Instruction, Operand, ParsedRung
 from l5x_lint.pipeline import analyze
-from l5x_lint.pipeline.symbols import build_symbol_table
+from l5x_lint.domain.symbols import build_symbol_table
 
 
 def _reset_registry():
