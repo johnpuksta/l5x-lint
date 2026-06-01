@@ -25,7 +25,7 @@ import pytest
 
 from l5x_lint import domain  # noqa: F401 — ensure domain is loaded before checks
 from l5x_lint.infrastructure.adapter import parse_l5x
-from l5x_lint.pipeline.analyze import analyze
+from l5x_lint.application.analyze import analyze
 from returns.result import Success
 
 # Directory containing pre-generated benchmark L5X files

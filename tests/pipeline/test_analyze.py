@@ -2,7 +2,7 @@ from returns.result import Success
 
 from l5x_lint.domain.diagnostics import Diagnostic
 from l5x_lint.domain.models import Controller, Program, Routine, Tag
-from l5x_lint.pipeline import analyze
+from l5x_lint.application import analyze
 
 
 def _reset_registry():

@@ -1,4 +1,4 @@
-from l5x_lint.pipeline.config import LintConfig
+from l5x_lint.application.config import LintConfig
 
 
 def test_default_config():

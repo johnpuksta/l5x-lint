@@ -1,6 +1,6 @@
 from returns.result import Failure
 
-from l5x_lint.pipeline.rung_parser import parse
+from l5x_lint.infrastructure.rung_parser import parse
 
 
 def test_parse_single_instruction():

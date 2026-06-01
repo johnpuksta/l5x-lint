@@ -3,7 +3,7 @@
 from returns.result import Failure, Success
 
 from l5x_lint.infrastructure.adapter import parse_l5x
-from l5x_lint.pipeline.analyze import analyze
+from l5x_lint.application.analyze import analyze
 
 
 def minimal_l5x(controller_content="", software_revision="32.00"):

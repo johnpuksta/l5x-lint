@@ -16,7 +16,7 @@ from l5x_lint.domain.st_models import (
     StUnaryOp,
     StWhile,
 )
-from l5x_lint.pipeline.st_parser import parse
+from l5x_lint.infrastructure.st_parser import parse
 
 
 def test_empty_text():

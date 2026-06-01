@@ -7,8 +7,8 @@ import pytest
 from returns.result import Success
 
 from l5x_lint.infrastructure.adapter import parse_l5x
-from l5x_lint.pipeline import analyze as analyze_module
-from l5x_lint.pipeline.analyze import analyze
+from l5x_lint.application import analyze as analyze_module
+from l5x_lint.application.analyze import analyze
 
 
 def _reset_all_check_state():
@@ -17,15 +17,15 @@ def _reset_all_check_state():
 
     for mod_name in list(sys.modules):
         if (
-            mod_name.startswith("l5x_lint.checks.")
-            and mod_name != "l5x_lint.checks._codes"
+            mod_name.startswith("l5x_lint.domain.checks.")
+            and mod_name != "l5x_lint.domain.checks._codes"
         ):
             del sys.modules[mod_name]
 
     # Re-import all check packages to re-register
-    import l5x_lint.checks.cross  # noqa: F401
-    import l5x_lint.checks.rll  # noqa: F401
-    import l5x_lint.checks.st  # noqa: F401
+    import l5x_lint.domain.checks.cross  # noqa: F401
+    import l5x_lint.domain.checks.rll  # noqa: F401
+    import l5x_lint.domain.checks.st  # noqa: F401
 
 
 INVALID_DIR = Path(__file__).parent / "data" / "invalid"

@@ -187,7 +187,7 @@ presentation/ → application/ → domain/
 
 ---
 
-### Step 2: Move checks into domain/
+### Step 2: Move checks into domain/ ✅ DONE
 
 **Goal:** Checks are business rules — they belong in `domain/checks/`.
 
@@ -216,7 +216,7 @@ presentation/ → application/ → domain/
 
 ---
 
-### Step 3: Create application layer
+### Step 3: Create application layer ✅ DONE
 
 **Goal:** Explicit application layer with use cases and orchestration.
 
@@ -262,7 +262,7 @@ presentation/ → application/ → domain/
 
 ---
 
-### Step 4: Move parsers into infrastructure/ + rename parsers/ to xml_parsers/
+### Step 4: Move parsers into infrastructure/ + rename parsers/ to xml_parsers/ ✅ DONE
 
 **Goal:** Lark-dependent parsers are infrastructure adapters. Rename `parsers/` to `xml_parsers/` to distinguish XML parsers from text parsers.
 

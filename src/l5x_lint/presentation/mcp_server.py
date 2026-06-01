@@ -5,10 +5,10 @@ from pathlib import Path
 
 from returns.result import Failure, Success
 
-import l5x_lint.checks  # noqa: F401 — registers all check functions
+import l5x_lint.domain.checks  # noqa: F401 — registers all check functions
 from l5x_lint.infrastructure.adapter import parse_l5x
-from l5x_lint.pipeline.analyze import analyze
-from l5x_lint.pipeline.config import (
+from l5x_lint.application.analyze import analyze
+from l5x_lint.application.config import (
     LintConfig,
     apply_severity_overrides,
     apply_warning_toggles,

@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 
 from l5x_lint.domain.diagnostics import Diagnostic
-from l5x_lint.pipeline import analyze
+from l5x_lint.application import analyze
 from l5x_lint.presentation.mcp_server import _validate, create_server
 
 TEST_DATA = Path(__file__).parent.parent / "data"
