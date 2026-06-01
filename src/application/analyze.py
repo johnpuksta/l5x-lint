@@ -10,7 +10,6 @@ from domain.diagnostics import AnalysisResult, Diagnostic
 from domain.errors import LintInternalError
 from domain.models import Controller, Location, Routine
 from application.config import LintConfig
-from domain.dialect import resolve_dialect
 from application.filter import filter_diagnostics
 from application.routine_router import route_routines
 from domain.symbols import SymbolTable, build_symbol_table

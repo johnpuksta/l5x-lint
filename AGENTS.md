@@ -2,21 +2,21 @@
 
 ## Test Folder Mirrors Source
 
-Every module in `src/l5x_lint/` has a corresponding test file at the same relative path under `tests/`.
+Every module in `src/` has a corresponding test file at the same relative path under `tests/`.
 
 ```
-src/l5x_lint/domain/models.py             →  tests/domain/test_models.py
-src/l5x_lint/domain/diagnostics.py        →  tests/domain/test_diagnostics.py
-src/l5x_lint/domain/errors.py             →  tests/domain/test_errors.py  (internal railway errors)
-src/l5x_lint/checks/_codes.py             →  tests/checks/cross/test_codes.py  (all diagnostic codes)
-src/l5x_lint/checks/_types.py             →  (tested via checks that use it)
-src/l5x_lint/checks/cross/ec*.py          →  tests/checks/cross/test_ec*.py  (15 cross error checks)
-src/l5x_lint/checks/cross/wc*.py          →  tests/checks/cross/test_wc*.py  (4 cross warning checks)
-src/l5x_lint/checks/cross/ws*.py          →  tests/checks/cross/test_ws*.py  (3 cross warning checks WS)
-src/l5x_lint/checks/rll/er*.py            →  tests/checks/rll/test_er*.py  (3 rll error checks)
-src/l5x_lint/checks/rll/wr*.py            →  tests/checks/rll/test_wr*.py  (6 rll warning checks)
-src/l5x_lint/checks/st/ws*.py             →  tests/checks/st/test_ws*.py  (6 st warning checks)
-src/l5x_lint/checks/st/es*.py             →  tests/checks/st/test_es*.py  (2 st error checks)
+src/domain/models.py             →  tests/domain/test_models.py
+src/domain/diagnostics.py        →  tests/domain/test_diagnostics.py
+src/domain/errors.py             →  tests/domain/test_errors.py  (internal railway errors)
+src/domain/checks/_codes.py      →  tests/domain/checks/cross/test_codes.py  (all diagnostic codes)
+src/domain/checks/_types.py      →  (tested via checks that use it)
+src/domain/checks/cross/ec*.py   →  tests/domain/checks/cross/test_ec*.py  (15 cross error checks)
+src/domain/checks/cross/wc*.py   →  tests/domain/checks/cross/test_wc*.py  (4 cross warning checks)
+src/domain/checks/cross/ws*.py   →  tests/domain/checks/cross/test_ws*.py  (3 cross warning checks WS)
+src/domain/checks/rll/er*.py     →  tests/domain/checks/rll/test_er*.py  (3 rll error checks)
+src/domain/checks/rll/wr*.py     →  tests/domain/checks/rll/test_wr*.py  (6 rll warning checks)
+src/domain/checks/st/ws*.py      →  tests/domain/checks/st/test_ws*.py  (6 st warning checks)
+src/domain/checks/st/es*.py      →  tests/domain/checks/st/test_es*.py  (2 st error checks)
 ```
 
 # Sub-Checker Walkers
@@ -24,8 +24,8 @@ src/l5x_lint/checks/st/es*.py             →  tests/checks/st/test_es*.py  (2 s
 Eliminates duplicated AST traversal (duplicated ~20× for RLL, ~6× for ST):
 
 ```python
-from l5x_lint.checks._walkers import StWalker, RllWalker
-from l5x_lint.pipeline.analyze import register
+from domain.checks._walkers import StWalker, RllWalker
+from application.analyze import register
 
 class MyCheck(StWalker):
     def visit_if(self, node):
@@ -55,18 +55,17 @@ Seven boolean flags on `DialectConfig` control check behavior across presets:
 | `allow_c_style_comments` | True | False | True |
 | `allow_cross_family_widening` | True | False | True |
 
-Checks access the active dialect via a module-level session:
+Checks access the active dialect via `DialectConfig` passed through `LintConfig`:
 
 ```python
-from l5x_lint.pipeline.dialect import get_dialect
+from domain.dialect import resolve_dialect, DIALECT_PRESETS
 
-def visit_something(self, node):
-    if get_dialect().allow_jsr:
-        return  # JSR is normal in Rockwell; skip check
-    ...
+# Resolve a dialect by name
+dialect = resolve_dialect("rockwell")
+
+# Or use presets directly
+dialect = DIALECT_PRESETS["iec-61131-3"]
 ```
-
-The session dialect is set by `analyze()` before running checks (`set_dialect(resolve_dialect(config.dialect))`). Import the module-level `get_dialect()` / `set_dialect()` from `pipeline/dialect.py`.
 
 # Toolchain
 
@@ -100,7 +99,7 @@ from returns.result import Result, Success, Failure
 from returns.maybe import Maybe, Some, Nothing
 from returns.pipeline import flow
 from returns.pointfree import bind
-from l5x_lint.domain.errors import LintInternalError
+from domain.errors import LintInternalError
 
 # 1. Error param MUST be LintInternalError, never raw Exception
 def resolve(name: str) -> Result[Tag, LintInternalError]: ...

@@ -1,4 +1,3 @@
-from domain.checks._codes import WS116
 from domain.checks._walkers import StWalker
 from application.analyze import register
 
