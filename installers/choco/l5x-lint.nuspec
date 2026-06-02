@@ -12,8 +12,10 @@
     <summary>Parses L5X XML and analyzes RLL/ST routine bodies for semantic issues</summary>
     <releaseNotes>https://github.com/JohnPrice/l5x-lint/releases</releaseNotes>
     <tags>plc rockwell logix l5x linter automation</tags>
+    <icon>l5x-lint.png</icon>
   </metadata>
   <files>
     <file src="tools\**" target="tools" />
+    <file src="l5x-lint.png" target="l5x-lint.png" />
   </files>
 </package>

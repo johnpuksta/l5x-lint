@@ -54,7 +54,7 @@ dev = [
 mcp = ["mcp>=1.0"]
 
 [tool.ruff]
-exclude = ["references/", "schemas/"]
+exclude = ["references/", "schemas/", "installers/"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W"]
