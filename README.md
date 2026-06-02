@@ -2,27 +2,45 @@
 
 Semantic linter for Rockwell Logix L5X PLC programs. Parses the controller XML for project structure (tags, data types, routines, AOIs) and builds ASTs from the neutral text embedded within `<CData>` sections for deeper semantic analysis of RLL and ST routine bodies.
 
-## Architecture
+## Install
 
-Clean architecture with four layers under `src/`:
+| Method | Command | Prerequisites |
+|--------|---------|---------------|
+| **pipx** | `pipx install l5x-lint` | [pipx](https://pipx.pypa.io/) or Python 3.12+ |
+| **uvx** (no install) | `uvx l5x-lint validate file.L5X` | [uv](https://docs.astral.sh/uv/) |
+| **uv** (persistent) | `uv tool install l5x-lint` | [uv](https://docs.astral.sh/uv/) |
+| **npx** (no install) | `npx l5x-lint validate file.L5X` | [Node.js](https://nodejs.org/) 18+ |
+| **npm** | `npm install -g l5x-lint` | [Node.js](https://nodejs.org/) 18+ |
+| **Homebrew** | `brew install JohnPrice/tap/l5x-lint` | [Homebrew](https://brew.sh/) |
+| **Chocolatey** | `choco install l5x-lint` | [Chocolatey](https://chocolatey.org/) |
+| **GitHub Releases** | Download from [releases page](https://github.com/JohnPrice/l5x-lint/releases) | None |
 
-| Layer | Directory | Role |
-|-------|-----------|------|
-| **domain** | `src/domain/` | Pure business logic. Check rules, symbol resolution, dialect config, core models. Zero external dependencies. |
-| **application** | `src/application/` | Use cases and orchestration. `analyze()` is the entry point; `config.py` manages rule packs and severity overrides. |
-| **infrastructure** | `src/infrastructure/` | External adapters. L5X XML parsing, Lark-based parsers for RLL neutral text and ST, XSD validation. |
-| **presentation** | `src/presentation/` | CLI and MCP server glue. `cli.py` defines the `validate` subcommand. |
+```bash
+# Quick start — no permanent install (cached on first run):
+uvx l5x-lint validate my_project.L5X --json
 
-Cross-layer flow: `CLI → parse_l5x (infra) → analyze (application) → run_checks (domain) → diagnostics → CLI`
+# Or with npx (downloads standalone binary on first run):
+npx l5x-lint validate my_project.L5X --json
+```
 
-## Supported Neutral Text Types
+## CLI Usage
 
-Routine bodies are extracted from XML `<CData>` sections and parsed into ASTs:
+```
+l5x-lint validate <file> [options]
+```
 
-| Type | Content | Parser |
-|------|---------|--------|
-| **RLL** | Rung-based ladder logic with instructions, operands, and branching | Lark grammar → AST of rungs, branches, instructions, and operands |
-| **ST** | Structured Text — IEC 61131-3 statements (IF, CASE, FOR, WHILE, assignments, etc.) | Lark grammar → AST of expressions, statements, and control flow |
+| Option | Values | What it does | Example |
+|--------|--------|--------------|---------|
+| `--json` | — | Emit machine-readable output as a JSON object with `passed`, `error_count`, `warning_count`, and `diagnostics` array | `l5x-lint validate bench.L5X --json` |
+| `--rule-pack` | `none`, `safety`, `rockwell`, `iec-61131-3` | Apply a preset group of rule configurations — `none` disables all rule packs, `safety` enables safety-critical checks, `rockwell` applies Rockwell-specific best practices, `iec-61131-3` applies IEC standard rules | `l5x-lint validate bench.L5X --rule-pack safety` — promotes float-equality and unreachable-rung warnings to errors |
+| `--dialect` | `rockwell`, `iec-61131-3`, `codesys` | Select the PLC target dialect so checks can adapt their behavior per-platform (e.g. differences in data type sizes, supported instructions) | `l5x-lint validate bench.L5X --dialect iec-61131-3` — flags case-insensitive keywords, JSR, and positional args as violations |
+| `--enable-warning` | `numeric`, `complexity` | Activate a warning category that is suppressed by default — `numeric` enables numeric-style checks, `complexity` enables cyclomatic complexity checks | `l5x-lint validate bench.L5X --enable-warning complexity` — reports WC103 for routines exceeding the complexity threshold |
+| `--disable-warning` | `unused`, `unreachable`, `output`, `timer`, `shadowed`, `numeric`, `complexity`, `conversion`, `missing-else` | Suppress an entire warning category — useful to silence noisy rule groups without individual severity overrides | `l5x-lint validate bench.L5X --disable-warning unused` — suppresses WC001 (unused tag) and WC106 (unused POU) |
+| `--severity-override` | `<code>=<severity>` | Override the severity of a specific diagnostic code — severity can be `error`, `warning`, `info`, or `off` | `l5x-lint validate bench.L5X --severity-override WR004=off --severity-override WS101=error` — silences timer-PRE checks, promotes float-equality to error |
+
+Exit code: 0 if no errors, 1 if errors or parse failure.
+
+The CLI parses the L5X file via `parse_l5x()` (infrastructure), then runs `analyze()` (application) which invokes all registered checks (domain). Diagnostics are printed with location context showing `program/routine:rung (XML line)`.
 
 ## Error Codes
 
@@ -123,24 +141,27 @@ Codes follow a prefix convention indicating severity and origin:
 | WS117 | OR/XOR expression may exceed Logix operand limit |
 | WS118 | CASE value is not a compile-time constant |
 
-## CLI Usage
+## Architecture
 
-```
-l5x-lint validate <file> [options]
-```
+Clean architecture with four layers under `src/`:
 
-| Option | Values | What it does | Example |
-|--------|--------|--------------|---------|
-| `--json` | — | Emit machine-readable output as a JSON object with `passed`, `error_count`, `warning_count`, and `diagnostics` array | `l5x-lint validate bench.L5X --json` |
-| `--rule-pack` | `none`, `safety`, `rockwell`, `iec-61131-3` | Apply a preset group of rule configurations — `none` disables all rule packs, `safety` enables safety-critical checks, `rockwell` applies Rockwell-specific best practices, `iec-61131-3` applies IEC standard rules | `l5x-lint validate bench.L5X --rule-pack safety` — promotes float-equality and unreachable-rung warnings to errors |
-| `--dialect` | `rockwell`, `iec-61131-3`, `codesys` | Select the PLC target dialect so checks can adapt their behavior per-platform (e.g. differences in data type sizes, supported instructions) | `l5x-lint validate bench.L5X --dialect iec-61131-3` — flags case-insensitive keywords, JSR, and positional args as violations |
-| `--enable-warning` | `numeric`, `complexity` | Activate a warning category that is suppressed by default — `numeric` enables numeric-style checks, `complexity` enables cyclomatic complexity checks | `l5x-lint validate bench.L5X --enable-warning complexity` — reports WC103 for routines exceeding the complexity threshold |
-| `--disable-warning` | `unused`, `unreachable`, `output`, `timer`, `shadowed`, `numeric`, `complexity`, `conversion`, `missing-else` | Suppress an entire warning category — useful to silence noisy rule groups without individual severity overrides | `l5x-lint validate bench.L5X --disable-warning unused` — suppresses WC001 (unused tag) and WC106 (unused POU) |
-| `--severity-override` | `<code>=<severity>` | Override the severity of a specific diagnostic code — severity can be `error`, `warning`, `info`, or `off` | `l5x-lint validate bench.L5X --severity-override WR004=off --severity-override WS101=error` — silences timer-PRE checks, promotes float-equality to error |
+| Layer | Directory | Role |
+|-------|-----------|------|
+| **domain** | `src/domain/` | Pure business logic. Check rules, symbol resolution, dialect config, core models. Zero external dependencies. |
+| **application** | `src/application/` | Use cases and orchestration. `analyze()` is the entry point; `config.py` manages rule packs and severity overrides. |
+| **infrastructure** | `src/infrastructure/` | External adapters. L5X XML parsing, Lark-based parsers for RLL neutral text and ST, XSD validation. |
+| **presentation** | `src/presentation/` | CLI and MCP server glue. `cli.py` defines the `validate` subcommand. |
 
-Exit code: 0 if no errors, 1 if errors or parse failure.
+Cross-layer flow: `CLI → parse_l5x (infra) → analyze (application) → run_checks (domain) → diagnostics → CLI`
 
-The CLI parses the L5X file via `parse_l5x()` (infrastructure), then runs `analyze()` (application) which invokes all registered checks (domain). Diagnostics are printed with location context showing `program/routine:rung (XML line)`.
+### Supported Neutral Text Types
+
+Routine bodies are extracted from XML `<CData>` sections and parsed into ASTs:
+
+| Type | Content | Parser |
+|------|---------|--------|
+| **RLL** | Rung-based ladder logic with instructions, operands, and branching | Lark grammar → AST of rungs, branches, instructions, and operands |
+| **ST** | Structured Text — IEC 61131-3 statements (IF, CASE, FOR, WHILE, assignments, etc.) | Lark grammar → AST of expressions, statements, and control flow |
 
 ## Tests
 
@@ -161,3 +182,45 @@ src/presentation/cli.py
 ```
 
 Every module under `src/` has a corresponding `test_` file at the same relative path under `tests/unit/`. Benchmarks live in `tests/benchmarks/`. Run with `uv run pytest tests/unit tests/benchmarks -v`.
+
+## Development
+
+### Versioning
+
+Versions are maintained in a single [`VERSION`](VERSION) file at the project root. `pyproject.toml` and all packaging files under [`installers/`](installers/) get their version stamped by CI from this file at release time.
+
+To cut a release:
+
+```bash
+# 1. Update VERSION to the new number (e.g. 0.2.0)
+# 2. Tag and push — the release workflow handles the rest:
+git tag v$(cat VERSION)
+git push origin v$(cat VERSION)
+```
+
+### CD Pipeline
+
+The release workflow (`.github/workflows/release.yml`) triggers on `git push --tags` matching `v*` and publishes to every channel:
+
+```
+git tag v0.2.0  &&  git push origin v0.2.0
+       │
+       ▼
+  ┌─ version ─── reads VERSION, validates against tag
+  ├─ pypi ─────── uv build → publish to PyPI
+  ├─ pyinstaller ─ matrix: linux / macos-x64 / macos-arm64 / windows
+  ├─ github-release ─ uploads executables + sha256 checksums
+  ├─ npm ───────── stamps version → npm publish
+  ├─ homebrew ──── updates homebrew-tap formula
+  └─ chocolatey ── stamps version → choco push
+```
+
+### Installers
+
+Platform-specific installer source lives under [`installers/`](installers/):
+
+| Directory | Channel |
+|-----------|---------|
+| `installers/npm/` | npm wrapper (thin JS shim that downloads the PyInstaller binary at install time) |
+| `installers/choco/` | Chocolatey package for Windows |
+

@@ -1,0 +1,32 @@
+{
+  "name": "l5x-lint",
+  "version": "0.0.0",
+  "description": "Semantic linter for Rockwell Logix L5X PLC programs",
+  "bin": {
+    "l5x-lint": "cli.js"
+  },
+  "scripts": {
+    "postinstall": "node install.js"
+  },
+  "files": [
+    "cli.js",
+    "install.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JohnPrice/l5x-lint.git"
+  },
+  "keywords": [
+    "l5x",
+    "plc",
+    "linter",
+    "rockwell",
+    "logix"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JohnPrice/l5x-lint/issues"
+  },
+  "homepage": "https://github.com/JohnPrice/l5x-lint#readme"
+}

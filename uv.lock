@@ -360,7 +360,7 @@ wheels = [
 [[package]]
 name = "l5x-lint"
 version = "0.1.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "lark" },
     { name = "mcp" },

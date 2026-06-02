@@ -1,0 +1,28 @@
+name: Publish to PyPI
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+
+jobs:
+  pypi:
+    name: Build and publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+
+      - name: Stamp version
+        run: |
+          sed -i "s/^version = \".*\"/version = \"${{ inputs.version }}\"  # stamped by CI/" pyproject.toml
+
+      - name: Build distribution
+        run: uv build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          skip-existing: true

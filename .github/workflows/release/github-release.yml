@@ -1,0 +1,36 @@
+name: Create GitHub Release
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+
+jobs:
+  github-release:
+    name: Upload assets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ inputs.version }}
+          name: v${{ inputs.version }}
+          body: |
+            ## l5x-lint ${{ inputs.version }}
+
+            See install options at https://github.com/${{ github.repository }}#install
+          generate_release_notes: true
+          draft: false
+          prerelease: ${{ contains(inputs.version, '-') }}
+          files: release-assets/*
+          fail_on_unmatched_files: false

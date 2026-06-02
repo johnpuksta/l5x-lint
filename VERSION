@@ -1,0 +1,6 @@
+0.0.0
+# Single source of truth for release version.
+# All packaging files (pyproject.toml, installers/npm/package.json,
+# installers/choco/l5x-lint.nuspec, tools/chocolateyInstall.ps1)
+# are stamped from this file by CI at release time.
+# Update this file, then: git tag v$(cat VERSION) && git push origin v$(cat VERSION)

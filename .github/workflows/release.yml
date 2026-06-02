@@ -1,0 +1,81 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+jobs:
+  # ── Gate ─────────────────────────────────────
+  ci:
+    uses: ./.github/workflows/ci.yml
+
+  version:
+    name: Resolve version
+    needs: ci
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get-version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: get-version
+        run: |
+          FILE_VER=$(cat VERSION | tr -d '[:space:]')
+          TAG_VER="${GITHUB_REF_NAME#v}"
+          if [ "${FILE_VER}" != "${TAG_VER}" ]; then
+            echo "::warning::VERSION file (${FILE_VER}) differs from git tag (${TAG_VER}) — using tag"
+          fi
+          echo "version=${TAG_VER}" >> $GITHUB_OUTPUT
+
+  # ── PyPI ──────────────────────────────────────
+  pypi:
+    needs: version
+    uses: ./.github/workflows/release/pypi.yml
+    with:
+      version: ${{ needs.version.outputs.version }}
+
+  # ── Standalone executables ────────────────────
+  pyinstaller:
+    needs: version
+    uses: ./.github/workflows/release/pyinstaller.yml
+    with:
+      version: ${{ needs.version.outputs.version }}
+
+  # ── GitHub Release (depends on binaries) ──────
+  github-release:
+    needs: [version, pyinstaller]
+    uses: ./.github/workflows/release/github-release.yml
+    with:
+      version: ${{ needs.version.outputs.version }}
+
+  # ── npm ───────────────────────────────────────
+  npm:
+    needs: [version, pyinstaller]
+    uses: ./.github/workflows/release/npm.yml
+    with:
+      version: ${{ needs.version.outputs.version }}
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  # ── Homebrew ──────────────────────────────────
+  homebrew:
+    needs: [version, pyinstaller]
+    uses: ./.github/workflows/release/homebrew.yml
+    with:
+      version: ${{ needs.version.outputs.version }}
+    secrets:
+      HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+
+  # ── Chocolatey (depends on Windows binary) ────
+  chocolatey:
+    needs: [version, pyinstaller]
+    uses: ./.github/workflows/release/chocolatey.yml
+    with:
+      version: ${{ needs.version.outputs.version }}
+    secrets:
+      CHOCOLATEY_API_KEY: ${{ secrets.CHOCOLATEY_API_KEY }}

@@ -1,0 +1,93 @@
+name: Build PyInstaller executables
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+
+jobs:
+  pyinstaller:
+    name: Build executable (${{ matrix.label }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            label: linux-x86_64
+            asset_name: l5x-lint-linux-x86_64
+            asset_ext: ""
+          - os: macos-13
+            label: macos-x86_64
+            asset_name: l5x-lint-macos-x86_64
+            asset_ext: ""
+          - os: macos-latest
+            label: macos-arm64
+            asset_name: l5x-lint-macos-arm64
+            asset_ext: ""
+          - os: windows-latest
+            label: windows-x86_64
+            asset_name: l5x-lint-windows-x86_64.exe
+            asset_ext: ".exe"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+
+      - name: Set up Python 3.12
+        run: uv python install 3.12
+
+      - name: Sync dependencies
+        run: uv sync --locked --all-extras --dev
+
+      - name: Install PyInstaller
+        run: uv pip install pyinstaller
+
+      - name: Build executable
+        run: |
+          uv run pyinstaller ^
+            --onefile ^
+            --name l5x-lint${{ matrix.asset_ext }} ^
+            --distpath dist ^
+            --hidden-import domain.checks ^
+            --hidden-import domain.checks.cross ^
+            --hidden-import domain.checks.rll ^
+            --hidden-import domain.checks.st ^
+            --add-data "src/domain/checks;domain/checks" ^
+            --add-data "src/infrastructure;infrastructure" ^
+            src/__main__.py
+        shell: pwsh
+
+      - name: Rename binary
+        shell: bash
+        run: |
+          mv dist/l5x-lint${{ matrix.asset_ext }} dist/${{ matrix.asset_name }}
+          chmod +x dist/${{ matrix.asset_name }}
+
+      - name: Verify executable
+        run: ./dist/${{ matrix.asset_name }} --help
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.asset_name }}
+          path: dist/${{ matrix.asset_name }}
+
+      - name: Generate checksum
+        shell: bash
+        run: |
+          cd dist
+          sha256sum ${{ matrix.asset_name }} > ${{ matrix.asset_name }}.sha256
+
+      - name: Upload checksum
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.asset_name }}.sha256
+          path: dist/${{ matrix.asset_name }}.sha256
