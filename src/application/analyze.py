@@ -1,27 +1,20 @@
 from __future__ import annotations
 
-from collections.abc import Callable
-
 from returns.pipeline import flow
 from returns.pointfree import bind
 from returns.result import Result, Success
 
+from application._registry import (  # noqa: F401 - re-exported for tests
+    _registry,
+    register,
+)
 from application.config import LintConfig
 from application.filter import filter_diagnostics
 from application.routine_router import route_routines
 from domain.diagnostics import AnalysisResult, Diagnostic
 from domain.errors import LintInternalError
-from domain.models import Controller, Location, Routine
-from domain.symbols import SymbolTable, build_symbol_table
-
-CheckFn = Callable[[Routine, SymbolTable, Location], list[Diagnostic]]
-
-_registry: list[CheckFn] = []
-
-
-def register(check: CheckFn) -> CheckFn:
-    _registry.append(check)
-    return check
+from domain.models import Controller, Location
+from domain.symbols import build_symbol_table
 
 
 def analyze(

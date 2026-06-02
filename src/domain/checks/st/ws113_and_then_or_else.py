@@ -1,4 +1,4 @@
-from application.analyze import register
+from application._registry import register
 from domain.checks._codes import WS113
 from domain.checks._types import expression_type
 from domain.checks._walkers import StWalker

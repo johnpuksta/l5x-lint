@@ -1,4 +1,4 @@
-from application.analyze import register
+from application._registry import register
 from domain.checks._codes import WC108
 from domain.checks._walkers import RllWalker, StWalker
 from domain.st_models import StCall

@@ -1,6 +1,6 @@
 import re
 
-from application.analyze import register
+from application._registry import register
 from domain.checks._codes import WS102
 from domain.diagnostics import Diagnostic
 from domain.models import Location, Routine

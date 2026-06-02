@@ -2,7 +2,7 @@ import re
 
 from returns.maybe import Nothing
 
-from application.analyze import register
+from application._registry import register
 from domain.checks._codes import EC001
 from domain.diagnostics import Diagnostic
 from domain.models import Location, Routine

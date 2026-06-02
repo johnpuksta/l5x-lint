@@ -1,4 +1,4 @@
-from application.analyze import register
+from application._registry import register
 from domain.checks._codes import WC001
 from domain.checks.tag_refs import collect_all_tag_refs
 from domain.diagnostics import Diagnostic

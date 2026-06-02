@@ -1,6 +1,6 @@
 import re
 
-from application.analyze import register
+from application._registry import register
 from domain.checks._codes import WR008
 from domain.checks._walkers import RllWalker
 

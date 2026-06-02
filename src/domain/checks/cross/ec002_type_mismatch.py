@@ -1,6 +1,6 @@
 from returns.maybe import Some
 
-from application.analyze import register
+from application._registry import register
 from domain.checks._codes import EC002
 from domain.checks.opcodes import INSTRUCTION_TYPES
 from domain.diagnostics import Diagnostic

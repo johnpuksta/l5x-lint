@@ -2,7 +2,7 @@ import re
 
 from returns.maybe import Some
 
-from application.analyze import register
+from application._registry import register
 from domain.checks._codes import EC005
 from domain.checks.tag_refs import extract_base
 from domain.diagnostics import Diagnostic
