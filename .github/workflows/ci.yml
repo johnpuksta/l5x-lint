@@ -21,13 +21,24 @@ jobs:
         run: uv run ruff check .
         shell: bash
 
-  test:
+  unit-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - name: Run tests
+      - name: Run unit tests
         env:
           PYTHONPATH: src
-        run: uv run pytest tests/ -v
+        run: uv run pytest tests/unit -v
+        shell: bash
+
+  benchmark-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Run benchmark tests
+        env:
+          PYTHONPATH: src
+        run: uv run pytest tests/benchmarks -v -m benchmark
         shell: bash

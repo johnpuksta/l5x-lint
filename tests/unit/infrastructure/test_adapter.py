@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import pytest
-
 from helpers import l5x_with_rll, minimal_l5x, parse_and_analyze
 from returns.result import Failure, Success
 

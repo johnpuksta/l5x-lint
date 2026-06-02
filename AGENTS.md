@@ -20,14 +20,14 @@ src/
 
 ## Test Folder Mirrors Source
 
-Every module in `src/` has a corresponding test file at the same relative path under `tests/`.
+Every module in `src/` has a corresponding test file at the same relative path under `tests/unit/`.
 
 ## Adding a New Check
 
 1. Create `src/domain/checks/<category>/<code>_<name>.py`
 2. Use `StWalker` or `RllWalker` from `domain/checks/_walkers.py`
 3. Call `register()` from `application.analyze`
-4. Add test in `tests/domain/checks/<category>/test_<code>_<name>.py`
+4. Add test in `tests/unit/domain/checks/<category>/test_<code>_<name>.py`
 5. Import in `src/domain/checks/<category>/__init__.py`
 
 # Toolchain
@@ -39,8 +39,8 @@ uv sync                           # Install all deps from pyproject.toml
 uv add <package>                  # Add runtime dependency
 uv add --dev <package>            # Add dev dependency
 uv run python -m l5x_lint ...    # Run module in env
-uv run pytest tests/ -v          # Run tests
-uv run pytest tests/ --cov       # Run with coverage
+uv run pytest tests/unit tests/benchmarks -v          # Run tests
+uv run pytest tests/unit tests/benchmarks --cov       # Run with coverage
 uvx ruff check .                  # Lint with ruff (ephemeral)
 ```
 

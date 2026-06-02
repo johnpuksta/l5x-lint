@@ -1,6 +1,6 @@
 """Benchmark tests: verify linear scaling of parse + analyze pipeline.
 
-Loads pre-generated L5X files from tests/data/benchmarks/ and asserts that
+Loads pre-generated L5X files from tests/benchmarks/data/benchmarks/ and asserts that
 the analysis time stays within a reasonable multiple of the measured baseline.
 These tests act as regression guards — if scaling breaks, these will catch it.
 
@@ -12,7 +12,7 @@ The benchmark L5X files contain realistic mixed content:
 - RLL rungs with XIC/XIO/OTE/LES/GRT/EQU/MOV/ADD/TON/CTU/COP
 - ST statements with assignments, IF/THEN, OR expressions
 
-Generate files: python tests/data/benchmarks/generate.py
+Generate files: python tests/benchmarks/data/benchmarks/generate.py
 Run with: pytest tests/benchmarks/ -v
 Run only benchmarks: pytest tests/benchmarks/ -v -m benchmark
 Skip benchmarks: pytest -m 'not benchmark'
@@ -29,7 +29,7 @@ from application.analyze import analyze
 from infrastructure.adapter import parse_l5x
 
 # Directory containing pre-generated benchmark L5X files
-BENCH_DIR = Path(__file__).parent.parent / "data" / "benchmarks"
+BENCH_DIR = Path(__file__).parent / "data" / "benchmarks"
 
 # Benchmark file configs: (filename, label, baseline_seconds)
 # Baselines measured on developer machine; tests assert time < baseline * TIME_MULTIPLIER

@@ -36,7 +36,7 @@ select = ["E", "F", "I", "N", "W"]
 "src/infrastructure/st_parser.py" = ["E501"]
 "src/infrastructure/rung_parser.py" = ["E501"]
 "tests/**/*.py" = ["E501"]
-"tests/data/benchmarks/generate.py" = ["E501"]
+"tests/benchmarks/data/benchmarks/generate.py" = ["E501"]
 
 [tool.ruff.format]
 line-ending = "auto"
@@ -44,7 +44,7 @@ line-ending = "auto"
 [tool.uv]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests/unit", "tests/benchmarks"]
 markers = [
     "benchmark: scaling/performance benchmark tests (deselect with '-m not benchmark')",
 ]
