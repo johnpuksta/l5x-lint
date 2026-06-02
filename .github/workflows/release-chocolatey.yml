@@ -15,10 +15,10 @@ jobs:
     name: Pack and push
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Download Windows executable
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: l5x-lint-windows-x86_64.exe
           path: installers/choco/tools

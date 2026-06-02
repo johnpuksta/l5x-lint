@@ -15,7 +15,7 @@ jobs:
     name: Update tap formula
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Compute SHA256 of source tarball
         id: sha
@@ -26,7 +26,7 @@ jobs:
           echo "sha256=${SHA}" >> $GITHUB_OUTPUT
 
       - name: Checkout homebrew tap repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: ${{ github.repository_owner }}/homebrew-tap
           token: ${{ secrets.HOMEBREW_TAP_TOKEN }}

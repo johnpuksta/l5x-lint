@@ -22,7 +22,7 @@ jobs:
     outputs:
       version: ${{ steps.get-version.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - id: get-version
         run: |
           FILE_VER=$(cat VERSION | tr -d '[:space:]')
@@ -35,28 +35,28 @@ jobs:
   # ── PyPI ──────────────────────────────────────
   pypi:
     needs: version
-    uses: ./.github/workflows/release/pypi.yml
+    uses: ./.github/workflows/release-pypi.yml
     with:
       version: ${{ needs.version.outputs.version }}
 
   # ── Standalone executables ────────────────────
   pyinstaller:
     needs: version
-    uses: ./.github/workflows/release/pyinstaller.yml
+    uses: ./.github/workflows/release-pyinstaller.yml
     with:
       version: ${{ needs.version.outputs.version }}
 
   # ── GitHub Release (depends on binaries) ──────
   github-release:
     needs: [version, pyinstaller]
-    uses: ./.github/workflows/release/github-release.yml
+    uses: ./.github/workflows/release-github-release.yml
     with:
       version: ${{ needs.version.outputs.version }}
 
   # ── npm ───────────────────────────────────────
   npm:
     needs: [version, pyinstaller]
-    uses: ./.github/workflows/release/npm.yml
+    uses: ./.github/workflows/release-npm.yml
     with:
       version: ${{ needs.version.outputs.version }}
     secrets:
@@ -65,7 +65,7 @@ jobs:
   # ── Homebrew ──────────────────────────────────
   homebrew:
     needs: [version, pyinstaller]
-    uses: ./.github/workflows/release/homebrew.yml
+    uses: ./.github/workflows/release-homebrew.yml
     with:
       version: ${{ needs.version.outputs.version }}
     secrets:
@@ -74,7 +74,7 @@ jobs:
   # ── Chocolatey (depends on Windows binary) ────
   chocolatey:
     needs: [version, pyinstaller]
-    uses: ./.github/workflows/release/chocolatey.yml
+    uses: ./.github/workflows/release-chocolatey.yml
     with:
       version: ${{ needs.version.outputs.version }}
     secrets:
