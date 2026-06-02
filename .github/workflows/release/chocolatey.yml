@@ -23,24 +23,10 @@ jobs:
           name: l5x-lint-windows-x86_64.exe
           path: installers/choco/tools
 
-      - name: Compute checksum
-        id: checksum
-        shell: pwsh
-        run: |
-          $hash = Get-FileHash -Path "installers/choco/tools/l5x-lint-windows-x86_64.exe" -Algorithm SHA256
-          $sha = $hash.Hash.ToLower()
-          echo "sha256=$sha" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
-
-      - name: Stamp version and checksum
+      - name: Stamp version
         shell: pwsh
         run: |
           $VERSION = "${{ inputs.version }}"
-          $SHA256 = "${{ steps.checksum.outputs.sha256 }}"
-
-          $content = Get-Content "installers/choco/tools/chocolateyInstall.ps1" -Raw
-          $content = $content -replace '\$version = ".*"', "`$version = `"${VERSION}`""
-          $content = $content -replace '\$checksum = ".*"', "`$checksum = `"${SHA256}`""
-          Set-Content -Path "installers/choco/tools/chocolateyInstall.ps1" -Value $content -Encoding utf8
 
           $nuspec = Get-Content "installers/choco/l5x-lint.nuspec" -Raw
           $nuspec = $nuspec -replace '<version>.*</version>', "<version>${VERSION}</version>"

@@ -1,0 +1,24 @@
+VERIFICATION
+
+Verification is intended to assist the Chocolatey moderators and community in
+verifying that this package's contents are trustworthy.
+
+The embedded binary is the official release build from:
+  https://github.com/JohnPrice/l5x-lint/releases
+
+To verify the binary:
+
+1. Download the binary from the GitHub release for the same version:
+   https://github.com/JohnPrice/l5x-lint/releases
+
+2. Compute the SHA256 checksum:
+   - Windows (PowerShell): Get-FileHash l5x-lint-windows-x86_64.exe -Algorithm SHA256
+   - Linux/macOS: sha256sum l5x-lint-linux-x86_64
+
+3. Compare the checksum with the value in the nuspec or release notes.
+
+The package source code is available at:
+  https://github.com/JohnPrice/l5x-lint
+
+License: MIT
+  See LICENSE.txt in this package or https://github.com/JohnPrice/l5x-lint/blob/main/LICENSE

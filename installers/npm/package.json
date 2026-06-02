@@ -23,8 +23,11 @@
     "rockwell",
     "logix"
   ],
-  "author": "",
+  "author": "John Puksta",
   "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
   "bugs": {
     "url": "https://github.com/JohnPrice/l5x-lint/issues"
   },

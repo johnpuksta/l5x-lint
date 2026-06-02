@@ -4,18 +4,22 @@
     <id>l5x-lint</id>
     <version>0.0.0</version> <!-- stamped by CI from VERSION at release -->
     <title>l5x-lint</title>
-    <authors>JohnPrice</authors>
+    <authors>John Puksta</authors>
     <projectUrl>https://github.com/JohnPrice/l5x-lint</projectUrl>
-    <licenseUrl>https://github.com/JohnPrice/l5x-lint/blob/main/LICENSE</licenseUrl>
+    <projectSourceUrl>https://github.com/JohnPrice/l5x-lint</projectSourceUrl>
+    <docsUrl>https://github.com/JohnPrice/l5x-lint#readme</docsUrl>
+    <packageSourceUrl>https://github.com/JohnPrice/l5x-lint/tree/main/installers/choco</packageSourceUrl>
+    <license type="expression">MIT</license>
+    <icon>l5x-lint.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Semantic linter for Rockwell Logix L5X PLC programs</description>
+    <copyright>Copyright (c) 2026 John Puksta</copyright>
+    <description>Semantic linter for Rockwell Logix L5X PLC programs. Parses the controller XML for project structure (tags, data types, routines, AOIs) and builds ASTs from the neutral text embedded within CDATA sections for deeper semantic analysis of RLL and ST routine bodies.</description>
     <summary>Parses L5X XML and analyzes RLL/ST routine bodies for semantic issues</summary>
     <releaseNotes>https://github.com/JohnPrice/l5x-lint/releases</releaseNotes>
     <tags>plc rockwell logix l5x linter automation</tags>
-    <icon>l5x-lint.png</icon>
   </metadata>
   <files>
+    <file src="l5x-lint.png" target="" />
     <file src="tools\**" target="tools" />
-    <file src="l5x-lint.png" target="l5x-lint.png" />
   </files>
 </package>
