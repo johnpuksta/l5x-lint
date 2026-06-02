@@ -1,3 +1,4 @@
+from application import analyze
 from domain.checks.cross.ec005_invalid_member import ec005_invalid_member
 from domain.models import (
     Controller,
@@ -8,7 +9,6 @@ from domain.models import (
     Tag,
 )
 from domain.rll_models import Instruction, Operand, ParsedRung
-from application import analyze
 from domain.symbols import build_symbol_table
 
 

@@ -1,6 +1,6 @@
+from application.analyze import register
 from domain.checks._codes import WS112
 from domain.checks._walkers import StWalker
-from application.analyze import register
 
 
 class Ws112Check(StWalker):

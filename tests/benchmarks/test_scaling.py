@@ -22,11 +22,11 @@ import time
 from pathlib import Path
 
 import pytest
+from returns.result import Success
 
 import domain  # noqa: F401 — ensure domain is loaded before checks
-from infrastructure.adapter import parse_l5x
 from application.analyze import analyze
-from returns.result import Success
+from infrastructure.adapter import parse_l5x
 
 # Directory containing pre-generated benchmark L5X files
 BENCH_DIR = Path(__file__).parent.parent / "data" / "benchmarks"
@@ -48,7 +48,6 @@ def _analyze_file(path: Path):
     """Parse and analyze an L5X file, returning (total_seconds, diagnostics_count)."""
     t0 = time.perf_counter()
     result = parse_l5x(path)
-    t1 = time.perf_counter()
 
     assert isinstance(result, Success), f"Parse failed: {result.failure()}"
 
@@ -67,7 +66,7 @@ def _file_info(path: Path) -> str:
     """Return a human-readable summary of a benchmark L5X file."""
     result = parse_l5x(path)
     if not isinstance(result, Success):
-        return f"(parse error)"
+        return "(parse error)"
     ctrl = result.unwrap().controller
     n_tags = len(ctrl.tags)
     n_dt = len(ctrl.data_types)

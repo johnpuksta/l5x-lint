@@ -9,8 +9,8 @@ def _loc(program="", routine=""):
 
 
 def test_if_with_else_no_diagnostic():
-    from domain.st_models import StAssignment
     from domain.models import TagPath, TagPathSegment
+    from domain.st_models import StAssignment
 
     prog = StProgram(
         statements=[
@@ -63,8 +63,8 @@ def test_case_without_else_emits_ws107():
 
 
 def test_case_with_else_no_diagnostic():
-    from domain.st_models import StAssignment
     from domain.models import TagPath, TagPathSegment
+    from domain.st_models import StAssignment
 
     prog = StProgram(
         statements=[

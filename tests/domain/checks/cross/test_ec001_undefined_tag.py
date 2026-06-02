@@ -1,3 +1,4 @@
+from application import analyze
 from domain.checks._codes import EC001
 from domain.checks.cross.ec001_undefined_tag import (
     _check_rll,
@@ -27,7 +28,6 @@ from domain.st_models import (
     StTagRef,
     StWhile,
 )
-from application import analyze
 from domain.symbols import build_symbol_table
 
 

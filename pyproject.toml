@@ -34,6 +34,9 @@ select = ["E", "F", "I", "N", "W"]
 
 [tool.ruff.lint.per-file-ignores]
 "src/infrastructure/st_parser.py" = ["E501"]
+"src/infrastructure/rung_parser.py" = ["E501"]
+"tests/**/*.py" = ["E501"]
+"tests/data/benchmarks/generate.py" = ["E501"]
 
 [tool.ruff.format]
 line-ending = "auto"

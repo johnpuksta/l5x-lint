@@ -1,7 +1,7 @@
+from application.analyze import register
 from domain.checks._codes import WS114
 from domain.checks._walkers import StWalker
 from domain.st_models import StBinaryOp, StLiteral, StTagRef
-from application.analyze import register
 
 
 def _type_label(expr) -> str | None:

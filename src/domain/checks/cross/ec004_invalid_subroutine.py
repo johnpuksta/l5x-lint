@@ -1,8 +1,8 @@
+from application.analyze import register
 from domain.checks._codes import EC004
 from domain.diagnostics import Diagnostic
 from domain.models import Location, Routine
 from domain.st_models import StJsr
-from application.analyze import register
 from domain.symbols import SymbolTable
 
 

@@ -1,7 +1,7 @@
+from application.analyze import register
 from domain.checks._codes import WS108
 from domain.checks._walkers import StWalker
 from domain.st_models import StCall
-from application.analyze import register
 
 _NO_EFFECT_CALLS: frozenset[str] = frozenset(
     {

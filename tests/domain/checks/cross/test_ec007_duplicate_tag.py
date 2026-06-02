@@ -1,6 +1,6 @@
+from application import analyze
 from domain.checks.cross.ec007_duplicate_tag import ec007_duplicate_tag
 from domain.models import Controller, Location, Routine, Tag
-from application import analyze
 from domain.symbols import build_symbol_table
 
 

@@ -1,10 +1,10 @@
 import re
 
+from application.analyze import register
 from domain.checks._codes import WS101
 from domain.diagnostics import Diagnostic
 from domain.models import Location, Routine
 from domain.st_models import StBinaryOp, StLiteral, StProgram
-from application.analyze import register
 from domain.symbols import SymbolTable
 
 

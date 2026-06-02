@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 
 from returns.maybe import Maybe, Nothing, Some
 
-from domain.models import AOI, Controller, DataType, Member, Tag
+from domain.models import AOI, Controller, DataType, Tag
 
 BUILTIN_TYPES: set[str] = {
     "BOOL",

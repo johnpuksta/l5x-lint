@@ -1,7 +1,7 @@
+from application.analyze import register
 from domain.checks._codes import ES002
 from domain.checks._walkers import StWalker
 from domain.st_models import StCase, StLiteral
-from application.analyze import register
 
 
 def _value_str(expr) -> str | None:

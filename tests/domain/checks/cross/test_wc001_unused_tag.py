@@ -1,7 +1,7 @@
+from application import analyze
 from domain.checks.cross.wc001_unused_tag import _reset, wc001_unused_tag
 from domain.models import Controller, Location, Program, Routine, Tag
 from domain.rll_models import Instruction, Operand, ParsedRung
-from application import analyze
 from domain.symbols import build_symbol_table
 
 

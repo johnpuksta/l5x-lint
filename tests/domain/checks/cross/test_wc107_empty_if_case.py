@@ -1,6 +1,5 @@
 from domain.checks.cross.wc107_empty_if_case import wc107_empty_body
-from domain.models import Location, Routine
-from domain.models import TagPath, TagPathSegment
+from domain.models import Location, Routine, TagPath, TagPathSegment
 from domain.st_models import (
     StAssignment,
     StCase,

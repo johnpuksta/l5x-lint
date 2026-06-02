@@ -1,8 +1,7 @@
-from domain.diagnostics import Diagnostic
-from domain.models import Location
 from application.config import LintConfig
 from application.filter import filter_diagnostics
-
+from domain.diagnostics import Diagnostic
+from domain.models import Location
 
 _LOC = Location("Prog", "Main", rung=0)
 

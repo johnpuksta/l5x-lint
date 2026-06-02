@@ -1,7 +1,6 @@
+from application.analyze import register
 from domain.checks._codes import ER016
 from domain.checks._walkers import RllWalker
-from application.analyze import register
-
 
 _FILE_OPS: frozenset[str] = frozenset({"FAL", "FSC"})
 _MIN_OPERANDS = 3

@@ -1,7 +1,6 @@
+from application.analyze import register
 from domain.checks._codes import WR009
 from domain.checks._walkers import RllWalker
-from application.analyze import register
-
 
 _KNOWN_OBJECT_CLASSES: frozenset[str] = frozenset(
     {

@@ -1,20 +1,16 @@
 from pathlib import Path
 
+from helpers import l5x_with_rll, minimal_l5x, parse_and_analyze
 from returns.result import Failure, Success
 
 from domain.errors import (
     L5XStructureError,
-    RLLParseError,
-    SoftwareRevisionError,
-    STParseError,
 )
 from domain.models import L5XProject
 from infrastructure.adapter import parse_l5x
 from infrastructure.xml_parsers._factory import create_parser
 from infrastructure.xml_parsers.base import L5XParser
 from infrastructure.xml_parsers.v38 import L5XParserV38
-
-from helpers import l5x_with_rll, l5x_with_st, minimal_l5x, parse_and_analyze
 
 TEST_DATA = Path(__file__).parent.parent / "data"
 VALID_DIR = TEST_DATA / "valid"
@@ -496,7 +492,7 @@ class TestMalformedXml:
 class TestBadRllCode:
     def test_garbage_rll_through_pipeline(self):
         """CDATA wrapping prevents XML-level failure; Lark parser rejects bad RLL."""
-        xml = minimal_l5x(f"""
+        xml = minimal_l5x("""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -516,7 +512,7 @@ class TestBadRllCode:
 
     def test_truncated_rll_in_cdata(self):
         """CDATA wrapping; truncated RLL inside CDATA."""
-        xml = minimal_l5x(f"""
+        xml = minimal_l5x("""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -541,7 +537,7 @@ class TestBadRllCode:
         assert isinstance(result, Success)
 
     def test_rll_with_xml_special_chars_in_cdata(self):
-        xml = minimal_l5x(f"""
+        xml = minimal_l5x("""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -560,7 +556,7 @@ class TestBadRllCode:
 
     def test_multiple_bad_routines_all_reported(self):
         """Both routines have unparseable RLL — both errors should be reported."""
-        xml = minimal_l5x(f"""
+        xml = minimal_l5x("""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -591,7 +587,7 @@ class TestBadRllCode:
 class TestBadStCode:
     def test_garbage_st_through_pipeline(self):
         """CDATA wrapping; garbage ST inside CDATA."""
-        xml = minimal_l5x(f"""
+        xml = minimal_l5x("""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -609,7 +605,7 @@ class TestBadStCode:
 
     def test_truncated_st_in_cdata(self):
         """CDATA wrapping; truncated ST inside CDATA."""
-        xml = minimal_l5x(f"""
+        xml = minimal_l5x("""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -629,7 +625,7 @@ class TestBadStCode:
 
     def test_st_missing_rhs(self):
         """Missing RHS in assignment — ST parser should reject."""
-        xml = minimal_l5x(f"""
+        xml = minimal_l5x("""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -648,7 +644,7 @@ class TestBadStCode:
         )
 
     def test_st_with_xml_special_chars(self):
-        xml = minimal_l5x(f"""
+        xml = minimal_l5x("""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -673,7 +669,7 @@ class TestBadStCode:
 
 class TestCdataEdgeCases:
     def test_rll_in_cdata_section(self):
-        xml = minimal_l5x(f"""
+        xml = minimal_l5x("""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -690,7 +686,7 @@ class TestCdataEdgeCases:
         assert isinstance(result, Success)
 
     def test_st_in_cdata_section(self):
-        xml = minimal_l5x(f"""
+        xml = minimal_l5x("""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -707,7 +703,7 @@ class TestCdataEdgeCases:
         assert isinstance(result, Success)
 
     def test_mixed_cdata_and_text_rll(self):
-        xml = minimal_l5x(f"""
+        xml = minimal_l5x("""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -827,7 +823,7 @@ class TestErrorTypes:
 
     def test_rll_parse_error_type(self):
         """CDATA-wrapped bad RLL triggers parse failure through analyze()."""
-        xml = minimal_l5x(f"""
+        xml = minimal_l5x("""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>
@@ -847,7 +843,7 @@ class TestErrorTypes:
 
     def test_st_parse_error_type(self):
         """CDATA-wrapped bad ST triggers parse failure through analyze()."""
-        xml = minimal_l5x(f"""
+        xml = minimal_l5x("""
         <DataTypes/><Tags/>
         <Programs><Program Name="Main">
           <Tags/>

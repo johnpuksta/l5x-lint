@@ -1,7 +1,7 @@
+from application.analyze import register
 from domain.checks._codes import WC106
 from domain.diagnostics import Diagnostic
 from domain.models import Location, Routine
-from application.analyze import register
 from domain.symbols import SymbolTable
 
 _used_aois: set[str] = set()
@@ -106,7 +106,7 @@ def wc106_unused_pou(
     if routine.type == "ST":
         bod = routine.st_body
         if bod is not None:
-            from domain.st_models import StCall, StJsr, StProgram
+            from domain.st_models import StCall, StJsr
 
             for stmt in bod.statements:
                 match stmt:

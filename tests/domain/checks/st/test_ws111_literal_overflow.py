@@ -6,7 +6,6 @@ from domain.st_models import (
     StFor,
     StLiteral,
     StProgram,
-    StTagRef,
 )
 from domain.symbols import SymbolTable
 

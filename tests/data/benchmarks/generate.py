@@ -13,7 +13,7 @@ Run: python tests/data/benchmarks/generate.py
 """
 
 from pathlib import Path
-from xml.dom.minidom import Document, parseString
+from xml.dom.minidom import Document
 
 OUTPUT_DIR = Path(__file__).parent
 

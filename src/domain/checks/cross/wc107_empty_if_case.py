@@ -1,7 +1,7 @@
+from application.analyze import register
 from domain.checks._codes import WC107
 from domain.checks._walkers import StWalker
 from domain.st_models import StCase, StIf
-from application.analyze import register
 
 _DEPRECATED_CALLS: frozenset[str] = frozenset(
     {

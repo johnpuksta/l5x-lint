@@ -1,7 +1,7 @@
+from application.analyze import register
 from domain.checks._codes import WS117
 from domain.checks._walkers import StWalker
 from domain.st_models import StBinaryOp
-from application.analyze import register
 
 _OR_XOR: frozenset[str] = frozenset({"OR", "XOR"})
 

@@ -1,7 +1,7 @@
+from application import analyze
 from domain.checks.cross.ec002_type_mismatch import ec002_type_mismatch
 from domain.models import Controller, Location, Routine, Tag
 from domain.rll_models import Instruction, Operand, ParsedRung
-from application import analyze
 from domain.symbols import build_symbol_table
 
 

@@ -2,6 +2,7 @@ import re
 
 from returns.maybe import Nothing
 
+from application.analyze import register
 from domain.checks._codes import EC001
 from domain.diagnostics import Diagnostic
 from domain.models import Location, Routine
@@ -22,7 +23,6 @@ from domain.st_models import (
     StUnaryOp,
     StWhile,
 )
-from application.analyze import register
 from domain.symbols import SymbolTable
 
 _DiagList = list[Diagnostic]

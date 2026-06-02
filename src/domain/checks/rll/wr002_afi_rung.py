@@ -1,7 +1,7 @@
+from application.analyze import register
 from domain.checks._codes import WR002
 from domain.diagnostics import Diagnostic
 from domain.models import Location, Routine
-from application.analyze import register
 from domain.symbols import SymbolTable
 
 _DiagList = list[Diagnostic]

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from domain.diagnostics import Diagnostic
 from application.config import LintConfig
+from domain.diagnostics import Diagnostic
 
 
 def filter_diagnostics(

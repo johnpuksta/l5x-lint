@@ -1,8 +1,8 @@
+from application.analyze import register
 from domain.checks._codes import EC010
 from domain.checks.tag_refs import extract_base
 from domain.diagnostics import Diagnostic
 from domain.models import Location, Routine
-from application.analyze import register
 from domain.symbols import SymbolTable
 
 

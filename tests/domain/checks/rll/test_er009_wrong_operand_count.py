@@ -1,7 +1,7 @@
+from application import analyze
 from domain.checks.rll.er009_wrong_operand_count import er009_wrong_operand_count
 from domain.models import Controller, Location, Routine
 from domain.rll_models import Instruction, Operand, ParsedRung
-from application import analyze
 from domain.symbols import build_symbol_table
 
 

@@ -1,6 +1,6 @@
+from application import analyze
 from domain.checks.cross.wc005_shadowed_tag import wc005_shadowed_tag
 from domain.models import Controller, Location, Program, Routine, Tag
-from application import analyze
 from domain.symbols import build_symbol_table
 
 

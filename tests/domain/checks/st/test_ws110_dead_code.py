@@ -1,13 +1,11 @@
 from domain.checks.st.ws110_dead_code import ws110_dead_code
-from domain.models import Location, Routine
+from domain.models import Location, Routine, TagPath, TagPathSegment
 from domain.st_models import (
     StAssignment,
     StLiteral,
     StProgram,
     StReturn,
-    StTagRef,
 )
-from domain.models import TagPath, TagPathSegment
 from domain.symbols import SymbolTable
 
 

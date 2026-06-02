@@ -1,7 +1,7 @@
+from application.analyze import register
 from domain.checks._codes import WS111
 from domain.checks._walkers import StWalker
 from domain.st_models import StLiteral
-from application.analyze import register
 
 _DINT_MAX = 2_147_483_647
 _DINT_MIN = -2_147_483_648

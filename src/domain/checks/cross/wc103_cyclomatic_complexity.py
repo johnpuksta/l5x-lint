@@ -1,8 +1,8 @@
+from application.analyze import register
 from domain.checks._codes import WC103
 from domain.diagnostics import Diagnostic
 from domain.models import Location, Routine
 from domain.st_models import StCase, StFor, StIf, StProgram, StWhile
-from application.analyze import register
 from domain.symbols import SymbolTable
 
 _THRESHOLD = 15

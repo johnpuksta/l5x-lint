@@ -1,8 +1,8 @@
+from application.analyze import register
 from domain.checks._codes import WC001
 from domain.checks.tag_refs import collect_all_tag_refs
 from domain.diagnostics import Diagnostic
 from domain.models import Location, Routine
-from application.analyze import register
 from domain.symbols import SymbolTable
 
 _reported: set[str] = set()

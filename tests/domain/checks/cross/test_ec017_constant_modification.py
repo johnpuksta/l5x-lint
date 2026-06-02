@@ -1,12 +1,9 @@
 import importlib
 
-from returns.maybe import Some
-
 from domain.checks.cross import ec017_constant_modification
-from domain.models import Location, Routine, Tag
+from domain.models import Location, Routine, Tag, TagPath, TagPathSegment
 from domain.st_models import StAssignment, StLiteral, StProgram, StTagRef
 from domain.symbols import SymbolTable
-from domain.models import TagPath, TagPathSegment
 
 
 def _reset():

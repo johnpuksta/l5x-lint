@@ -1,9 +1,9 @@
+from application.analyze import register
 from domain.checks._codes import WR003
 from domain.checks.opcodes import INPUT_OPCODES, OUTPUT_OPCODES
 from domain.checks.tag_refs import extract_base
 from domain.diagnostics import Diagnostic
 from domain.models import Location, Routine
-from application.analyze import register
 from domain.symbols import SymbolTable
 
 

@@ -1,8 +1,8 @@
+from application.analyze import register
 from domain.checks._codes import WS104
 from domain.checks._types import expression_type
 from domain.checks._walkers import StWalker
 from domain.st_models import StIf, StRepeat, StWhile
-from application.analyze import register
 
 
 class Ws104Check(StWalker):

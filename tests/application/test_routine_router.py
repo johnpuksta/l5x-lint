@@ -1,9 +1,9 @@
 from returns.result import Failure, Success
 
+from application.routine_router import route_routines
 from domain.models import Controller, Program, Routine
 from domain.rll_models import ParsedRung
 from domain.st_models import StAssignment, StProgram
-from application.routine_router import route_routines
 
 
 def _controller(routines: list[Routine], prog_name: str = "MainProgram") -> Controller:

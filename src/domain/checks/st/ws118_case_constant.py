@@ -1,7 +1,7 @@
+from application.analyze import register
 from domain.checks._codes import WS118
 from domain.checks._walkers import StWalker
 from domain.st_models import StCase, StLiteral
-from application.analyze import register
 
 
 class Ws118CaseConstant(StWalker):

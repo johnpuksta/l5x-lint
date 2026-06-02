@@ -1,3 +1,4 @@
+from application.analyze import register
 from domain.checks._codes import WS110
 from domain.checks._walkers import StWalker
 from domain.st_models import (
@@ -10,7 +11,6 @@ from domain.st_models import (
     StReturn,
     StWhile,
 )
-from application.analyze import register
 
 
 class Ws110DeadCode(StWalker):

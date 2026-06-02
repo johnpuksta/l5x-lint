@@ -1,9 +1,8 @@
 import re
 
+from application.analyze import register
 from domain.checks._codes import WR008
 from domain.checks._walkers import RllWalker
-from application.analyze import register
-
 
 _COPY_OPS: frozenset[str] = frozenset({"COP", "CPS"})
 

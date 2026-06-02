@@ -1,5 +1,5 @@
-from domain.checks._walkers import StWalker
 from application.analyze import register
+from domain.checks._walkers import StWalker
 
 
 class Ws116NoGoto(StWalker):

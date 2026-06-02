@@ -1,9 +1,9 @@
 """Shared test helpers for building minimal L5X XML."""
 
-from returns.result import Failure, Success
+from returns.result import Failure
 
-from infrastructure.adapter import parse_l5x
 from application.analyze import analyze
+from infrastructure.adapter import parse_l5x
 
 
 def minimal_l5x(controller_content="", software_revision="32.00"):

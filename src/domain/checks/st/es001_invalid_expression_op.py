@@ -1,8 +1,8 @@
+from application.analyze import register
 from domain.checks._codes import ES001
 from domain.checks._types import expression_type
 from domain.checks._walkers import StWalker
 from domain.st_models import StBinaryOp
-from application.analyze import register
 
 _STRING_TYPES: frozenset[str] = frozenset({"STRING"})
 

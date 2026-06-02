@@ -1,7 +1,7 @@
 from domain.checks._hints import (
+    _levenshtein,
     suggest_did_you_mean,
     syntax_habit_hints,
-    _levenshtein,
 )
 
 

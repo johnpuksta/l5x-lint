@@ -6,9 +6,9 @@ from pathlib import Path
 import pytest
 from returns.result import Success
 
-from infrastructure.adapter import parse_l5x
 from application import analyze as analyze_module
 from application.analyze import analyze
+from infrastructure.adapter import parse_l5x
 
 
 def _reset_all_check_state():
@@ -16,10 +16,7 @@ def _reset_all_check_state():
     analyze_module._registry.clear()
 
     for mod_name in list(sys.modules):
-        if (
-            mod_name.startswith("domain.checks.")
-            and mod_name != "domain.checks._codes"
-        ):
+        if mod_name.startswith("domain.checks.") and mod_name != "domain.checks._codes":
             del sys.modules[mod_name]
 
     # Re-import all check packages to re-register

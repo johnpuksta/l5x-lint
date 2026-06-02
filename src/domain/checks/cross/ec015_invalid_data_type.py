@@ -1,7 +1,7 @@
+from application.analyze import register
 from domain.checks._codes import EC015
 from domain.diagnostics import Diagnostic
 from domain.models import Location, Routine
-from application.analyze import register
 from domain.symbols import SymbolTable
 
 _BUILTIN_TYPES: frozenset[str] = frozenset(

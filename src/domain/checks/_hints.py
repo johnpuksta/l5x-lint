@@ -20,7 +20,6 @@ def syntax_habit_hints(text: str) -> str | None:
         "!=": "Use '<>' in ST",
         "&&": "Use 'AND'",
         "||": "Use 'OR'",
-        "&&": "Use 'AND'",
         "{": "Use '(* *)'",
     }
     for pattern, hint in hints.items():

@@ -1,9 +1,9 @@
 import re
 
+from application.analyze import register
 from domain.checks._codes import WS102
 from domain.diagnostics import Diagnostic
 from domain.models import Location, Routine
-from application.analyze import register
 from domain.symbols import SymbolTable
 
 _ZERO_DIV_RE = re.compile(r"/\s*0\b")

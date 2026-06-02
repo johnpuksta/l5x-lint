@@ -1,7 +1,7 @@
+from application.analyze import register
 from domain.checks._codes import WS109
 from domain.checks._walkers import StWalker
 from domain.st_models import StAssignment, StFor
-from application.analyze import register
 
 
 class ForVarAssignCheck(StWalker):

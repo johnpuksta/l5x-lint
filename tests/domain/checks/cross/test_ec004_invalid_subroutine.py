@@ -1,7 +1,7 @@
+from application import analyze
 from domain.checks.cross.ec004_invalid_subroutine import ec004_invalid_subroutine
 from domain.models import Controller, Location, Program, Routine
 from domain.rll_models import Instruction, Operand, ParsedRung
-from application import analyze
 from domain.symbols import build_symbol_table
 
 

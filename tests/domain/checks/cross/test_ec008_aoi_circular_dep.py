@@ -1,6 +1,6 @@
+from application import analyze
 from domain.checks.cross.ec008_aoi_circular_dep import ec008_aoi_circular_dep
 from domain.models import AOI, Controller, Location, Routine
-from application import analyze
 from domain.symbols import build_symbol_table
 
 

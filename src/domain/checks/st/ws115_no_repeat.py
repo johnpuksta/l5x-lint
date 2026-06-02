@@ -1,7 +1,7 @@
+from application.analyze import register
 from domain.checks._codes import WS115
 from domain.checks._walkers import StWalker
 from domain.st_models import StRepeat
-from application.analyze import register
 
 
 class Ws115NoRepeat(StWalker):

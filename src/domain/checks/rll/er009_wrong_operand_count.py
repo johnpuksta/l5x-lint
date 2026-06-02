@@ -1,8 +1,8 @@
+from application.analyze import register
 from domain.checks._codes import ER009
 from domain.checks.opcodes import OPCODE_OPERANDS
 from domain.diagnostics import Diagnostic
 from domain.models import Location, Routine
-from application.analyze import register
 from domain.symbols import SymbolTable
 
 

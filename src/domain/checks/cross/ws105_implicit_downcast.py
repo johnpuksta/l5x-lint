@@ -1,7 +1,7 @@
+from application.analyze import register
 from domain.checks._codes import WS105
 from domain.checks._walkers import StWalker
 from domain.st_models import StAssignment, StTagRef
-from application.analyze import register
 
 _NARROW_TO_WIDE: dict[str, int] = {
     "SINT": 1,

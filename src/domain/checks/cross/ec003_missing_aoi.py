@@ -5,11 +5,11 @@ Any opcode not in this set and not defined as an AOI triggers EC003.
 Must stay in sync with OPCODE_OPERANDS in opcodes.py.
 """
 
+from application.analyze import register
 from domain.checks._codes import EC003
 from domain.diagnostics import Diagnostic
 from domain.models import Location, Routine
 from domain.st_models import StCall
-from application.analyze import register
 from domain.symbols import SymbolTable
 
 _BUILTIN_OPCODES: frozenset[str] = frozenset(

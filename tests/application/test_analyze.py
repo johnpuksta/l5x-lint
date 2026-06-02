@@ -1,8 +1,8 @@
 from returns.result import Success
 
+from application import analyze
 from domain.diagnostics import Diagnostic
 from domain.models import Controller, Program, Routine, Tag
-from application import analyze
 
 
 def _reset_registry():

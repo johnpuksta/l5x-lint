@@ -1,7 +1,7 @@
+from application import analyze
 from domain.checks.cross.ec006_array_bounds import ec006_array_bounds
 from domain.models import Controller, Location, Routine, Tag
 from domain.rll_models import Instruction, Operand, ParsedRung
-from application import analyze
 from domain.symbols import build_symbol_table
 
 

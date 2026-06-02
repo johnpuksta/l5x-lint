@@ -1,7 +1,7 @@
+from application import analyze
 from domain.checks.cross.ec003_missing_aoi import ec003_missing_aoi
 from domain.models import AOI, Controller, Location, Routine, Tag
 from domain.rll_models import Instruction, Operand, ParsedRung
-from application import analyze
 from domain.symbols import build_symbol_table
 
 

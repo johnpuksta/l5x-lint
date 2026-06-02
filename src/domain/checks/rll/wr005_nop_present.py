@@ -1,6 +1,6 @@
+from application.analyze import register
 from domain.checks._codes import WR005
 from domain.checks._walkers import RllWalker
-from application.analyze import register
 
 
 class Wr005Check(RllWalker):

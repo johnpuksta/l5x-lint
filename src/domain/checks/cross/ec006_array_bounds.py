@@ -2,11 +2,11 @@ import re
 
 from returns.maybe import Some
 
+from application.analyze import register
 from domain.checks._codes import EC006
 from domain.checks.tag_refs import extract_base
 from domain.diagnostics import Diagnostic
 from domain.models import Location, Routine
-from application.analyze import register
 from domain.symbols import SymbolTable
 
 _ARRAY_INDEX_BRACKET = re.compile(r"^[A-Za-z_][A-Za-z0-9_:]*\[(\d+)\]")

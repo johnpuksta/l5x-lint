@@ -3,8 +3,8 @@ from pathlib import Path
 
 import pytest
 
-from domain.diagnostics import Diagnostic
 from application import analyze
+from domain.diagnostics import Diagnostic
 from presentation.mcp_server import _validate, create_server
 
 TEST_DATA = Path(__file__).parent.parent / "data"

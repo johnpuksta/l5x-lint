@@ -6,13 +6,13 @@ from pathlib import Path
 from returns.result import Failure, Success
 
 import domain.checks  # noqa: F401 — registers all check functions
-from infrastructure.adapter import parse_l5x
 from application.analyze import analyze
 from application.config import (
     LintConfig,
     apply_severity_overrides,
     apply_warning_toggles,
 )
+from infrastructure.adapter import parse_l5x
 from presentation._format import diagnostic_to_dict, find_xml_line
 
 try:
