@@ -48,7 +48,7 @@ jobs:
 
   # ── GitHub Release (depends on binaries) ──────
   github-release:
-    needs: [version, pyinstaller]
+    needs: [version, pypi, pyinstaller, npm, homebrew, chocolatey]
     uses: ./.github/workflows/release-github-release.yml
     with:
       version: ${{ needs.version.outputs.version }}
