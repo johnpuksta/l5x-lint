@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import pytest
+
 from helpers import l5x_with_rll, minimal_l5x, parse_and_analyze
 from returns.result import Failure, Success
 
@@ -405,7 +407,8 @@ def test_parser_factory_returns_v38_for_v38():
 
 
 def test_parser_factory_returns_base_for_unknown():
-    parser = create_parser("99.99", "1.0").unwrap()
+    with pytest.warns(UserWarning, match="exceeds max known"):
+        parser = create_parser("99.99", "1.0").unwrap()
     assert isinstance(parser, L5XParser)
     assert not isinstance(parser, L5XParserV38)
 
@@ -742,8 +745,8 @@ class TestBadSoftwareRevision:
 
     def test_future_version_warns_but_continues(self):
         xml = minimal_l5x(software_revision="99.00")
-        result = parse_l5x(xml)
-        # v99 has no XSD, validation skips, parser uses base — should succeed
+        with pytest.warns(UserWarning, match="exceeds max known"):
+            result = parse_l5x(xml)
         assert isinstance(result, Success)
 
     def test_old_version_without_xsd(self):
