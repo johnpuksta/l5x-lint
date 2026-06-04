@@ -226,3 +226,95 @@ def test_parse_realistic_rung():
     assert rungs[0].instructions[1].operands[0].value == "Safety_Ok"
     assert rungs[0].instructions[1].branch is not None
     assert len(rungs[0].instructions[1].branch) == 2
+
+def test_io_address_suffix_si():
+    result = parse("XIC(SignalA:SI)OTE(Flag);")
+    rungs = result.unwrap()
+    assert len(rungs) == 1
+    assert rungs[0].instructions[0].operands[0].value == "SignalA:SI"
+    assert rungs[0].instructions[1].operands[0].value == "Flag"
+
+
+def test_io_address_suffix_so():
+    result = parse("OTE(SignalB:SO);")
+    rungs = result.unwrap()
+    assert rungs[0].instructions[0].operands[0].value == "SignalB:SO"
+
+
+def test_empty_operands_middle():
+    result = parse("CAL(TagA,,TagB,TagC);")
+    rungs = result.unwrap()
+    instr = rungs[0].instructions[0]
+    assert instr.opcode == "CAL"
+    assert len(instr.operands) == 4
+    assert instr.operands[0].value == "TagA"
+    assert instr.operands[1].value == ""
+    assert instr.operands[2].value == "TagB"
+    assert instr.operands[3].value == "TagC"
+
+
+def test_empty_operands_trailing():
+    result = parse("CAL(X,Y,,);")
+    rungs = result.unwrap()
+    instr = rungs[0].instructions[0]
+    assert len(instr.operands) == 4
+    assert instr.operands[0].value == "X"
+    assert instr.operands[1].value == "Y"
+    assert instr.operands[2].value == ""
+    assert instr.operands[3].value == ""
+
+
+def test_hex_literal_with_underscores():
+    result = parse("MOV(16#FF00_1234,Dest);")
+    rungs = result.unwrap()
+    instr = rungs[0].instructions[0]
+    assert instr.opcode == "MOV"
+    assert instr.operands[0].value == "16#FF00_1234"
+    assert instr.operands[1].value == "Dest"
+
+
+def test_hex_literal_standard():
+    result = parse("MOV(16#FF00,Dest);")
+    rungs = result.unwrap()
+    assert rungs[0].instructions[0].operands[0].value == "16#FF00"
+
+
+def test_arithmetic_expression_operand():
+    result = parse("CAL(Result,ValA * 100 + ValB);")
+    rungs = result.unwrap()
+    instr = rungs[0].instructions[0]
+    assert instr.opcode == "CAL"
+    assert len(instr.operands) == 2
+    assert instr.operands[0].value == "Result"
+    assert instr.operands[1].value == "ValA * 100 + ValB"
+
+
+def test_simple_expression_operand():
+    result = parse("CAL(Sum,A + B);")
+    rungs = result.unwrap()
+    instr = rungs[0].instructions[0]
+    assert instr.operands[1].value == "A + B"
+
+
+def test_cmp_instruction():
+    result = parse("EQU(A,B);")
+    rungs = result.unwrap()
+    instr = rungs[0].instructions[0]
+    assert instr.opcode == "EQU"
+    assert len(instr.operands) == 2
+    assert instr.operands[0].value == "A"
+    assert instr.operands[1].value == "B"
+
+
+def test_io_address_with_module_slot():
+    result = parse("XIC(Rack:3:I.Data.2)OTE(Flag);")
+    rungs = result.unwrap()
+    assert rungs[0].instructions[0].operands[0].value == "Rack:3:I.Data.2"
+
+
+def test_tag_with_colon_suffix_in_branch():
+    result = parse("XIC(SignalA:SI)[XIO(B)]OTE(Flag);")
+    rungs = result.unwrap()
+    xic = rungs[0].instructions[0]
+    assert xic.operands[0].value == "SignalA:SI"
+    assert xic.branch is not None

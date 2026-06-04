@@ -33,7 +33,7 @@ from domain.st_models import (
 
 _GRAMMAR = r"""
 start: st_program
-st_program: statement+
+st_program: statement*
 
 statement: assignment
          | if_statement
@@ -47,16 +47,16 @@ statement: assignment
 
 assignment: tag_path ASSIGN expression SEMICOLON
 
-if_statement: IF expression THEN statement* (ELSIF expression THEN statement*)* (ELSE statement*)? END_IF
+if_statement: IF expression THEN statement* (ELSIF expression THEN statement*)* (ELSE statement*)? END_IF SEMICOLON?
 
-case_statement: CASE expression OF case_element+ (ELSE statement*)? END_CASE
+case_statement: CASE expression OF case_element+ (ELSE statement*)? END_CASE SEMICOLON?
 case_element: expression (COMMA expression)* COLON statement*
 
-for_loop: FOR tag_path ASSIGN expression TO expression (BY expression)? DO statement+ END_FOR
+for_loop: FOR tag_path ASSIGN expression TO expression (BY expression)? DO statement+ END_FOR SEMICOLON?
 
-while_loop: WHILE expression DO statement+ END_WHILE
+while_loop: WHILE expression DO statement+ END_WHILE SEMICOLON?
 
-repeat_loop: REPEAT statement+ UNTIL expression END_REPEAT
+repeat_loop: REPEAT statement+ UNTIL expression END_REPEAT SEMICOLON?
 
 call_statement: call SEMICOLON
 
@@ -75,11 +75,13 @@ compare_expr: add_expr ((EQ | NE | LT | GT | LE | GE) add_expr)?
 add_expr: mul_expr ((PLUS | MINUS) mul_expr)*
 mul_expr: unary_expr ((MUL | DIV | MOD) unary_expr)*
 unary_expr: (MINUS | NOT)* atom
-atom: tag_path | number | bool_literal | wildcard | call | LPAREN expression RPAREN
+atom: tag_path | number | bool_literal | string_literal | wildcard | call | LPAREN expression RPAREN
 
-tag_path: TAG_BASE (DOT TAG_BASE | LSQB INTEGER RSQB)*
+tag_path: TAG_BASE (DOT TAG_BASE | LSQB INTEGER RSQB | LSQB TAG_BASE RSQB)*
 
 number: INTEGER | FLOAT
+
+string_literal: STRING
 
 bool_literal: TRUE | FALSE
 
@@ -141,11 +143,18 @@ WILDCARD: "?"
 TAG_BASE.-1: /[A-Za-z_][A-Za-z0-9_]*/
 INTEGER: /-?[0-9]+/
 FLOAT: /-?[0-9]+\.[0-9]+([eE][-+]?[0-9]+)?/
+STRING: /'[^']*(?:''[^']*)*'/
 
 COMMENT1: /\(\*[\s\S]*?\*\)/
 COMMENT2: /\/\/[^\n]*/
+COMMENT3: /\/\*[\s\S]*?\*\//
+REGION: /(?i:#region[^\n]*)/
+ENDREGION: /(?i:#endregion[^\n]*)/
 %ignore COMMENT1
 %ignore COMMENT2
+%ignore COMMENT3
+%ignore REGION
+%ignore ENDREGION
 %ignore /[ \t\n\r]+/
 """
 
@@ -349,9 +358,13 @@ class _StTransformer(Transformer):
                 segments[-1].index = int(item)
             elif isinstance(item, str) and item.isdigit():
                 segments[-1].index = int(item)
-            else:
+            elif isinstance(item, str):
                 segments.append(TagPathSegment(name=str(item)))
         return TagPath(segments=segments)
+
+    def string_literal(self, items):
+        raw = str(items[0])
+        return StLiteral(value=raw[1:-1].replace("''", "'"))
 
     def number(self, items):
         value = items[0]

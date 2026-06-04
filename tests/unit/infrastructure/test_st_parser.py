@@ -4,6 +4,7 @@ from domain.st_models import (
     StAssignment,
     StBinaryOp,
     StCall,
+    StCase,
     StExit,
     StFor,
     StIf,
@@ -320,3 +321,163 @@ def test_parse_invalid_syntax():
 def test_parse_garbage():
     result = parse("@#!invalid")
     assert isinstance(result, Failure)
+
+def test_block_comment_c_style():
+    result = parse("/* block comment */ x := 1;")
+    prog = result.unwrap()
+    assert len(prog.statements) == 1
+    stmt = prog.statements[0]
+    assert isinstance(stmt, StAssignment)
+    assert stmt.target.segments[0].name == "x"
+    assert stmt.expression.value == 1
+
+
+def test_block_comment_multiline():
+    text = "/* line 1\n   line 2 */\nx := 2;"
+    result = parse(text)
+    prog = result.unwrap()
+    assert len(prog.statements) == 1
+
+
+def test_block_comment_nested_parens():
+    text = "/* has (parens) inside */ x := 1;"
+    result = parse(text)
+    prog = result.unwrap()
+    assert len(prog.statements) == 1
+
+
+def test_single_quoted_string():
+    result = parse("x := 'hello';")
+    prog = result.unwrap()
+    stmt = prog.statements[0]
+    assert isinstance(stmt, StAssignment)
+    assert isinstance(stmt.expression, StLiteral)
+    assert stmt.expression.value == "hello"
+
+
+def test_single_quoted_string_empty():
+    result = parse("x := '';")
+    prog = result.unwrap()
+    stmt = prog.statements[0]
+    assert isinstance(stmt.expression, StLiteral)
+    assert stmt.expression.value == ""
+
+
+def test_single_quoted_string_struct_member():
+    result = parse("Config.Mode := 'AUTO';")
+    prog = result.unwrap()
+    stmt = prog.statements[0]
+    assert isinstance(stmt, StAssignment)
+    assert stmt.target.segments[0].name == "Config"
+    assert stmt.target.segments[1].name == "Mode"
+    assert isinstance(stmt.expression, StLiteral)
+    assert stmt.expression.value == "AUTO"
+
+
+def test_single_quoted_string_escaped_quote():
+    result = parse("x := 'it''s';")
+    prog = result.unwrap()
+    stmt = prog.statements[0]
+    assert isinstance(stmt.expression, StLiteral)
+    assert stmt.expression.value == "it's"
+
+
+def test_end_if_with_semicolon():
+    result = parse("if x then y := 1; end_if;")
+    prog = result.unwrap()
+    assert len(prog.statements) == 1
+    stmt = prog.statements[0]
+    assert isinstance(stmt, StIf)
+    assert len(stmt.body) == 1
+
+
+def test_end_if_without_semicolon():
+    result = parse("if x then y := 1; end_if")
+    prog = result.unwrap()
+    assert len(prog.statements) == 1
+    assert isinstance(prog.statements[0], StIf)
+
+
+def test_end_case_with_semicolon():
+    result = parse("case x of 1: y := 2; end_case;")
+    prog = result.unwrap()
+    assert len(prog.statements) == 1
+    assert isinstance(prog.statements[0], StCase)
+
+
+def test_end_for_with_semicolon():
+    result = parse("for i := 1 to 10 do x := 1; end_for;")
+    prog = result.unwrap()
+    assert len(prog.statements) == 1
+    assert isinstance(prog.statements[0], StFor)
+
+
+def test_end_while_with_semicolon():
+    result = parse("while x do y := 1; end_while;")
+    prog = result.unwrap()
+    assert len(prog.statements) == 1
+    assert isinstance(prog.statements[0], StWhile)
+
+
+def test_end_repeat_with_semicolon():
+    result = parse("repeat y := 1; until x end_repeat;")
+    prog = result.unwrap()
+    assert len(prog.statements) == 1
+    assert isinstance(prog.statements[0], StRepeat)
+
+
+def test_region_directive():
+    result = parse("#region MyRegion\nx := 1;\n#endregion")
+    prog = result.unwrap()
+    assert len(prog.statements) == 1
+    assert isinstance(prog.statements[0], StAssignment)
+
+
+def test_region_directive_with_name():
+    result = parse("#region Test Region\nval := 1;\n#endregion Test Region")
+    prog = result.unwrap()
+    assert len(prog.statements) == 1
+
+
+def test_variable_array_index():
+    result = parse("val := DataBuf[Idx];")
+    prog = result.unwrap()
+    stmt = prog.statements[0]
+    assert isinstance(stmt, StAssignment)
+    expr = stmt.expression
+    assert isinstance(expr, StTagRef)
+    assert expr.path.segments[0].name == "DataBuf"
+    assert expr.path.segments[1].name == "Idx"
+
+
+def test_variable_array_index_member():
+    result = parse("val := Stack.Items[Idx];")
+    prog = result.unwrap()
+    expr = prog.statements[0].expression
+    assert isinstance(expr, StTagRef)
+    segs = expr.path.segments
+    assert segs[0].name == "Stack"
+    assert segs[1].name == "Items"
+    assert segs[1].index is None
+    assert segs[2].name == "Idx"
+
+
+def test_comment_only_routine():
+    result = parse("/* entire routine is commented out */")
+    prog = result.unwrap()
+    assert isinstance(prog, StProgram)
+    assert prog.statements == []
+
+
+def test_comment_only_with_multiple_comments():
+    text = "/* first comment */\n/* second comment */"
+    result = parse(text)
+    prog = result.unwrap()
+    assert prog.statements == []
+
+
+def test_mixed_block_and_line_comments():
+    text = "/* block */\n// line comment\nx := 1;"
+    result = parse(text)
+    prog = result.unwrap()
+    assert len(prog.statements) == 1

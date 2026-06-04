@@ -45,7 +45,7 @@ instruction: CMP "(" CMP_CONTENT ")"
 
 branch: "[" items ("," items)* "]"
 
-params: param ("," param)*
+params: param (COMMA param?)*
 
 param: tag_path
      | NUMBER
@@ -58,12 +58,14 @@ tag_path: TAG_BASE ("." (TAG_BASE | NUMBER | "[" TAG_BASE ("." TAG_BASE)* "]") |
 // Tokens
 OPCODE: /[A-Za-z_][A-Za-z0-9_]*/
 TAG_BASE: /[A-Za-z_][A-Za-z0-9_]*:[0-9]+:[A-Za-z_][A-Za-z0-9_]*/
+        | /[A-Za-z_][A-Za-z0-9_]*:[A-Za-z][A-Za-z0-9_]*/
         | /[A-Za-z_][A-Za-z0-9_]*/
 WILDCARD: "?"
-HEX_LITERAL.100: /[0-9]+#[0-9A-Fa-f]+/
+HEX_LITERAL.100: /16#[0-9A-Fa-f][0-9A-Fa-f_]*/
 NUMBER: /-?[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?/
 SEMICOLON: ";"
-EXPR: /[A-Za-z0-9_.+*\/\-\s]+/
+COMMA: ","
+EXPR.50: /[A-Za-z0-9_]+(\s*[+*\/\-]\s*[A-Za-z0-9_\s]+)+/
 CMP.100: "CMP"
 CMP_CONTENT: /(?:[^)()]+|\([^)]*\))+/
 %ignore /[ \t\n\r]+/
@@ -111,13 +113,26 @@ class _RLLTransformer(Transformer):
         return _BranchItem(paths=[x for x in items if x is not None])
 
     def params(self, items):
-        flat = []
-        for item in items:
+        result = []
+        i = 0
+        while i < len(items):
+            item = items[i]
             if isinstance(item, list):
-                flat.extend(item)
+                for sub in item:
+                    if isinstance(sub, Operand):
+                        result.append(sub)
+                i += 1
+            elif isinstance(item, Operand):
+                result.append(item)
+                i += 1
+            elif str(item) == ",":
+                next_item = items[i + 1] if i + 1 < len(items) else None
+                if next_item is None or str(next_item) == ",":
+                    result.append(Operand(value=""))
+                i += 1
             else:
-                flat.append(item)
-        return flat
+                i += 1
+        return result
 
     def param(self, items):
         return items[0]
