@@ -378,6 +378,11 @@ mcp = [
     { name = "mcp" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "lark", specifier = ">=1.1" },
@@ -390,6 +395,9 @@ requires-dist = [
     { name = "xmlschema", specifier = ">=3.0" },
 ]
 provides-extras = ["dev", "mcp"]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=9.0.3" }]
 
 [[package]]
 name = "lark"

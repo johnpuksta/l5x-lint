@@ -75,3 +75,8 @@ testpaths = ["tests/unit", "tests/benchmarks"]
 markers = [
     "benchmark: scaling/performance benchmark tests (deselect with '-m not benchmark')",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+]
