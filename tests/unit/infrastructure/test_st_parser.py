@@ -322,6 +322,7 @@ def test_parse_garbage():
     result = parse("@#!invalid")
     assert isinstance(result, Failure)
 
+
 def test_block_comment_c_style():
     result = parse("/* block comment */ x := 1;")
     prog = result.unwrap()

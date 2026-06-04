@@ -227,6 +227,7 @@ def test_parse_realistic_rung():
     assert rungs[0].instructions[1].branch is not None
     assert len(rungs[0].instructions[1].branch) == 2
 
+
 def test_io_address_suffix_si():
     result = parse("XIC(SignalA:SI)OTE(Flag);")
     rungs = result.unwrap()
