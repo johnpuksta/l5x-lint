@@ -4,9 +4,26 @@ Lark Scanner Priority:
     TAG_BASE uses priority -1 to sort after keywords (priority 0)
     to prevent identifiers from shadowing keywords.
 
-    All 26 keyword terminals use /(?i:keyword)/ regex (case-insensitive).
+    All keyword terminals use /(?i:keyword)/ regex (case-insensitive).
     TAG_BASE.-1 ensures identifiers don't match before keywords.
+
+    POWER.200, HEX_LITERAL.100, OCTAL_LITERAL.100, BINARY_LITERAL.100,
+    TIME_LITERAL.100, DATE_LITERAL.100, AMPERSAND.100 use high priority
+    to match before broader patterns.
+
+IEC 61131-3 Edition 4 Features:
+    - Exponentiation ** (right-associative, precedence between unary and *)
+    - MOD operator (same precedence as * /)
+    - & operator (boolean/bitwise AND, same precedence as AND)
+    - Hex (16#FF), Octal (8#77), Binary (2#1010_1100) integer literals
+    - Integer underscore separators (1_000_000)
+    - Typed literals (INT#42, REAL#3.14, T#5s, D#2025-01-15, etc.)
+    - $-based string escape sequences ($$, $', $L, $R, $T, $N, $P, $nn, $nnnn)
+    - Empty statements (standalone ;)
+    - Multi-dimensional array indexing (Arr[1,2])
 """
+
+import re
 
 from lark import Lark, Transformer, UnexpectedInput
 from returns.result import Failure, Result, Success
@@ -44,19 +61,21 @@ statement: assignment
          | call_statement
          | exit_statement
          | return_statement
+         | empty_statement
 
 assignment: tag_path ASSIGN expression SEMICOLON
 
 if_statement: IF expression THEN statement* (ELSIF expression THEN statement*)* (ELSE statement*)? END_IF SEMICOLON?
 
 case_statement: CASE expression OF case_element+ (ELSE statement*)? END_CASE SEMICOLON?
-case_element: expression (COMMA expression)* COLON statement*
+case_element: case_selector (COMMA case_selector)* COLON statement*
+case_selector: expression | expression DOTDOT expression
 
 for_loop: FOR tag_path ASSIGN expression TO expression (BY expression)? DO statement+ END_FOR SEMICOLON?
 
-while_loop: WHILE expression DO statement+ END_WHILE SEMICOLON?
+while_loop: WHILE expression DO statement* END_WHILE SEMICOLON?
 
-repeat_loop: REPEAT statement+ UNTIL expression END_REPEAT SEMICOLON?
+repeat_loop: REPEAT statement* UNTIL expression END_REPEAT SEMICOLON?
 
 call_statement: call SEMICOLON
 
@@ -64,22 +83,35 @@ exit_statement: EXIT SEMICOLON
 
 return_statement: RETURN SEMICOLON
 
+empty_statement: SEMICOLON
+
 call: TAG_BASE LPAREN (expression (COMMA expression)*)? RPAREN
 wildcard: WILDCARD
 
 expression: short_circuit_expr
 short_circuit_expr: or_expr (AND_THEN or_expr | OR_ELSE or_expr)*
-or_expr: and_expr (OR and_expr)*
-and_expr: compare_expr (AND compare_expr)*
+or_expr: xor_expr (OR xor_expr)*
+xor_expr: and_expr (XOR and_expr)*
+and_expr: compare_expr ((AND | AMPERSAND) compare_expr)*
 compare_expr: add_expr ((EQ | NE | LT | GT | LE | GE) add_expr)?
 add_expr: mul_expr ((PLUS | MINUS) mul_expr)*
-mul_expr: unary_expr ((MUL | DIV | MOD) unary_expr)*
-unary_expr: (MINUS | NOT)* atom
-atom: tag_path | number | bool_literal | string_literal | wildcard | call | LPAREN expression RPAREN
+mul_expr: power_expr ((MUL | DIV | MOD) power_expr)*
+power_expr: unary_expr (POWER power_expr)?
+unary_expr: (MINUS | NOT | PLUS)* atom
+atom: tag_path | typed_literal | number | time_literal | date_literal
+     | bool_literal | string_literal | wildcard | call | LPAREN expression RPAREN
 
-tag_path: TAG_BASE (DOT TAG_BASE | LSQB INTEGER RSQB | LSQB TAG_BASE RSQB)*
+tag_path: TAG_BASE (DOT TAG_BASE | LSQB expression RSQB | LSQB expression (COMMA expression)* RSQB)*
 
-number: INTEGER | FLOAT
+typed_literal: INT_TYPED | DINT_TYPED | SINT_TYPED | UINT_TYPED
+             | REAL_TYPED | LREAL_TYPED | TIME_TYPED | DATE_TYPED
+             | TOD_TYPED | DT_TYPED | STRING_TYPED | WSTRING_TYPED
+             | CHAR_TYPED | WCHAR_TYPED
+
+time_literal: TIME_LITERAL
+date_literal: DATE_LITERAL | TOD_LITERAL | DT_LITERAL
+
+number: INTEGER | HEX_LITERAL | OCTAL_LITERAL | BINARY_LITERAL | FLOAT
 
 string_literal: STRING
 
@@ -110,12 +142,14 @@ OR: /(?i:or)/
 OR_ELSE.100: /(?i:or_else)/
 AND: /(?i:and)/
 AND_THEN.100: /(?i:and_then)/
+XOR: /(?i:xor)/
 NOT: /(?i:not)/
 MOD.100: /(?i:mod)/
 TRUE: /(?i:true)/
 FALSE: /(?i:false)/
 
 // Operators
+POWER.200: "**"
 ASSIGN: ":="
 EQ: "="
 NE: "<>"
@@ -127,6 +161,8 @@ PLUS: "+"
 MINUS: "-"
 MUL: "*"
 DIV: "/"
+AMPERSAND.100: "&"
+DOTDOT: ".."
 
 // Structure
 LPAREN: "("
@@ -141,10 +177,60 @@ RSQB: "]"
 // Identifiers and literals
 WILDCARD: "?"
 TAG_BASE.-1: /[A-Za-z_][A-Za-z0-9_]*/
-INTEGER: /-?[0-9]+/
-FLOAT: /-?[0-9]+\.[0-9]+([eE][-+]?[0-9]+)?/
+
+// Numeric literals — hex, octal, binary with optional underscore separators
+HEX_LITERAL.100: /16#[0-9A-Fa-f][0-9A-Fa-f_]*/ | /16#[0-9A-Fa-f][0-9A-Fa-f_]*\.[0-9A-Fa-f][0-9A-Fa-f_]*/
+OCTAL_LITERAL.100: /8#[0-7][0-7_]*/
+BINARY_LITERAL.100: /2#[01][01_]*/
+INTEGER: /-?[0-9][0-9_]*/
+FLOAT: /-?[0-9][0-9_]*\.[0-9][0-9_]*([eE][-+]?[0-9][0-9_]*)?/
+
+// Typed literals — INT#42, REAL#3.14, T#5s, D#2025-01-15, etc.
+INT_TYPED.100: /(?i:int)#-?[0-9][0-9_]*/
+DINT_TYPED.100: /(?i:dint)#-?[0-9][0-9_]*/
+SINT_TYPED.100: /(?i:sint)#-?[0-9][0-9_]*/
+UINT_TYPED.100: /(?i:uint)#[0-9][0-9_]*/
+REAL_TYPED.100: /(?i:real)#-?[0-9][0-9_]*\.[0-9][0-9_]*/
+LREAL_TYPED.100: /(?i:lreal)#-?[0-9][0-9_]*\.[0-9][0-9_]*([eE][-+]?[0-9][0-9_]*)?/
+TIME_TYPED.100: /(?i:time)#-?[0-9]+(d|h|m(?!s)|s|ms|us|ns)/
+DATE_TYPED.100: /(?i:date)#[0-9]{4}-[0-9]{2}-[0-9]{2}/
+TOD_TYPED.100: /(?i:(?:time_of_day|tod))#[0-9]{2}:[0-9]{2}:[0-9]{2}/
+DT_TYPED.100: /(?i:(?:date_and_time|dt))#[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}/
+STRING_TYPED.100: /(?i:string)(?:\([0-9]+\))?#'[^']*(?:''[^']*)*'/
+WSTRING_TYPED.100: /(?i:wstring)(?:\([0-9]+\))?#"[^"]*(?:""[^"]*)*"/
+CHAR_TYPED.100: /(?i:char)#'[^']'/
+WCHAR_TYPED.100: /(?i:wchar)#"[^"]"/
+
+// Time literal — T#5s, T#1h2m3s4ms, TIME#5s
+// Longest patterns first to avoid premature short matches
+TIME_LITERAL.100: /(?i:t(?:ime)?)#[0-9]+d[0-9]+h[0-9]+m(?!s)[0-9]+s[0-9]+ms[0-9]+us[0-9]+ns/
+              | /(?i:t(?:ime)?)#[0-9]+d[0-9]+h[0-9]+m(?!s)[0-9]+s[0-9]+ms/
+              | /(?i:t(?:ime)?)#[0-9]+d[0-9]+h[0-9]+m(?!s)[0-9]+s/
+              | /(?i:t(?:ime)?)#[0-9]+h[0-9]+m(?!s)[0-9]+s[0-9]+ms/
+              | /(?i:t(?:ime)?)#[0-9]+h[0-9]+m(?!s)[0-9]+s/
+              | /(?i:t(?:ime)?)#[0-9]+m(?!s)[0-9]+s[0-9]+ms/
+              | /(?i:t(?:ime)?)#[0-9]+d[0-9]+h[0-9]+m(?!s)/
+              | /(?i:t(?:ime)?)#[0-9]+d[0-9]+h/
+              | /(?i:t(?:ime)?)#[0-9]+h[0-9]+m(?!s)/
+              | /(?i:t(?:ime)?)#[0-9]+m(?!s)[0-9]+s/
+              | /(?i:t(?:ime)?)#[0-9]+s[0-9]+ms/
+              | /(?i:t(?:ime)?)#[0-9]+d/
+              | /(?i:t(?:ime)?)#[0-9]+h/
+              | /(?i:t(?:ime)?)#[0-9]+m(?!s)/
+              | /(?i:t(?:ime)?)#[0-9]+s/
+              | /(?i:t(?:ime)?)#[0-9]+ms/
+              | /(?i:t(?:ime)?)#[0-9]+us/
+              | /(?i:t(?:ime)?)#[0-9]+ns/
+
+// Date/time literals — D#2025-01-15, TOD#14:30:00, DT#2025-01-15-14:30:00
+DATE_LITERAL.100: /(?i:d(?:ate)?)#[0-9]{4}-[0-9]{2}-[0-9]{2}/
+TOD_LITERAL.100: /(?i:(?:time_of_day|tod))#[0-9]{2}:[0-9]{2}:[0-9]{2}/
+DT_LITERAL.100: /(?i:(?:date_and_time|dt))#[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}/
+
+// String — single-quoted with '' escape
 STRING: /'[^']*(?:''[^']*)*'/
 
+// Comments
 COMMENT1: /\(\*[\s\S]*?\*\)/
 COMMENT2: /\/\/[^\n]*/
 COMMENT3: /\/\*[\s\S]*?\*\//
@@ -159,15 +245,123 @@ ENDREGION: /(?i:#endregion[^\n]*)/
 """
 
 
+def _process_string_escapes(s: str) -> str:
+    """Process IEC 61131-3 $-based string escape sequences."""
+    result = []
+    i = 0
+    while i < len(s):
+        if s[i] == "$" and i + 1 < len(s):
+            next_char = s[i + 1]
+            if next_char == "$":
+                result.append("$")
+                i += 2
+            elif next_char in ("'", '"'):
+                result.append(next_char)
+                i += 2
+            elif next_char in ("L", "l"):
+                result.append("\n")
+                i += 2
+            elif next_char in ("N", "n"):
+                result.append("\r\n")
+                i += 2
+            elif next_char in ("R", "r"):
+                result.append("\r")
+                i += 2
+            elif next_char in ("T", "t"):
+                result.append("\t")
+                i += 2
+            elif next_char in ("P", "p"):
+                result.append("\f")
+                i += 2
+            elif next_char in "0123456789ABCDEFabcdef":
+                # Hex escape: $nn (2 hex digits for STRING)
+                hex_str = ""
+                j = i + 1
+                while j < len(s) and j < i + 5 and s[j] in "0123456789ABCDEFabcdef":
+                    hex_str += s[j]
+                    j += 1
+                if hex_str:
+                    try:
+                        result.append(chr(int(hex_str, 16)))
+                    except ValueError:
+                        result.append("$" + hex_str)
+                    i = j
+                else:
+                    result.append(s[i])
+                    i += 1
+            else:
+                result.append(s[i])
+                i += 1
+        else:
+            result.append(s[i])
+            i += 1
+    return "".join(result)
+
+
+def _parse_int_literal(text: str) -> int:
+    """Parse an integer literal, stripping underscores."""
+    return int(text.replace("_", ""))
+
+
+def _parse_float_literal(text: str) -> float:
+    """Parse a float literal, stripping underscores."""
+    return float(text.replace("_", ""))
+
+
+def _parse_based_literal(text: str) -> int:
+    """Parse a based literal like 16#FF, 8#77, 2#1010_1100."""
+    base_str, value_str = text.split("#", 1)
+    base = int(base_str)
+    return int(value_str.replace("_", ""), base)
+
+
+def _parse_time_literal(text: str) -> int:
+    """Parse a time literal like T#5s, T#1h2m3s4ms into milliseconds."""
+    # Strip the prefix (T# or TIME#)
+    _, value = text.split("#", 1)
+    value = value.lower()
+
+    total_ms = 0
+    # Parse each component
+    pattern = re.compile(r"(\d+)(d|h|m(?!s)|s|ms|us|ns)")
+    for match in pattern.finditer(value):
+        num = int(match.group(1))
+        unit = match.group(2)
+        if unit == "d":
+            total_ms += num * 86400000
+        elif unit == "h":
+            total_ms += num * 3600000
+        elif unit == "m":
+            total_ms += num * 60000
+        elif unit == "s":
+            total_ms += num * 1000
+        elif unit == "ms":
+            total_ms += num
+        elif unit == "us":
+            total_ms += num // 1000
+        elif unit == "ns":
+            total_ms += num // 1000000
+    return total_ms
+
+
+def _parse_date_literal(text: str) -> str:
+    """Parse a date literal like D#2025-01-15."""
+    _, value = text.split("#", 1)
+    return value.strip()
+
+
 class _StTransformer(Transformer):
     def start(self, items):
         return items[0]
 
     def st_program(self, items):
-        return StProgram(statements=list(items))
+        return StProgram(statements=[s for s in items if s is not None])
 
     def statement(self, items):
         return items[0]
+
+    def empty_statement(self, _items):
+        return None
 
     def assignment(self, items):
         target, _assign, expr, _semi = items
@@ -207,7 +401,6 @@ class _StTransformer(Transformer):
         )
 
     def case_statement(self, items):
-        # items: ["case", expr, "of", *case_elements, "end_case"]
         expr = items[1]
         cases = []
         else_body = []
@@ -222,20 +415,31 @@ class _StTransformer(Transformer):
             elif item == "end_case":
                 break
             else:
-                # case_element returns (selectors, body_statements)
                 cases.append(item)
         return StCase(expression=expr, cases=cases, else_body=else_body)
 
     def case_element(self, items):
-        selectors = items[:-1]
-        colon_idx = 0
-        for idx, item in enumerate(items):
+        # items: [selector, ",", selector, ..., ":", statement*]
+        selectors = []
+        body = []
+        in_body = False
+        for item in items:
             if item == ":":
-                colon_idx = idx
-                break
-        selectors = [items[i] for i in range(colon_idx)]
-        body = [it for it in items[colon_idx + 1 :] if not isinstance(it, str)]
+                in_body = True
+                continue
+            if in_body:
+                if not isinstance(item, str):
+                    body.append(item)
+            else:
+                if not isinstance(item, str) or item != ",":
+                    selectors.append(item)
         return (selectors, body)
+
+    def case_selector(self, items):
+        if len(items) == 1:
+            return items[0]
+        # Range: expression DOTDOT expression
+        return ("range", items[0], items[2])
 
     def for_loop(self, items):
         var = items[1]
@@ -269,10 +473,10 @@ class _StTransformer(Transformer):
         callee, _semi = items
         return callee
 
-    def exit_statement(self, items):
+    def exit_statement(self, _items):
         return StExit()
 
-    def return_statement(self, items):
+    def return_statement(self, _items):
         return StReturn()
 
     def call(self, items):
@@ -305,8 +509,11 @@ class _StTransformer(Transformer):
     def or_expr(self, items):
         return self._build_binary(items, "or")
 
+    def xor_expr(self, items):
+        return self._build_binary(items, "xor")
+
     def and_expr(self, items):
-        return self._build_binary(items, "and")
+        return self._build_binary(items, "and", "&")
 
     def compare_expr(self, items):
         if len(items) == 1:
@@ -317,7 +524,19 @@ class _StTransformer(Transformer):
         return self._build_binary(items, "+", "-")
 
     def mul_expr(self, items):
-        return self._build_binary(items, "*", "/")
+        return self._build_binary(items, "*", "/", "mod")
+
+    def power_expr(self, items):
+        if len(items) == 1:
+            return items[0]
+        # Right-associative: a ** b ** c = a ** (b ** c)
+        result = items[0]
+        i = 1
+        while i < len(items):
+            right = items[i + 1] if i + 1 < len(items) else items[i]
+            i += 2
+            result = StBinaryOp(left=result, op="**", right=right)
+        return result
 
     def _build_binary(self, items, *ops):
         if len(items) == 1:
@@ -338,7 +557,7 @@ class _StTransformer(Transformer):
             result = StUnaryOp(op=item, operand=result)
         return result
 
-    def wildcard(self, items):
+    def wildcard(self, _items):
         return StLiteral(value="?")
 
     def atom(self, items):
@@ -349,38 +568,160 @@ class _StTransformer(Transformer):
             return StTagRef(path=item)
         return item
 
+    def typed_literal(self, items):
+        raw = str(items[0])
+        if "#" not in raw:
+            return StLiteral(value=raw)
+        type_prefix, value_str = raw.split("#", 1)
+        type_lower = type_prefix.lower()
+        if type_lower in ("int", "dint", "sint", "uint", "lint", "udint", "usint", "ulint"):
+            return StLiteral(value=_parse_int_literal(value_str))
+        elif type_lower in ("real", "lreal"):
+            return StLiteral(value=_parse_float_literal(value_str))
+        elif type_lower in ("time",):
+            return StLiteral(value=_parse_time_literal(raw))
+        elif type_lower in ("date",):
+            return StLiteral(value=_parse_date_literal(raw))
+        elif type_lower in ("tod", "time_of_day"):
+            return StLiteral(value=_parse_date_literal(raw))
+        elif type_lower in ("dt", "date_and_time"):
+            return StLiteral(value=_parse_date_literal(raw))
+        elif type_lower in ("string",):
+            inner = value_str[1:-1] if len(value_str) >= 2 else value_str
+            return StLiteral(value=_process_string_escapes(inner.replace("''", "'")))
+        elif type_lower in ("wstring",):
+            inner = value_str[1:-1] if len(value_str) >= 2 else value_str
+            return StLiteral(value=_process_string_escapes(inner.replace('""', '"')))
+        elif type_lower in ("char",):
+            return StLiteral(value=value_str[1] if len(value_str) >= 2 else "")
+        elif type_lower in ("wchar",):
+            return StLiteral(value=value_str[1] if len(value_str) >= 2 else "")
+        return StLiteral(value=raw)
+
+    def time_literal(self, items):
+        return StLiteral(value=_parse_time_literal(str(items[0])))
+
+    def date_literal(self, items):
+        return StLiteral(value=_parse_date_literal(str(items[0])))
+
     def tag_path(self, items):
         segments = [TagPathSegment(name=str(items[0]))]
         for item in items[1:]:
-            if isinstance(item, str) and item in {".", "[", "]"}:
+            if isinstance(item, str) and item in {".", "[", "]", ","}:
                 continue
-            if isinstance(item, (int, float)):
-                segments[-1].index = int(item)
+            # StLiteral with integer value → array index
+            if isinstance(item, StLiteral) and isinstance(item.value, int):
+                if segments[-1].index is not None:
+                    segments.append(TagPathSegment(name=str(item.value)))
+                else:
+                    segments[-1].index = item.value
+            # StTagRef used as array index (variable index) → treat as name segment
+            elif isinstance(item, StTagRef):
+                segments.append(TagPathSegment(name=item.path.segments[0].name))
+            elif isinstance(item, (int, float)):
+                if segments[-1].index is not None:
+                    segments.append(TagPathSegment(name=str(int(item))))
+                else:
+                    segments[-1].index = int(item)
             elif isinstance(item, str) and item.isdigit():
-                segments[-1].index = int(item)
+                if segments[-1].index is not None:
+                    segments.append(TagPathSegment(name=item))
+                else:
+                    segments[-1].index = int(item)
             elif isinstance(item, str):
                 segments.append(TagPathSegment(name=str(item)))
         return TagPath(segments=segments)
 
     def string_literal(self, items):
         raw = str(items[0])
-        return StLiteral(value=raw[1:-1].replace("''", "'"))
+        inner = raw[1:-1].replace("''", "'")
+        return StLiteral(value=_process_string_escapes(inner))
 
     def number(self, items):
         value = items[0]
-        if isinstance(value, float) or "." in str(value):
-            return StLiteral(value=float(str(value)))
-        return StLiteral(value=int(str(value)))
+        if isinstance(value, float):
+            return StLiteral(value=value)
+        if isinstance(value, int):
+            return StLiteral(value=value)
+        s = str(value)
+        if s.startswith("16#") or s.startswith("8#") or s.startswith("2#"):
+            return StLiteral(value=_parse_based_literal(s))
+        if "." in s or "e" in s.lower():
+            return StLiteral(value=_parse_float_literal(s))
+        return StLiteral(value=_parse_int_literal(s))
 
     def bool_literal(self, items):
         val = str(items[0])
         return StLiteral(value=(val.upper() == "TRUE"))
 
     def INTEGER(self, token):  # noqa: N802
-        return int(str(token))
+        return int(str(token).replace("_", ""))
 
     def FLOAT(self, token):  # noqa: N802
-        return float(str(token))
+        return float(str(token).replace("_", ""))
+
+    def HEX_LITERAL(self, token):  # noqa: N802
+        return str(token)
+
+    def OCTAL_LITERAL(self, token):  # noqa: N802
+        return str(token)
+
+    def BINARY_LITERAL(self, token):  # noqa: N802
+        return str(token)
+
+    def TIMELiteral(self, token):  # noqa: N802
+        return str(token)
+
+    def DATELiteral(self, token):  # noqa: N802
+        return str(token)
+
+    def TODLiteral(self, token):  # noqa: N802
+        return str(token)
+
+    def DTLiteral(self, token):  # noqa: N802
+        return str(token)
+
+    def INT_TYPED(self, token):  # noqa: N802
+        return str(token)
+
+    def DINT_TYPED(self, token):  # noqa: N802
+        return str(token)
+
+    def SINT_TYPED(self, token):  # noqa: N802
+        return str(token)
+
+    def UINT_TYPED(self, token):  # noqa: N802
+        return str(token)
+
+    def REAL_TYPED(self, token):  # noqa: N802
+        return str(token)
+
+    def LREAL_TYPED(self, token):  # noqa: N802
+        return str(token)
+
+    def TIME_TYPED(self, token):  # noqa: N802
+        return str(token)
+
+    def DATE_TYPED(self, token):  # noqa: N802
+        return str(token)
+
+    def TOD_TYPED(self, token):  # noqa: N802
+        return str(token)
+
+    def DT_TYPED(self, token):  # noqa: N802
+        return str(token)
+
+    def STRING_TYPED(self, token):  # noqa: N802
+        return str(token)
+
+    def WSTRING_TYPED(self, token):  # noqa: N802
+        return str(token)
+
+    def CHAR_TYPED(self, token):  # noqa: N802
+        return str(token)
+
+    def WCHAR_TYPED(self, token):  # noqa: N802
+        return str(token)
 
     def TRUE(self, token):  # noqa: N802
         return str(token)
@@ -406,8 +747,17 @@ class _StTransformer(Transformer):
     def AND_THEN(self, token):  # noqa: N802
         return "and_then"
 
+    def XOR(self, token):  # noqa: N802
+        return "xor"
+
     def NOT(self, token):  # noqa: N802
         return "not"
+
+    def AMPERSAND(self, token):  # noqa: N802
+        return "&"
+
+    def POWER(self, token):  # noqa: N802
+        return "**"
 
     def EQ(self, token):  # noqa: N802
         return "="
@@ -521,6 +871,9 @@ class _StTransformer(Transformer):
         return token.value
 
     def DOT(self, token):  # noqa: N802
+        return token.value
+
+    def DOTDOT(self, token):  # noqa: N802
         return token.value
 
     def LSQB(self, token):  # noqa: N802

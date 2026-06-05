@@ -9,3 +9,7 @@ build/
 venv/
 .vscode/
 .coverage
+
+# PDF extraction output
+docs/*_pages/
+docs/*.txt

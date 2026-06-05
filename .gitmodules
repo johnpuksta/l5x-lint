@@ -22,3 +22,24 @@
 [submodule "references/trust-platform"]
 	path = references/trust-platform
 	url = https://github.com/johannesPettersson80/trust-platform.git
+[submodule "references/iec-checker"]
+	path = references/iec-checker
+	url = https://github.com/iec-checker/iec-checker.git
+[submodule "references/logix"]
+	path = references/logix
+	url = https://github.com/ieedan/logix.git
+[submodule "references/tree-sitter-iec61131-3-st"]
+	path = references/tree-sitter-iec61131-3-st
+	url = https://github.com/Zeugwerk/tree-sitter-iec61131-3-st.git
+[submodule "references/L5XJS"]
+	path = references/L5XJS
+	url = https://github.com/cmseaton42/L5XJS.git
+[submodule "references/matiec"]
+	path = references/matiec
+	url = https://github.com/thiagoralves/matiec.git
+[submodule "references/blark"]
+	path = references/blark
+	url = https://github.com/klauer/blark.git
+[submodule "references/radevgit-plc"]
+	path = references/radevgit-plc
+	url = https://github.com/radevgit/plc.git

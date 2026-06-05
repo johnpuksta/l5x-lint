@@ -190,13 +190,18 @@ class _RLLTransformer(Transformer):
 
 
 def _merge_branches(items: list) -> list[Instruction]:
+    """Merge _BranchItem objects into Instruction.branch attributes."""
     result: list[Instruction] = []
     for item in items:
         if isinstance(item, Instruction):
             result.append(item)
         elif isinstance(item, _BranchItem) and item.paths:
+            # Convert each path (list of items) into a merged instruction list
+            branch_paths = []
+            for path in item.paths:
+                branch_paths.append(_merge_branches(path))
             if result:
-                result[-1].branch = item.paths
+                result[-1].branch = branch_paths
     return result
 
 
