@@ -27,6 +27,8 @@ dependencies = [
     "returns>=0.27",
     "mcp>=1.0",
     "xmlschema>=3.0",
+    "openai>=2.41.0",
+    "pymupdf>=1.27.2.3",
 ]
 
 [tool.setuptools.packages.find]
@@ -79,4 +81,5 @@ markers = [
 [dependency-groups]
 dev = [
     "pytest>=9.0.3",
+    "ruff>=0.15.14",
 ]

@@ -13,3 +13,4 @@ venv/
 # PDF extraction output
 docs/*_pages/
 docs/*.txt
+docs/*_context.md
