@@ -868,3 +868,128 @@ class TestErrorTypes:
                 pass
             case _:
                 assert False, f"Expected Failure, got {result}"
+
+
+class TestNamespaceHandling:
+    def test_xml_with_namespace_parses(self):
+        xml = '''<?xml version="1.0" encoding="UTF-8"?>
+<RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.00"
+    xmlns="http://www.rockwellautomation.com/schemas/RSLogix5000Content">
+  <Controller Name="Test">
+    <DataTypes Use="Context"/>
+    <Tags Use="Context">
+      <Tag Name="T1" TagType="Base" DataType="DINT" Radix="Decimal"
+           Constant="false" ExternalAccess="Read/Write">
+        <Data Format="Decorated">
+          <DataValue DataType="DINT" Radix="Decimal" Value="42"/>
+        </Data>
+      </Tag>
+    </Tags>
+    <Programs Use="Context"/>
+    <Tasks Use="Context"/>
+  </Controller>
+</RSLogix5000Content>'''
+        result = parse_l5x(xml)
+        assert isinstance(result, Success)
+        proj = result.unwrap()
+        assert len(proj.controller.tags) == 1
+        assert proj.controller.tags[0].name == "T1"
+
+    def test_xml_without_namespace_parses(self):
+        xml = minimal_l5x("""
+    <DataTypes Use="Context"/>
+    <Tags Use="Context">
+      <Tag Name="T1" TagType="Base" DataType="DINT" Radix="Decimal"
+           Constant="false" ExternalAccess="Read/Write"/>
+    </Tags>
+    <Programs Use="Context"/>
+    <Tasks Use="Context"/>""")
+        result = parse_l5x(xml)
+        assert isinstance(result, Success)
+
+
+class TestTagTypes:
+    def test_alias_tag(self):
+        xml = minimal_l5x("""
+    <DataTypes Use="Context"/>
+    <Tags Use="Context">
+      <Tag Name="BaseTag" TagType="Base" DataType="DINT" Radix="Decimal"
+           Constant="false" ExternalAccess="Read/Write"/>
+      <Tag Name="AliasTag" TagType="Alias" DataType="DINT" Radix="Decimal"
+           Constant="false" ExternalAccess="Read/Write">
+        <Data><Link href="Controller.Tags[BaseTag]"/></Data>
+      </Tag>
+    </Tags>
+    <Programs Use="Context"/>
+    <Tasks Use="Context"/>""")
+        result = parse_l5x(xml)
+        assert isinstance(result, Success)
+        proj = result.unwrap()
+        assert len(proj.controller.tags) == 2
+
+    def test_produced_tag(self):
+        xml = minimal_l5x("""
+    <DataTypes Use="Context"/>
+    <Tags Use="Context">
+      <Tag Name="ProdTag" TagType="Produced" DataType="DINT" Radix="Decimal"
+           Constant="false" ExternalAccess="Read/Write">
+        <ProducedTagConnection>
+          <Connection ProduceCount="10" MinimumRPI="0.196"
+                      MaximumRPI="536870.911" DefaultRPI="10.0"/>
+        </ProducedTagConnection>
+      </Tag>
+    </Tags>
+    <Programs Use="Context"/>
+    <Tasks Use="Context"/>""")
+        result = parse_l5x(xml)
+        assert isinstance(result, Success)
+        proj = result.unwrap()
+        assert len(proj.controller.tags) == 1
+
+    def test_consumed_tag(self):
+        xml = minimal_l5x("""
+    <DataTypes Use="Context"/>
+    <Tags Use="Context">
+      <Tag Name="ConsTag" TagType="Consumed" DataType="DINT" Radix="Decimal"
+           Constant="false" ExternalAccess="Read/Write">
+        <ConsumedTagConnection>
+          <Connection Producer="RemotePLC" RemoteTag="ProdTag" RPI="10.0"/>
+        </ConsumedTagConnection>
+      </Tag>
+    </Tags>
+    <Programs Use="Context"/>
+    <Tasks Use="Context"/>""")
+        result = parse_l5x(xml)
+        assert isinstance(result, Success)
+        proj = result.unwrap()
+        assert len(proj.controller.tags) == 1
+
+    def test_tag_with_description(self):
+        xml = minimal_l5x("""
+    <DataTypes Use="Context"/>
+    <Tags Use="Context">
+      <Tag Name="Described" TagType="Base" DataType="DINT" Radix="Decimal"
+           Constant="false" ExternalAccess="Read/Write">
+        <Description><![CDATA[This is a tag description with <special> & chars]]></Description>
+      </Tag>
+    </Tags>
+    <Programs Use="Context"/>
+    <Tasks Use="Context"/>""")
+        result = parse_l5x(xml)
+        assert isinstance(result, Success)
+        proj = result.unwrap()
+        assert proj.controller.tags[0].description == "This is a tag description with <special> & chars"
+
+    def test_tag_constant_flag(self):
+        xml = minimal_l5x("""
+    <DataTypes Use="Context"/>
+    <Tags Use="Context">
+      <Tag Name="ConstTag" TagType="Base" DataType="DINT" Radix="Decimal"
+           Constant="true" ExternalAccess="Read/Write"/>
+    </Tags>
+    <Programs Use="Context"/>
+    <Tasks Use="Context"/>""")
+        result = parse_l5x(xml)
+        assert isinstance(result, Success)
+        proj = result.unwrap()
+        assert proj.controller.tags[0].constant is True

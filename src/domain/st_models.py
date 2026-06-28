@@ -105,6 +105,37 @@ class StReturn:
     line: int = 0
 
 
+@dataclass
+class StVarDecl:
+    name: str
+    type_name: str
+    dimension: int = 0
+    at_address: str = ""
+    initial_value: "StExpression | None" = None
+    retain: bool = False
+    non_retain: bool = False
+    constant: bool = False
+
+
+@dataclass
+class StVarBlock:
+    block_type: str
+    declarations: list[StVarDecl] = field(default_factory=list)
+    line: int = 0
+
+
+@dataclass
+class StTypeBlock:
+    declarations: list = field(default_factory=list)
+    line: int = 0
+
+
+@dataclass
+class StNamedArg:
+    name: str
+    value: "StExpression"
+
+
 StStatement = (
     StAssignment
     | StIf
@@ -119,6 +150,10 @@ StStatement = (
 )
 
 
+StDeclaration = StVarBlock | StTypeBlock
+
+
 @dataclass
 class StProgram:
+    declarations: list[StDeclaration] = field(default_factory=list)
     statements: list[StStatement] = field(default_factory=list)

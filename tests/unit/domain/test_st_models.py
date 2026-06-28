@@ -26,7 +26,7 @@ def test_st_program_with_statements():
     target = TagPath([TagPathSegment("x")])
     expr = StLiteral(42)
     stmt = StAssignment(target, expr)
-    p = StProgram([stmt])
+    p = StProgram(statements=[stmt])
     assert len(p.statements) == 1
 
 

@@ -40,6 +40,9 @@ def parse_l5x(source: str | Path) -> Result[L5XProject, LintInternalError]:
                 pass
         return Failure(L5XStructureError(element="XML", detail=msg, line=line))
 
+    # Strip namespace prefixes from all element tags for uniform handling
+    _strip_namespaces(root)
+
     schema_revision = root.get("SchemaRevision", "")
     software_revision = root.get("SoftwareRevision", "")
 
@@ -75,3 +78,26 @@ def parse_l5x(source: str | Path) -> Result[L5XProject, LintInternalError]:
             controller=controller,
         )
     )
+
+
+def _strip_namespaces(element: ET.Element) -> None:
+    """Remove namespace prefixes from element tags and attributes.
+
+    L5X files may use xmlns namespace declarations which cause ElementTree
+    to prefix all tags (e.g., '{http://...}Controller'). This function
+    strips those prefixes so the rest of the parser can use simple tag names.
+    """
+    import re
+
+    def _strip_tag(tag: str) -> str:
+        if tag.startswith("{"):
+            return re.sub(r"\{[^}]+\}", "", tag)
+        return tag
+
+    element.tag = _strip_tag(element.tag)
+    new_attrib = {}
+    for key, value in element.attrib.items():
+        new_attrib[_strip_tag(key)] = value
+    element.attrib = new_attrib
+    for child in element:
+        _strip_namespaces(child)

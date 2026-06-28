@@ -40,17 +40,47 @@ from domain.st_models import (
     StIf,
     StJsr,
     StLiteral,
+    StNamedArg,
     StProgram,
     StRepeat,
     StReturn,
     StTagRef,
+    StTypeBlock,
     StUnaryOp,
+    StVarBlock,
+    StVarDecl,
     StWhile,
 )
 
 _GRAMMAR = r"""
 start: st_program
-st_program: statement*
+st_program: declaration* statement*
+
+declaration: var_block | type_block
+
+type_block: TYPE type_decl+ END_TYPE SEMICOLON?
+type_decl: TAG_BASE COLON LPAREN enum_value (COMMA enum_value)* RPAREN SEMICOLON
+         | TAG_BASE COLON STRUCT struct_member* END_STRUCT SEMICOLON
+         | TAG_BASE COLON TAG_BASE LSQB INTEGER RSQB SEMICOLON
+         | TAG_BASE COLON TAG_BASE DOTDOT TAG_BASE SEMICOLON
+         | TAG_BASE COLON POINTER TO TAG_BASE SEMICOLON
+         | TAG_BASE COLON TAG_BASE SEMICOLON
+
+var_block: var_type var_decl* END_VAR SEMICOLON?
+var_type: VAR | VAR_INPUT | VAR_OUTPUT | VAR_IN_OUT | VAR_GLOBAL | VAR_EXTERNAL | VAR_TEMP
+var_decl: TAG_BASE COLON type_spec (ASSIGN expression)? (RETAIN | NON_RETAIN | CONSTANT)? SEMICOLON
+         | TAG_BASE AT IO_ADDRESS COLON type_spec (ASSIGN expression)? (RETAIN | NON_RETAIN | CONSTANT)? SEMICOLON
+
+type_spec: TAG_BASE
+         | TAG_BASE LSQB INTEGER RSQB
+         | TAG_BASE LSQB INTEGER COMMA INTEGER RSQB
+         | STRUCT struct_member* END_STRUCT
+         | ENUM enum_value* END_ENUM
+         | TAG_BASE DOTDOT TAG_BASE
+         | POINTER TO TAG_BASE
+
+struct_member: TAG_BASE COLON type_spec SEMICOLON
+enum_value: TAG_BASE (ASSIGN INTEGER)?
 
 statement: assignment
          | if_statement
@@ -85,7 +115,8 @@ return_statement: RETURN SEMICOLON
 
 empty_statement: SEMICOLON
 
-call: TAG_BASE LPAREN (expression (COMMA expression)*)? RPAREN
+call: TAG_BASE LPAREN (call_arg (COMMA call_arg)*)? RPAREN
+call_arg: expression | TAG_BASE ASSIGN expression
 wildcard: WILDCARD
 
 expression: short_circuit_expr
@@ -147,6 +178,25 @@ NOT: /(?i:not)/
 MOD.100: /(?i:mod)/
 TRUE: /(?i:true)/
 FALSE: /(?i:false)/
+TYPE.100: /(?i:type)/
+END_TYPE.100: /(?i:end_type)/
+STRUCT.100: /(?i:struct)/
+END_STRUCT.100: /(?i:end_struct)/
+ENUM.100: /(?i:enum)/
+END_ENUM.100: /(?i:end_enum)/
+POINTER.100: /(?i:pointer)/
+AT.100: /(?i:at)/
+VAR.100: /(?i:var)(?![\w])/
+VAR_INPUT.100: /(?i:var_input)/
+VAR_OUTPUT.100: /(?i:var_output)/
+VAR_IN_OUT.100: /(?i:var_in_out)/
+VAR_GLOBAL.100: /(?i:var_global)/
+VAR_EXTERNAL.100: /(?i:var_external)/
+VAR_TEMP.100: /(?i:var_temp)/
+END_VAR.100: /(?i:end_var)/
+RETAIN.100: /(?i:retain)/
+NON_RETAIN.100: /(?i:non_retain)/
+CONSTANT.100: /(?i:constant)/
 
 // Operators
 POWER.200: "**"
@@ -176,6 +226,7 @@ RSQB: "]"
 
 // Identifiers and literals
 WILDCARD: "?"
+IO_ADDRESS.100: /%[IQM][XBWDL][0-9]+(\.[0-9]+)?/
 TAG_BASE.-1: /[A-Za-z_][A-Za-z0-9_]*/
 
 // Numeric literals — hex, octal, binary with optional underscore separators
@@ -355,7 +406,117 @@ class _StTransformer(Transformer):
         return items[0]
 
     def st_program(self, items):
-        return StProgram(statements=[s for s in items if s is not None])
+        declarations = []
+        statements = []
+        for item in items:
+            if item is None:
+                continue
+            if isinstance(item, (StVarBlock, StTypeBlock)):
+                declarations.append(item)
+            else:
+                statements.append(item)
+        return StProgram(declarations=declarations, statements=statements)
+
+    def declaration(self, items):
+        return items[0] if items else None
+
+    def var_type(self, items):
+        return str(items[0]).lower()
+
+    def var_block(self, items):
+        block_type = str(items[0]).lower()
+        decls = [d for d in items[1:] if isinstance(d, StVarDecl)]
+        return StVarBlock(block_type=block_type, declarations=decls)
+
+    def var_decl(self, items):
+        name = str(items[0])
+        type_name = ""
+        dimension = 0
+        at_address = ""
+        initial_value = None
+        retain = False
+        non_retain = False
+        constant = False
+        i = 1
+        # Check for AT address
+        if isinstance(items[i], str) and items[i] == "at":
+            at_address = str(items[i + 1])
+            i += 3  # skip AT, address, COLON
+        # Skip COLON
+        if isinstance(items[i], str) and items[i] == ":":
+            i += 1
+        # type_spec returns (type_name, dimension) tuple
+        if isinstance(items[i], tuple):
+            type_name, dimension = items[i]
+        else:
+            type_name = str(items[i])
+        i += 1
+        # Check for ASSIGN expression
+        if i < len(items) and isinstance(items[i], str) and items[i] == ":=":
+            initial_value = items[i + 1]
+            i += 2
+        # Check for qualifiers
+        for j in range(i, len(items)):
+            val = items[j] if isinstance(items[j], str) else str(items[j])
+            val = val.lower()
+            if val == "retain":
+                retain = True
+            elif val == "non_retain":
+                non_retain = True
+            elif val == "constant":
+                constant = True
+        return StVarDecl(
+            name=name,
+            type_name=type_name,
+            dimension=dimension,
+            at_address=at_address,
+            initial_value=initial_value,
+            retain=retain,
+            non_retain=non_retain,
+            constant=constant,
+        )
+
+    def type_block(self, items):
+        decls = [d for d in items[1:] if d is not None and not isinstance(d, str)]
+        return StTypeBlock(declarations=decls)
+
+    def type_decl(self, items):
+        # items: [name, ":", ...type_def..., ";"]
+        name = str(items[0])
+        # Find the type definition (skip ":", "(", etc.)
+        type_def = []
+        for item in items[2:]:
+            if isinstance(item, str) and item == ";":
+                break
+            if isinstance(item, str) and item in (":", "(", ")", "pointer", "to", ","):
+                continue
+            type_def.append(item)
+        return (name, type_def)
+
+    def struct_member(self, items):
+        return ("member", str(items[0]), str(items[2]) if len(items) > 2 else "")
+
+    def enum_value(self, items):
+        name = str(items[0])
+        value = int(str(items[2])) if len(items) > 2 and items[2] is not None else None
+        return (name, value)
+
+    def type_spec(self, items):
+        # Returns (type_name, dimension) tuple
+        type_name = str(items[0])
+        dimension = 0
+        if len(items) > 1:
+            # Check for [N] dimension
+            for i, item in enumerate(items):
+                if isinstance(item, str) and item == "[" and i + 1 < len(items):
+                    try:
+                        dimension = int(str(items[i + 1]))
+                    except (ValueError, TypeError):
+                        pass
+        return (type_name, dimension)
+
+    def io_address(self, token):  # noqa: N802
+        return str(token)
 
     def statement(self, items):
         return items[0]
@@ -481,11 +642,11 @@ class _StTransformer(Transformer):
 
     def call(self, items):
         name = str(items[0])
-        separators = frozenset({",", ")"})
+        # Filter out separators
         args = [
             item
             for item in items[2:]
-            if not (isinstance(item, str) and item in separators)
+            if not (isinstance(item, str) and item in {",", ")"})
         ]
         if name.lower() == "jsr":
             routine_name = ""
@@ -499,6 +660,14 @@ class _StTransformer(Transformer):
                 rest_args = args[1:]
             return StJsr(routine_name=routine_name, args=rest_args)
         return StCall(name=name, args=args)
+
+    def call_arg(self, items):
+        if len(items) == 1:
+            return items[0]
+        # Named parameter: TAG_BASE ASSIGN expression
+        name = str(items[0])
+        value = items[2] if len(items) > 2 else items[1]
+        return StNamedArg(name=name, value=value)
 
     def expression(self, items):
         return items[0]
@@ -854,6 +1023,66 @@ class _StTransformer(Transformer):
 
     def RETURN(self, token):  # noqa: N802
         return "return"
+
+    def TYPE(self, token):  # noqa: N802
+        return "type"
+
+    def END_TYPE(self, token):  # noqa: N802
+        return "end_type"
+
+    def STRUCT(self, token):  # noqa: N802
+        return "struct"
+
+    def END_STRUCT(self, token):  # noqa: N802
+        return "end_struct"
+
+    def ENUM(self, token):  # noqa: N802
+        return "enum"
+
+    def END_ENUM(self, token):  # noqa: N802
+        return "end_enum"
+
+    def POINTER(self, token):  # noqa: N802
+        return "pointer"
+
+    def AT(self, token):  # noqa: N802
+        return "at"
+
+    def VAR(self, token):  # noqa: N802
+        return "var"
+
+    def VAR_INPUT(self, token):  # noqa: N802
+        return "var_input"
+
+    def VAR_OUTPUT(self, token):  # noqa: N802
+        return "var_output"
+
+    def VAR_IN_OUT(self, token):  # noqa: N802
+        return "var_in_out"
+
+    def VAR_GLOBAL(self, token):  # noqa: N802
+        return "var_global"
+
+    def VAR_EXTERNAL(self, token):  # noqa: N802
+        return "var_external"
+
+    def VAR_TEMP(self, token):  # noqa: N802
+        return "var_temp"
+
+    def END_VAR(self, token):  # noqa: N802
+        return "end_var"
+
+    def RETAIN(self, token):  # noqa: N802
+        return "retain"
+
+    def NON_RETAIN(self, token):  # noqa: N802
+        return "non_retain"
+
+    def CONSTANT(self, token):  # noqa: N802
+        return "constant"
+
+    def IO_ADDRESS(self, token):  # noqa: N802
+        return str(token)
 
     def SEMICOLON(self, token):  # noqa: N802
         return token.value
