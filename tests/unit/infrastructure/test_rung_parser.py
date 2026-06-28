@@ -325,6 +325,7 @@ def test_tag_with_colon_suffix_in_branch():
 # All Rockwell instruction types
 # ---------------------------------------------------------------------------
 
+
 class TestAllOpcodes:
     def test_bit_instructions(self):
         for opcode in ("XIC", "XIO", "OTE", "OTL", "OTU", "ONS", "OSR", "OSF"):
@@ -409,6 +410,7 @@ class TestAllOpcodes:
 # Nested branches
 # ---------------------------------------------------------------------------
 
+
 class TestNestedBranches:
     def test_simple_parallel(self):
         result = parse("XIC(A)[XIO(B),XIO(C)]OTE(D);")
@@ -469,6 +471,7 @@ class TestNestedBranches:
 # Tag path edge cases
 # ---------------------------------------------------------------------------
 
+
 class TestTagPaths:
     def test_simple_tag(self):
         result = parse("XIC(Motor_Start);")
@@ -513,12 +516,15 @@ class TestTagPaths:
     def test_program_tag(self):
         result = parse("XIC(Program:MainProgram.TagName);")
         rungs = result.unwrap()
-        assert rungs[0].instructions[0].operands[0].value == "Program:MainProgram.TagName"
+        assert (
+            rungs[0].instructions[0].operands[0].value == "Program:MainProgram.TagName"
+        )
 
 
 # ---------------------------------------------------------------------------
 # Instruction operand variations
 # ---------------------------------------------------------------------------
+
 
 class TestInstructionOperands:
     def test_zero_operand_instruction(self):
@@ -590,6 +596,7 @@ class TestInstructionOperands:
 # Rung structure
 # ---------------------------------------------------------------------------
 
+
 class TestRungStructure:
     def test_single_rung(self):
         result = parse("XIC(A)OTE(B);")
@@ -627,9 +634,12 @@ class TestRungStructure:
 # Realistic ladder logic patterns
 # ---------------------------------------------------------------------------
 
+
 class TestRealisticPatterns:
     def test_motor_start_stop(self):
-        text = "XIC(Motor_Start)XIC(Safety_Ok)[XIO(E_Stop),XIC(Auto_Mode)]OTE(Motor_Run);"
+        text = (
+            "XIC(Motor_Start)XIC(Safety_Ok)[XIO(E_Stop),XIC(Auto_Mode)]OTE(Motor_Run);"
+        )
         result = parse(text)
         rungs = result.unwrap()
         assert len(rungs) == 1
@@ -714,6 +724,7 @@ class TestRealisticPatterns:
 # Error cases
 # ---------------------------------------------------------------------------
 
+
 class TestErrorCases:
     def test_missing_closing_paren(self):
         result = parse("XIC(A")
@@ -727,6 +738,7 @@ class TestErrorCases:
 # ---------------------------------------------------------------------------
 # CMP instruction with expression
 # ---------------------------------------------------------------------------
+
 
 class TestCmpInstruction:
     def test_cmp_with_expression(self):
@@ -769,6 +781,7 @@ class TestCmpInstruction:
 # ---------------------------------------------------------------------------
 # CPT with parenthesized expressions and function calls
 # ---------------------------------------------------------------------------
+
 
 class TestCptParenthesizedExpressions:
     def test_cpt_with_parenthesized_expression(self):
@@ -844,6 +857,7 @@ class TestCptParenthesizedExpressions:
 # Unary prefix operators (NOT, !, -)
 # ---------------------------------------------------------------------------
 
+
 class TestUnaryOperators:
     def test_not_prefix(self):
         result = parse("CMP(NOT A);")
@@ -895,6 +909,7 @@ class TestUnaryOperators:
 # ---------------------------------------------------------------------------
 # Deeply nested branches (3+ levels)
 # ---------------------------------------------------------------------------
+
 
 class TestDeepNestedBranches:
     def test_three_way_parallel(self):

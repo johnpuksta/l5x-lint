@@ -7,7 +7,6 @@ Usage:
     python scripts/pdf_render.py --dpi 300          # custom DPI
 """
 
-import os
 import sys
 from pathlib import Path
 

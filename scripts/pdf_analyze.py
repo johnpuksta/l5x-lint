@@ -6,7 +6,6 @@ Usage:
     python scripts/pdf_analyze.py 1756-pm019_-en-p   # analyze one PDF
 """
 
-import os
 import sys
 from pathlib import Path
 
@@ -49,7 +48,9 @@ def analyze_pdf(pdf_path: Path):
                 xref = img[0]
                 base = doc.extract_image(xref)
                 print(
-                    f"    xref={xref}, {base['ext']}, {base['width']}x{base['height']}, {len(base['image'])} bytes"
+                    f"    xref={xref}, {base['ext']}, "
+                    f"{base['width']}x{base['height']}, "
+                    f"{len(base['image'])} bytes"
                 )
             break
 

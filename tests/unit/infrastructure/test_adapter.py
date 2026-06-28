@@ -872,7 +872,7 @@ class TestErrorTypes:
 
 class TestNamespaceHandling:
     def test_xml_with_namespace_parses(self):
-        xml = '''<?xml version="1.0" encoding="UTF-8"?>
+        xml = """<?xml version="1.0" encoding="UTF-8"?>
 <RSLogix5000Content SchemaRevision="1.0" SoftwareRevision="32.00"
     xmlns="http://www.rockwellautomation.com/schemas/RSLogix5000Content">
   <Controller Name="Test">
@@ -888,7 +888,7 @@ class TestNamespaceHandling:
     <Programs Use="Context"/>
     <Tasks Use="Context"/>
   </Controller>
-</RSLogix5000Content>'''
+</RSLogix5000Content>"""
         result = parse_l5x(xml)
         assert isinstance(result, Success)
         proj = result.unwrap()
@@ -978,7 +978,10 @@ class TestTagTypes:
         result = parse_l5x(xml)
         assert isinstance(result, Success)
         proj = result.unwrap()
-        assert proj.controller.tags[0].description == "This is a tag description with <special> & chars"
+        assert (
+            proj.controller.tags[0].description
+            == "This is a tag description with <special> & chars"
+        )
 
     def test_tag_constant_flag(self):
         xml = minimal_l5x("""

@@ -491,6 +491,7 @@ def test_mixed_block_and_line_comments():
 # Named parameters in function calls
 # ---------------------------------------------------------------------------
 
+
 class TestNamedParameters:
     def test_named_parameter(self):
         result = parse("LIMIT(MN := 10, IN := x, MX := 100);")
@@ -540,6 +541,7 @@ class TestNamedParameters:
 # ---------------------------------------------------------------------------
 # Variable declarations
 # ---------------------------------------------------------------------------
+
 
 class TestVariableDeclarations:
     def test_simple_var_block(self):
@@ -689,6 +691,7 @@ end_var"""
 # TYPE declarations
 # ---------------------------------------------------------------------------
 
+
 class TestTypeDeclarations:
     def test_enum_type(self):
         text = """TYPE
@@ -758,6 +761,7 @@ x := 42;"""
 # Realistic programs with declarations
 # ---------------------------------------------------------------------------
 
+
 class TestProgramWithDeclarations:
     def test_full_program(self):
         text = """VAR_INPUT
@@ -787,6 +791,7 @@ Timer1(IN := Motor_Run, PT := T#5s);"""
 # ---------------------------------------------------------------------------
 # Exponentiation operator **
 # ---------------------------------------------------------------------------
+
 
 class TestExponentiation:
     def test_simple_power(self):
@@ -843,6 +848,7 @@ class TestExponentiation:
 # MOD operator
 # ---------------------------------------------------------------------------
 
+
 class TestModOperator:
     def test_simple_mod(self):
         result = parse("x := 10 MOD 3;")
@@ -874,6 +880,7 @@ class TestModOperator:
 # & operator (boolean/bitwise AND)
 # ---------------------------------------------------------------------------
 
+
 class TestAmpersandOperator:
     def test_ampersand_as_and(self):
         result = parse("x := a & b;")
@@ -895,6 +902,7 @@ class TestAmpersandOperator:
 # ---------------------------------------------------------------------------
 # XOR operator
 # ---------------------------------------------------------------------------
+
 
 class TestXorOperator:
     def test_xor_operator(self):
@@ -924,6 +932,7 @@ class TestXorOperator:
 # ---------------------------------------------------------------------------
 # Hex, Octal, Binary integer literals
 # ---------------------------------------------------------------------------
+
 
 class TestBasedLiterals:
     def test_hex_literal(self):
@@ -980,6 +989,7 @@ class TestBasedLiterals:
 # Integer underscore separators
 # ---------------------------------------------------------------------------
 
+
 class TestUnderscoreSeparators:
     def test_integer_with_underscores(self):
         result = parse("x := 1_000_000;")
@@ -1006,6 +1016,7 @@ class TestUnderscoreSeparators:
 # ---------------------------------------------------------------------------
 # Typed literals
 # ---------------------------------------------------------------------------
+
 
 class TestTypedLiterals:
     def test_int_typed(self):
@@ -1061,6 +1072,7 @@ class TestTypedLiterals:
 # ---------------------------------------------------------------------------
 # Time/Date literals
 # ---------------------------------------------------------------------------
+
 
 class TestTimeLiterals:
     def test_time_seconds(self):
@@ -1144,6 +1156,7 @@ class TestTimeLiterals:
 # ---------------------------------------------------------------------------
 # String escape sequences
 # ---------------------------------------------------------------------------
+
 
 class TestStringEscapes:
     def test_dollar_escape(self):
@@ -1235,6 +1248,7 @@ class TestStringEscapes:
 # Empty statement
 # ---------------------------------------------------------------------------
 
+
 class TestEmptyStatement:
     def test_standalone_semicolon(self):
         result = parse(";")
@@ -1255,6 +1269,7 @@ class TestEmptyStatement:
 # ---------------------------------------------------------------------------
 # Multi-dimensional array indexing
 # ---------------------------------------------------------------------------
+
 
 class TestMultiDimensionalArrays:
     def test_two_dimensional_index(self):
@@ -1282,6 +1297,7 @@ class TestMultiDimensionalArrays:
 # Case statement ranges
 # ---------------------------------------------------------------------------
 
+
 class TestCaseRanges:
     def test_case_with_range(self):
         result = parse("case x of 1..5: y := 1; end_case")
@@ -1307,6 +1323,7 @@ class TestCaseRanges:
 # Unary + operator
 # ---------------------------------------------------------------------------
 
+
 class TestUnaryPlus:
     def test_unary_plus(self):
         result = parse("x := +5;")
@@ -1326,6 +1343,7 @@ class TestUnaryPlus:
 # ---------------------------------------------------------------------------
 # Multiple unary operators
 # ---------------------------------------------------------------------------
+
 
 class TestMultipleUnary:
     def test_double_negation(self):
@@ -1360,6 +1378,7 @@ class TestMultipleUnary:
 # Operator precedence
 # ---------------------------------------------------------------------------
 
+
 class TestOperatorPrecedence:
     def test_precedence_table(self):
         result = parse("x := a + b * c ** d;")
@@ -1387,6 +1406,7 @@ class TestOperatorPrecedence:
 # ---------------------------------------------------------------------------
 # Nested control structures
 # ---------------------------------------------------------------------------
+
 
 class TestNestedControl:
     def test_nested_if_without_else(self):
@@ -1435,6 +1455,7 @@ class TestNestedControl:
 # ---------------------------------------------------------------------------
 # Complex realistic programs
 # ---------------------------------------------------------------------------
+
 
 class TestRealisticProgramsEdgeCases:
     def test_motor_control(self):
@@ -1492,6 +1513,7 @@ Average := Sum / Count;"""
 # Comments edge cases
 # ---------------------------------------------------------------------------
 
+
 class TestCommentsEdgeCases:
     def test_comment_inside_expression(self):
         result = parse("x := a (* comment *) + b;")
@@ -1521,6 +1543,7 @@ x := 1;"""
 # ---------------------------------------------------------------------------
 # CASE with all selector types
 # ---------------------------------------------------------------------------
+
 
 class TestCaseSelectors:
     def test_single_value_selector(self):
@@ -1555,6 +1578,7 @@ class TestCaseSelectors:
 # FOR loop edge cases
 # ---------------------------------------------------------------------------
 
+
 class TestForEdgeCases:
     def test_for_with_negative_step(self):
         result = parse("for i := 10 to 1 by -1 do x := i; end_for")
@@ -1577,6 +1601,7 @@ class TestForEdgeCases:
 # WHILE and REPEAT edge cases
 # ---------------------------------------------------------------------------
 
+
 class TestLoopEdgeCases:
     def test_while_with_empty_body(self):
         result = parse("while x do end_while")
@@ -1596,6 +1621,7 @@ class TestLoopEdgeCases:
 # ---------------------------------------------------------------------------
 # RETURN and EXIT
 # ---------------------------------------------------------------------------
+
 
 class TestReturnAndExit:
     def test_return_in_middle(self):
@@ -1626,6 +1652,7 @@ end_for"""
 # Error cases
 # ---------------------------------------------------------------------------
 
+
 class TestErrorCasesEdgeCases:
     def test_invalid_syntax(self):
         result = parse("x := ;")
@@ -1647,6 +1674,7 @@ class TestErrorCasesEdgeCases:
 # ---------------------------------------------------------------------------
 # WSTRING, CHAR, WCHAR typed literals
 # ---------------------------------------------------------------------------
+
 
 class TestWideStringTypedLiterals:
     def test_wstring_typed(self):
@@ -1682,6 +1710,7 @@ class TestWideStringTypedLiterals:
 # 4th edition ${nn} hex escapes
 # ---------------------------------------------------------------------------
 
+
 class TestBracedHexEscapes:
     def test_braced_hex_two_digit(self):
         result = parse("x := '${41}';")
@@ -1709,6 +1738,7 @@ class TestBracedHexEscapes:
 # VAR_TEMP
 # ---------------------------------------------------------------------------
 
+
 class TestVarTemp:
     def test_var_temp(self):
         text = """VAR_TEMP
@@ -1723,6 +1753,7 @@ END_VAR"""
 # ---------------------------------------------------------------------------
 # Nested structs in TYPE blocks
 # ---------------------------------------------------------------------------
+
 
 class TestNestedTypeDeclarations:
     def test_multiple_type_declarations(self):
@@ -1742,6 +1773,7 @@ END_TYPE"""
 # ---------------------------------------------------------------------------
 # Subrange types in TYPE blocks
 # ---------------------------------------------------------------------------
+
 
 class TestSubrangeTypeDeclaration:
     def test_subrange_as_type_alias(self):

@@ -761,7 +761,16 @@ class _StTransformer(Transformer):
             return StLiteral(value=raw)
         type_prefix, value_str = raw.split("#", 1)
         type_lower = type_prefix.lower()
-        if type_lower in ("int", "dint", "sint", "uint", "lint", "udint", "usint", "ulint"):
+        if type_lower in (
+            "int",
+            "dint",
+            "sint",
+            "uint",
+            "lint",
+            "udint",
+            "usint",
+            "ulint",
+        ):
             return StLiteral(value=_parse_int_literal(value_str))
         elif type_lower in ("real", "lreal"):
             return StLiteral(value=_parse_float_literal(value_str))

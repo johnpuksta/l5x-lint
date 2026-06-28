@@ -8,7 +8,8 @@ Usage:
 
 Requires:
     A llama.cpp server running with a vision model, e.g.:
-    llama-server --model Qwen3-VL-8B-Q4_K_M.gguf --mmproj mmproj-Qwen3-VL-8B.gguf --port 8080
+    llama-server --model Qwen3-VL-8B-Q4_K_M.gguf \
+        --mmproj mmproj-Qwen3-VL-8B.gguf --port 8080
 """
 
 import base64
@@ -27,9 +28,12 @@ MODEL_NAME = os.environ.get("VISION_MODEL", "default")
 DPI = 150
 MAX_TOKENS = 2048
 PROMPT = (
-    "You are analyzing a page from a technical Rockwell Automation / Allen-Bradley manual. "
-    "Extract ALL text on the page verbatim. Then describe any diagrams, tables, schematics, "
-    "wiring diagrams, module layouts, screenshots, or other visual content in detail. "
+    "You are analyzing a page from a technical "
+    "Rockwell Automation / Allen-Bradley manual. "
+    "Extract ALL text on the page verbatim. Then "
+    "describe any diagrams, tables, schematics, "
+    "wiring diagrams, module layouts, screenshots, "
+    "or other visual content in detail. "
     "For diagrams: describe components, connections, labels, and structure. "
     "For tables: reproduce the table in markdown. "
     "Be thorough — this content will be used as context for an LLM."
@@ -68,7 +72,8 @@ def describe_page(
             if attempt < retries:
                 wait = 2 ** (attempt + 1)
                 print(
-                    f"    Retry {attempt + 1}/{retries} after error: {e} (waiting {wait}s)"
+                    f"    Retry {attempt + 1}/{retries} "
+                    f"after error: {e} (waiting {wait}s)"
                 )
                 time.sleep(wait)
             else:
