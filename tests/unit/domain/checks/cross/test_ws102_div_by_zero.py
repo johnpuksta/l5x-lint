@@ -1,3 +1,5 @@
+from helpers import make_project
+
 from domain.checks.cross.ws102_div_by_zero import ws102_div_by_zero
 from domain.models import Controller, Location, Routine
 from domain.rll_models import Instruction, Operand, ParsedRung
@@ -11,7 +13,7 @@ def _loc(program="", routine=""):
 def test_st_division_by_literal_zero():
     r = Routine(name="Main", type="ST", cdata="result := x / 0;")
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ws102_div_by_zero(r, table, _loc())
     assert len(result) == 1
     assert result[0].code == "WS102"
@@ -20,7 +22,7 @@ def test_st_division_by_literal_zero():
 def test_st_mod_by_literal_zero():
     r = Routine(name="Main", type="ST", cdata="result := x MOD 0;")
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ws102_div_by_zero(r, table, _loc())
     assert len(result) == 1
     assert result[0].code == "WS102"
@@ -29,7 +31,7 @@ def test_st_mod_by_literal_zero():
 def test_st_variable_divisor_no_diagnostic():
     r = Routine(name="Main", type="ST", cdata="result := x / y;")
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ws102_div_by_zero(r, table, _loc())
     assert result == []
 
@@ -52,7 +54,7 @@ def test_rll_cpt_with_div_by_zero():
         ],
     )
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ws102_div_by_zero(r, table, _loc())
     assert len(result) == 1
     assert result[0].code == "WS102"
@@ -61,6 +63,6 @@ def test_rll_cpt_with_div_by_zero():
 def test_empty_text():
     r = Routine(name="Main", type="ST", cdata="")
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ws102_div_by_zero(r, table, _loc())
     assert result == []

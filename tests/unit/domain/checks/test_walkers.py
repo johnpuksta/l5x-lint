@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from helpers import make_project
+
 from domain.checks._walkers import RllWalker, StWalker
 from domain.models import (
     Controller,
@@ -97,7 +99,7 @@ def test_st_walks_assignment():
     )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
-    w(r, build_symbol_table(c), _loc())
+    w(r, build_symbol_table(make_project(c)), _loc())
     assert w.visited == ["assignment", "literal"]
 
 
@@ -115,7 +117,7 @@ def test_st_walks_if():
     )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
-    w(r, build_symbol_table(c), _loc())
+    w(r, build_symbol_table(make_project(c)), _loc())
     assert w.visited == [
         "if",
         "literal",
@@ -140,7 +142,7 @@ def test_st_walks_case():
     )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
-    w(r, build_symbol_table(c), _loc())
+    w(r, build_symbol_table(make_project(c)), _loc())
     assert w.visited == ["case", "tag_ref", "return", "exit"]
 
 
@@ -159,7 +161,7 @@ def test_st_walks_for():
     )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
-    w(r, build_symbol_table(c), _loc())
+    w(r, build_symbol_table(make_project(c)), _loc())
     assert w.visited == ["for", "literal", "literal", "literal", "return"]
 
 
@@ -175,7 +177,7 @@ def test_st_walks_while():
     )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
-    w(r, build_symbol_table(c), _loc())
+    w(r, build_symbol_table(make_project(c)), _loc())
     assert w.visited == ["while", "tag_ref", "assignment", "literal"]
 
 
@@ -188,7 +190,7 @@ def test_st_walks_repeat():
     )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
-    w(r, build_symbol_table(c), _loc())
+    w(r, build_symbol_table(make_project(c)), _loc())
     assert w.visited == ["repeat", "return", "literal"]
 
 
@@ -201,7 +203,7 @@ def test_st_walks_call():
     )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
-    w(r, build_symbol_table(c), _loc())
+    w(r, build_symbol_table(make_project(c)), _loc())
     assert w.visited == ["call", "literal", "literal"]
 
 
@@ -214,7 +216,7 @@ def test_st_walks_jsr():
     )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
-    w(r, build_symbol_table(c), _loc())
+    w(r, build_symbol_table(make_project(c)), _loc())
     assert w.visited == ["jsr", "literal"]
 
 
@@ -223,7 +225,7 @@ def test_st_walks_exit():
     prog = StProgram(statements=[StExit()])
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
-    w(r, build_symbol_table(c), _loc())
+    w(r, build_symbol_table(make_project(c)), _loc())
     assert w.visited == ["exit"]
 
 
@@ -232,7 +234,7 @@ def test_st_walks_return():
     prog = StProgram(statements=[StReturn()])
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
-    w(r, build_symbol_table(c), _loc())
+    w(r, build_symbol_table(make_project(c)), _loc())
     assert w.visited == ["return"]
 
 
@@ -248,7 +250,7 @@ def test_st_walks_expr_binary_op():
     )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
-    w(r, build_symbol_table(c), _loc())
+    w(r, build_symbol_table(make_project(c)), _loc())
     assert w.visited == ["assignment", "binary_op", "literal", "literal"]
 
 
@@ -264,7 +266,7 @@ def test_st_walks_expr_unary_op():
     )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
-    w(r, build_symbol_table(c), _loc())
+    w(r, build_symbol_table(make_project(c)), _loc())
     assert w.visited == ["assignment", "unary_op", "literal"]
 
 
@@ -280,7 +282,7 @@ def test_st_walks_expr_call():
     )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
-    w(r, build_symbol_table(c), _loc())
+    w(r, build_symbol_table(make_project(c)), _loc())
     assert w.visited == ["assignment", "call", "literal"]
 
 
@@ -288,7 +290,7 @@ def test_st_non_st_ignored():
     w = _VisitRecorder()
     r = Routine(name="R", type="RLL")
     c = Controller(name="C")
-    result = w(r, build_symbol_table(c), _loc())
+    result = w(r, build_symbol_table(make_project(c)), _loc())
     assert result == []
 
 
@@ -311,7 +313,7 @@ def test_st_walker_add_diagnostic():
     )
     r = Routine(name="R", type="ST", st_body=prog)
     c = Controller(name="C")
-    result = w(r, build_symbol_table(c), _loc(program="P", routine="R"))
+    result = w(r, build_symbol_table(make_project(c)), _loc(program="P", routine="R"))
     assert len(result) == 1
     assert result[0].code == "WS107"
     assert result[0].severity == "warning"
@@ -361,7 +363,7 @@ def test_rll_walks_basic():
         ],
     )
     c = Controller(name="C")
-    w(prog, build_symbol_table(c), _loc())
+    w(prog, build_symbol_table(make_project(c)), _loc())
     assert w.visited == [
         "rung(1)",
         "inst(XIC)",
@@ -394,7 +396,7 @@ def test_rll_walks_branches():
         ],
     )
     c = Controller(name="C")
-    w(prog, build_symbol_table(c), _loc())
+    w(prog, build_symbol_table(make_project(c)), _loc())
     assert w.visited == [
         "rung(1)",
         "inst(XIC)",
@@ -407,7 +409,7 @@ def test_rll_non_rll_ignored():
     w = _RllVisitRecorder()
     r = Routine(name="R", type="ST")
     c = Controller(name="C")
-    result = w(r, build_symbol_table(c), _loc())
+    result = w(r, build_symbol_table(make_project(c)), _loc())
     assert result == []
 
 
@@ -438,7 +440,7 @@ def test_rll_walker_add_diagnostic():
         ],
     )
     c = Controller(name="C")
-    result = w(prog, build_symbol_table(c), _loc(program="P", routine="R"))
+    result = w(prog, build_symbol_table(make_project(c)), _loc(program="P", routine="R"))
     assert len(result) == 1
     assert result[0].code == "WR005"
     assert result[0].severity == "warning"
@@ -463,5 +465,5 @@ def test_rll_walker_add_diagnostic_default_rung():
         ],
     )
     c = Controller(name="C")
-    result = w(prog, build_symbol_table(c), _loc())
+    result = w(prog, build_symbol_table(make_project(c)), _loc())
     assert result[0].location.rung == 7

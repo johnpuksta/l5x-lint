@@ -1,3 +1,4 @@
+from helpers import make_project
 from returns.result import Success
 
 from application import analyze
@@ -11,7 +12,7 @@ def _reset_registry():
 
 def test_empty_controller():
     _reset_registry()
-    result = analyze.analyze(Controller(name="Test"))
+    result = analyze.analyze(make_project(Controller(name="Test")))
     assert isinstance(result, Success)
     ar = result.unwrap()
     assert ar.passed
@@ -26,7 +27,7 @@ def test_no_checks_registered():
             Program(name="Prog", routines=[Routine(name="Main", type="RLL")]),
         ],
     )
-    result = analyze.analyze(c)
+    result = analyze.analyze(make_project(c))
     assert isinstance(result, Success)
     assert result.unwrap().diagnostics == []
 
@@ -48,7 +49,7 @@ def test_check_collects_diagnostics():
             Program(name="Prog", routines=[Routine(name="Main", type="RLL")]),
         ],
     )
-    result = analyze.analyze(c)
+    result = analyze.analyze(make_project(c))
     assert isinstance(result, Success)
     ar = result.unwrap()
     assert not ar.passed
@@ -84,7 +85,7 @@ def test_multiple_routines():
             ),
         ],
     )
-    result = analyze.analyze(c)
+    result = analyze.analyze(make_project(c))
     ar = result.unwrap()
     assert ar.warning_count == 2
     msgs = {d.message for d in ar.diagnostics}
@@ -107,7 +108,7 @@ def test_multiple_programs():
             Program(name="B", routines=[Routine(name="R2", type="ST")]),
         ],
     )
-    result = analyze.analyze(c)
+    result = analyze.analyze(make_project(c))
     ar = result.unwrap()
     assert ar.error_count == 2
     progs = {d.location.program for d in ar.diagnostics}
@@ -132,7 +133,7 @@ def test_mixed_severity():
             Program(name="Prog", routines=[Routine(name="Main", type="RLL")]),
         ],
     )
-    result = analyze.analyze(c)
+    result = analyze.analyze(make_project(c))
     ar = result.unwrap()
     assert ar.error_count == 1
     assert ar.warning_count == 1
@@ -156,7 +157,7 @@ def test_all_warnings_still_passes():
             Program(name="Prog", routines=[Routine(name="Main", type="RLL")]),
         ],
     )
-    result = analyze.analyze(c)
+    result = analyze.analyze(make_project(c))
     ar = result.unwrap()
     assert ar.passed
     assert ar.warning_count == 1
@@ -180,6 +181,6 @@ def test_check_receives_symbols():
             Program(name="Prog", routines=[Routine(name="Main", type="RLL")]),
         ],
     )
-    analyze.analyze(c)
+    analyze.analyze(make_project(c))
     assert captured_table is not None
     assert "MyTag" in captured_table.controller_tags

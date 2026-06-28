@@ -1,3 +1,5 @@
+from helpers import make_project
+
 from application import analyze
 from domain.checks.rll.wr003_output_never_driven import wr003_output_never_driven
 from domain.models import Controller, Location, Routine
@@ -30,7 +32,7 @@ def test_input_and_output_no_diagnostic():
     ]
     r = Routine(name="Main", type="RLL", rll_rungs=rungs)
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = wr003_output_never_driven(r, table, _loc())
     assert result == []
 
@@ -39,7 +41,7 @@ def test_input_only_emits_wr003():
     rungs = [ParsedRung(number=0, text="", instructions=[_inst("XIC", "InputOnly")])]
     r = Routine(name="Main", type="RLL", rll_rungs=rungs)
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = wr003_output_never_driven(r, table, _loc())
     assert len(result) == 1
     assert result[0].code == "WR003"
@@ -49,7 +51,7 @@ def test_output_only_no_diagnostic():
     rungs = [ParsedRung(number=0, text="", instructions=[_inst("OTE", "MyTag")])]
     r = Routine(name="Main", type="RLL", rll_rungs=rungs)
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = wr003_output_never_driven(r, table, _loc())
     assert result == []
 
@@ -57,7 +59,7 @@ def test_output_only_no_diagnostic():
 def test_non_rll_ignored():
     r = Routine(name="Main", type="ST")
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = wr003_output_never_driven(r, table, _loc())
     assert result == []
 
@@ -70,7 +72,7 @@ def test_jsr_params_not_considered():
     rungs = [ParsedRung(number=0, text="", instructions=[jsr])]
     r = Routine(name="Main", type="RLL", rll_rungs=rungs)
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = wr003_output_never_driven(r, table, _loc())
     assert result == []
 
@@ -78,6 +80,6 @@ def test_jsr_params_not_considered():
 def test_empty_routine():
     r = Routine(name="Main", type="RLL", rll_rungs=[])
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = wr003_output_never_driven(r, table, _loc())
     assert result == []

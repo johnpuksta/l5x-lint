@@ -1,8 +1,6 @@
 """Opcode definitions for RLL instruction validation.
 
-NOTE: _BUILTIN_OPCODES in ec003_missing_aoi.py must stay in sync with this.
-Any opcode not in _BUILTIN_OPCODES and not defined as an AOI triggers EC003.
-GT was recently added as a comparison instruction alias alongside GRT.
+Opcode classification sets for checks live in _opcode_sets.py.
 """
 
 OPCODE_OPERANDS: dict[str, tuple[int | None, int | None]] = {
@@ -29,6 +27,7 @@ OPCODE_OPERANDS: dict[str, tuple[int | None, int | None]] = {
     "DIV": (3, 3),
     "MOD": (3, 3),
     "MOV": (2, 2),
+    "MOVE": (2, 2),
     "CLR": (1, 1),
     "NEG": (1, 1),
     "CPT": (1, None),
@@ -36,11 +35,16 @@ OPCODE_OPERANDS: dict[str, tuple[int | None, int | None]] = {
     "ABS": (1, 1),
     # Compare
     "EQU": (2, 2),
+    "EQ": (2, 2),
     "NEQ": (2, 2),
+    "NE": (2, 2),
     "LES": (2, 2),
+    "LT": (2, 2),
     "LEQ": (2, 2),
+    "LE": (2, 2),
     "GRT": (2, 2),
     "GEQ": (2, 2),
+    "GE": (2, 2),
     "GT": (2, 2),
     "CMP": (1, 1),
     "LIM": (3, 3),
@@ -90,11 +94,16 @@ INPUT_OPCODES: frozenset[str] = frozenset(
         "OSR",
         "OSF",
         "EQU",
+        "EQ",
         "NEQ",
+        "NE",
         "LES",
+        "LT",
         "LEQ",
+        "LE",
         "GRT",
         "GEQ",
+        "GE",
         "GT",
         "CMP",
         "LIM",
@@ -112,6 +121,7 @@ OUTPUT_OPCODES: frozenset[str] = frozenset(
         "CTU",
         "CTD",
         "MOV",
+        "MOVE",
         "ADD",
         "SUB",
         "MUL",

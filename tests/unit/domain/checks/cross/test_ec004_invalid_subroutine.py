@@ -1,3 +1,5 @@
+from helpers import make_project
+
 from application import analyze
 from domain.checks.cross.ec004_invalid_subroutine import ec004_invalid_subroutine
 from domain.models import Controller, Location, Program, Routine
@@ -31,7 +33,7 @@ def test_valid_jsr_no_diagnostic():
             Program(name="Prog", routines=[Routine(name="SubRoutine", type="RLL")])
         ],
     )  # noqa: E501
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec004_invalid_subroutine(r, table, _loc())
     assert result == []
 
@@ -39,7 +41,7 @@ def test_valid_jsr_no_diagnostic():
 def test_invalid_jsr_emits_ec004():
     r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("JSR", "NoSuch"))])
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec004_invalid_subroutine(r, table, _loc())
     assert len(result) == 1
     assert result[0].code == "EC004"
@@ -53,7 +55,7 @@ def test_jxr_valid():
             Program(name="Prog", routines=[Routine(name="SubRoutine", type="RLL")])
         ],
     )  # noqa: E501
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec004_invalid_subroutine(r, table, _loc())
     assert result == []
 
@@ -69,7 +71,7 @@ def test_st_jsr_valid():
             Program(name="Prog", routines=[Routine(name="SubRoutine", type="ST")])
         ],
     )  # noqa: E501
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec004_invalid_subroutine(r, table, _loc())
     assert result == []
 
@@ -80,7 +82,7 @@ def test_st_jsr_invalid():
     prog = StProgram(statements=[StJsr(routine_name="NoSuch")])
     r = Routine(name="Main", type="ST", st_body=prog)
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec004_invalid_subroutine(r, table, _loc())
     assert len(result) == 1
     assert result[0].code == "EC004"
@@ -89,6 +91,6 @@ def test_st_jsr_invalid():
 def test_empty_routine():
     r = Routine(name="Main", type="RLL", rll_rungs=[])
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec004_invalid_subroutine(r, table, _loc())
     assert result == []

@@ -99,7 +99,7 @@ def test_invalid_file_emits_code(stem_prefix, expected_code):
     )
     project = result.unwrap()
 
-    ar = analyze(project.controller).unwrap()
+    ar = analyze(project).unwrap()
     codes = {d.code for d in ar.diagnostics}
     assert expected_code in codes, (
         f"Expected {expected_code} in diagnostics for {files[0].name}, "

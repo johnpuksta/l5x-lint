@@ -1,20 +1,13 @@
 from application._registry import register
 from domain.checks._codes import WC108
+from domain.checks._opcode_sets import DEPRECATED_OPCODES
 from domain.checks._walkers import RllWalker, StWalker
 from domain.st_models import StCall
-
-_DEPRECATED_INSTRUCTIONS: frozenset[str] = frozenset(
-    {
-        "MSG",
-        "PID",
-        "DDT",
-    }
-)
 
 
 class _StWc108Check(StWalker):
     def visit_call(self, node: StCall) -> None:
-        if node.name.upper() in _DEPRECATED_INSTRUCTIONS:
+        if node.name.upper() in DEPRECATED_OPCODES:
             self.add_diagnostic(
                 WC108.code,
                 WC108.severity,
@@ -25,7 +18,7 @@ class _StWc108Check(StWalker):
 
 class _RllWc108Check(RllWalker):
     def visit_instruction(self, inst) -> None:
-        if inst.opcode.upper() in _DEPRECATED_INSTRUCTIONS:
+        if inst.opcode.upper() in DEPRECATED_OPCODES:
             self.add_diagnostic(
                 WC108.code,
                 WC108.severity,

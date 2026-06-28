@@ -52,7 +52,7 @@ def _analyze_file(path: Path):
     assert isinstance(result, Success), f"Parse failed: {result.failure()}"
 
     project = result.unwrap()
-    ar = analyze(project.controller)
+    ar = analyze(project)
     t2 = time.perf_counter()
 
     assert isinstance(ar, Success), f"Analyze failed: {ar.failure()}"

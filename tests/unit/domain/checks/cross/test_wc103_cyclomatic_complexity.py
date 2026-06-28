@@ -1,3 +1,5 @@
+from helpers import make_project
+
 from domain.checks.cross.wc103_cyclomatic_complexity import (
     wc103_cyclomatic_complexity,
 )
@@ -19,7 +21,7 @@ def test_st_simple_no_diagnostic():
     )
     r = Routine(name="Main", type="ST", st_body=prog)
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = wc103_cyclomatic_complexity(r, table, _loc())
     assert result == []
 
@@ -31,7 +33,7 @@ def test_st_above_threshold():
     prog = StProgram(statements=branches)
     r = Routine(name="Main", type="ST", st_body=prog)
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = wc103_cyclomatic_complexity(r, table, _loc())
     assert len(result) == 1
     assert result[0].code == "WC103"
@@ -42,7 +44,7 @@ def test_rll_below_threshold():
     rungs = [ParsedRung(number=0, text="", instructions=[Instruction(opcode="XIC")])]
     r = Routine(name="Main", type="RLL", rll_rungs=rungs)
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = wc103_cyclomatic_complexity(r, table, _loc())
     assert result == []
 
@@ -55,7 +57,7 @@ def test_rll_above_threshold():
     ]
     r = Routine(name="Main", type="RLL", rll_rungs=rungs)
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = wc103_cyclomatic_complexity(r, table, _loc())
     assert len(result) == 1
     assert result[0].code == "WC103"
@@ -64,6 +66,6 @@ def test_rll_above_threshold():
 def test_no_body():
     r = Routine(name="Main", type="ST")
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = wc103_cyclomatic_complexity(r, table, _loc())
     assert result == []

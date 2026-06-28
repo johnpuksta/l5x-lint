@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 
 from returns.maybe import Maybe, Nothing, Some
 
-from domain.models import AOI, Controller, DataType, Tag
+from domain.models import AOI, DataType, L5XProject, Tag
 
 BUILTIN_TYPES: set[str] = {
     "BOOL",
@@ -30,6 +30,7 @@ BUILTIN_TYPES: set[str] = {
 
 @dataclass
 class SymbolTable:
+    software_revision: str = ""
     controller_tags: dict[str, Tag] = field(default_factory=dict)
     program_tags: dict[str, dict[str, Tag]] = field(default_factory=dict)
     aoi_tags: dict[str, dict[str, Tag]] = field(default_factory=dict)
@@ -81,7 +82,8 @@ class SymbolTable:
         return False
 
 
-def build_symbol_table(controller: Controller) -> SymbolTable:
+def build_symbol_table(project: L5XProject) -> SymbolTable:
+    controller = project.controller
     controller_tags: dict[str, Tag] = {}
     program_tags: dict[str, dict[str, Tag]] = {}
     aoi_tags: dict[str, dict[str, Tag]] = {}
@@ -122,6 +124,7 @@ def build_symbol_table(controller: Controller) -> SymbolTable:
     aoi_names = {aoi.name for aoi in controller.aois}
 
     return SymbolTable(
+        software_revision=project.software_revision,
         controller_tags=controller_tags,
         program_tags=program_tags,
         aoi_tags=aoi_tags,

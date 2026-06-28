@@ -1,3 +1,5 @@
+from helpers import make_project
+
 from application import analyze
 from domain.checks.cross.ec007_duplicate_tag import ec007_duplicate_tag
 from domain.models import Controller, Location, Routine, Tag
@@ -20,7 +22,7 @@ def test_no_duplicates():
             Tag(name="B", data_type="BOOL"),
         ],
     )
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec007_duplicate_tag(Routine(name="Main", type="RLL"), table, _loc())
     assert result == []
 
@@ -33,13 +35,13 @@ def test_duplicate_controller_tags():
             Tag(name="a", data_type="BOOL"),
         ],
     )
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec007_duplicate_tag(Routine(name="Main", type="RLL"), table, _loc())
     assert result == []
 
 
 def test_empty_controller():
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec007_duplicate_tag(Routine(name="Main", type="RLL"), table, _loc())
     assert result == []

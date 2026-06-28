@@ -1,3 +1,5 @@
+from helpers import make_project
+
 from application import analyze
 from domain.checks.rll.wr002_afi_rung import wr002_afi_rung
 from domain.models import Controller, Location, Program, Routine
@@ -34,7 +36,7 @@ def test_afi_first_instruction():
         ],
     )
     controller = Controller(name="Test")
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = wr002_afi_rung(r, table, loc)
     assert len(result) == 1
@@ -51,7 +53,7 @@ def test_no_afi():
         rll_rungs=[_rung(_inst("XIC", "TagA"))],
     )
     controller = Controller(name="Test")
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = wr002_afi_rung(r, table, loc)
     assert result == []
@@ -69,7 +71,7 @@ def test_afi_not_first_instruction():
         ],
     )
     controller = Controller(name="Test")
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = wr002_afi_rung(r, table, loc)
     assert result == []
@@ -87,7 +89,7 @@ def test_afi_multiple_rungs():
     ]
     r = Routine(name="Main", type="RLL", rll_rungs=rungs)
     controller = Controller(name="Test")
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = wr002_afi_rung(r, table, loc)
     assert len(result) == 2
@@ -98,7 +100,7 @@ def test_afi_multiple_rungs():
 def test_afi_st_ignored():
     r = Routine(name="Main", type="ST", st_body=StProgram(statements=[]))
     controller = Controller(name="Test")
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = wr002_afi_rung(r, table, loc)
     assert result == []
@@ -109,7 +111,7 @@ def test_afi_in_branch_not_flagged():
     main_inst = Instruction(opcode="BST", branch=[[branch_inst]])
     r = Routine(name="Main", type="RLL", rll_rungs=[_rung(main_inst)])
     controller = Controller(name="Test")
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = wr002_afi_rung(r, table, loc)
     assert result == []
@@ -122,7 +124,7 @@ def test_afi_with_operands():
         rll_rungs=[_rung(Instruction(opcode="AFI", operands=[Operand(value="X")]))],
     )
     controller = Controller(name="Test")
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = wr002_afi_rung(r, table, loc)
     assert len(result) == 1
@@ -131,7 +133,7 @@ def test_afi_with_operands():
 def test_empty_routine():
     r = Routine(name="Main", type="RLL", rll_rungs=[])
     controller = Controller(name="Test")
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = wr002_afi_rung(r, table, loc)
     assert result == []
@@ -157,7 +159,7 @@ def test_wr002_via_analyze_pipeline():
         ],
     )
 
-    result = analyze.analyze(controller)
+    result = analyze.analyze(make_project(controller))
     ar = result.unwrap()
     assert ar.passed  # warnings only → still passes
     assert ar.warning_count == 1
@@ -167,7 +169,7 @@ def test_wr002_via_analyze_pipeline():
 def test_afi_non_rll_ignored():
     r = Routine(name="Main", type="FBD")
     controller = Controller(name="Test")
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = wr002_afi_rung(r, table, loc)
     assert result == []

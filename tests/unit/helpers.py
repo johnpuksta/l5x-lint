@@ -3,7 +3,17 @@
 from returns.result import Failure
 
 from application.analyze import analyze
+from domain.models import Controller, L5XProject
 from infrastructure.adapter import parse_l5x
+
+
+def make_project(controller: Controller, revision: str = "32.00") -> L5XProject:
+    """Wrap a Controller in a minimal L5XProject."""
+    return L5XProject(
+        schema_revision="1.0",
+        software_revision=revision,
+        controller=controller,
+    )
 
 
 def minimal_l5x(controller_content="", software_revision="32.00"):
@@ -56,4 +66,4 @@ def parse_and_analyze(xml):
     if isinstance(result, Failure):
         return result
     project = result.unwrap()
-    return analyze(project.controller)
+    return analyze(project)

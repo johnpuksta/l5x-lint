@@ -1,3 +1,5 @@
+from helpers import make_project
+
 from application import analyze
 from domain.checks.rll.wr004_timer_pre import wr004_timer_pre
 from domain.models import Controller, Location, Routine, Tag
@@ -26,7 +28,7 @@ def _inst(opcode, *operand_values):
 def test_ton_timer_no_diagnostic():
     r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("TON", "MyTimer"))])
     c = Controller(name="Test", tags=[Tag(name="MyTimer", data_type="TIMER")])
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = wr004_timer_pre(r, table, _loc())
     assert len(result) == 1
     assert result[0].code == "WR004"
@@ -35,7 +37,7 @@ def test_ton_timer_no_diagnostic():
 def test_tof_timer():
     r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("TOF", "MyTimer"))])
     c = Controller(name="Test", tags=[Tag(name="MyTimer", data_type="TIMER")])
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = wr004_timer_pre(r, table, _loc())
     assert len(result) == 1
 
@@ -43,7 +45,7 @@ def test_tof_timer():
 def test_rto_timer():
     r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("RTO", "MyTimer"))])
     c = Controller(name="Test", tags=[Tag(name="MyTimer", data_type="TIMER")])
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = wr004_timer_pre(r, table, _loc())
     assert len(result) == 1
 
@@ -51,7 +53,7 @@ def test_rto_timer():
 def test_non_timer_tag_skipped():
     r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("TON", "MyDint"))])
     c = Controller(name="Test", tags=[Tag(name="MyDint", data_type="DINT")])
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = wr004_timer_pre(r, table, _loc())
     assert result == []
 
@@ -59,7 +61,7 @@ def test_non_timer_tag_skipped():
 def test_non_rll_ignored():
     r = Routine(name="Main", type="ST")
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = wr004_timer_pre(r, table, _loc())
     assert result == []
 
@@ -67,6 +69,6 @@ def test_non_rll_ignored():
 def test_xic_not_flagged():
     r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("XIC", "MyTimer"))])
     c = Controller(name="Test", tags=[Tag(name="MyTimer", data_type="TIMER")])
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = wr004_timer_pre(r, table, _loc())
     assert result == []

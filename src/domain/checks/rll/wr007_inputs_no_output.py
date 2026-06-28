@@ -1,39 +1,9 @@
 from application._registry import register
 from domain.checks._codes import WR007
+from domain.checks._opcode_sets import INPUT_OPCODES, OUTPUT_OPCODES
 from domain.diagnostics import Diagnostic
 from domain.models import Location, Routine
 from domain.symbols import SymbolTable
-
-_INPUT_OPS: frozenset[str] = frozenset({"XIC", "XIO", "ONS", "OSR", "OSF"})
-_OUTPUT_OPS: frozenset[str] = frozenset(
-    {
-        "OTE",
-        "OTL",
-        "OTU",
-        "TON",
-        "TOF",
-        "RTO",
-        "CTU",
-        "CTD",
-        "RES",
-        "MOV",
-        "ADD",
-        "SUB",
-        "MUL",
-        "DIV",
-        "CPT",
-        "CLR",
-        "COP",
-        "CPS",
-        "FAL",
-        "FSC",
-        "MSG",
-        "JSR",
-        "JXR",
-        "GSV",
-        "SSV",
-    }
-)
 
 
 @register
@@ -75,9 +45,9 @@ class _RungState:
 def _classify_rung_state(instructions, state: _RungState):
     for inst in instructions:
         opcode = inst.opcode.upper()
-        if opcode in _INPUT_OPS:
+        if opcode in INPUT_OPCODES:
             state.has_input = True
-        if opcode in _OUTPUT_OPS:
+        if opcode in OUTPUT_OPCODES:
             state.has_output = True
         if inst.branch:
             for path in inst.branch:

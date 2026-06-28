@@ -1,3 +1,5 @@
+from helpers import make_project
+
 from application import analyze
 from domain.checks.cross.ec006_array_bounds import ec006_array_bounds
 from domain.models import Controller, Location, Routine, Tag
@@ -28,7 +30,7 @@ def test_valid_array_index_no_diagnostic():
     c = Controller(
         name="Test", tags=[Tag(name="MyArr", data_type="DINT", dimensions=(10,))]
     )  # noqa: E501
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec006_array_bounds(r, table, _loc())
     assert result == []
 
@@ -38,7 +40,7 @@ def test_oor_array_index_emits_ec006():
     c = Controller(
         name="Test", tags=[Tag(name="MyArr", data_type="DINT", dimensions=(10,))]
     )  # noqa: E501
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec006_array_bounds(r, table, _loc())
     assert len(result) == 1
     assert result[0].code == "EC006"
@@ -47,7 +49,7 @@ def test_oor_array_index_emits_ec006():
 def test_unknown_tag_skipped():
     r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("MOV", "NoTag[0]"))])
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec006_array_bounds(r, table, _loc())
     assert result == []
 
@@ -55,7 +57,7 @@ def test_unknown_tag_skipped():
 def test_non_array_tag_skipped():
     r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("MOV", "MyTag[0]"))])
     c = Controller(name="Test", tags=[Tag(name="MyTag", data_type="DINT")])
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec006_array_bounds(r, table, _loc())
     assert result == []
 
@@ -63,7 +65,7 @@ def test_non_array_tag_skipped():
 def test_empty_routine():
     r = Routine(name="Main", type="RLL", rll_rungs=[])
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec006_array_bounds(r, table, _loc())
     assert result == []
 
@@ -73,7 +75,7 @@ def test_member_with_array():
     c = Controller(
         name="Test", tags=[Tag(name="MyArr", data_type="MyUDT", dimensions=(6,))]
     )  # noqa: E501
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec006_array_bounds(r, table, _loc())
     assert result == []
 
@@ -83,6 +85,6 @@ def test_negative_index_not_flagged():
     c = Controller(
         name="Test", tags=[Tag(name="Arr", data_type="DINT", dimensions=(10,))]
     )  # noqa: E501
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec006_array_bounds(r, table, _loc())
     assert result == []

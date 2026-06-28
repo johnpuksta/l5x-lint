@@ -1,3 +1,5 @@
+from helpers import make_project
+
 from application import analyze
 from domain.checks.cross.ec008_aoi_circular_dep import ec008_aoi_circular_dep
 from domain.models import AOI, Controller, Location, Routine
@@ -14,20 +16,20 @@ def _loc(program="", routine="", rung=None):
 
 def test_no_aois():
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec008_aoi_circular_dep(Routine(name="Main", type="RLL"), table, _loc())
     assert result == []
 
 
 def test_single_aoi_no_cycle():
     c = Controller(name="Test", aois=[AOI(name="MyAOI")])
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec008_aoi_circular_dep(Routine(name="Main", type="RLL"), table, _loc())
     assert result == []
 
 
 def test_empty_controller():
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec008_aoi_circular_dep(Routine(name="Main", type="RLL"), table, _loc())
     assert result == []

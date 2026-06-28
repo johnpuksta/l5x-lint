@@ -1,3 +1,5 @@
+from helpers import make_project
+
 from application import analyze
 from domain.checks.cross.ec005_invalid_member import ec005_invalid_member
 from domain.models import (
@@ -43,7 +45,7 @@ def test_valid_member_no_diagnostic():
     c = Controller(
         name="Test", tags=[Tag(name="MyTag", data_type="MyUDT")], data_types=[dt]
     )
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec005_invalid_member(r, table, _loc())
     assert result == []
 
@@ -61,7 +63,7 @@ def test_invalid_member_emits_ec005():
     c = Controller(
         name="Test", tags=[Tag(name="MyTag", data_type="MyUDT")], data_types=[dt]
     )
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec005_invalid_member(r, table, _loc())
     assert len(result) == 1
     assert result[0].code == "EC005"
@@ -72,7 +74,7 @@ def test_unknown_tag_skipped():
         name="Main", type="RLL", rll_rungs=[_rung(_inst("XIC", "NoTag.Field1"))]
     )  # noqa: E501
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec005_invalid_member(r, table, _loc())
     assert result == []
 
@@ -82,7 +84,7 @@ def test_no_members_on_type_skipped():
         name="Main", type="RLL", rll_rungs=[_rung(_inst("XIC", "MyTag.Field1"))]
     )  # noqa: E501
     c = Controller(name="Test", tags=[Tag(name="MyTag", data_type="DINT")])
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec005_invalid_member(r, table, _loc())
     assert result == []
 
@@ -90,6 +92,6 @@ def test_no_members_on_type_skipped():
 def test_non_rll_ignored():
     r = Routine(name="Main", type="FBD")
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec005_invalid_member(r, table, _loc())
     assert result == []

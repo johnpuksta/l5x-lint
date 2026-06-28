@@ -1,3 +1,5 @@
+from helpers import make_project
+
 from domain.checks.st.ws104_non_bool_condition import ws104_non_bool_condition
 from domain.models import (
     Controller,
@@ -34,7 +36,7 @@ def test_if_with_bool_condition_no_diagnostic():
         data_types=[DataType(name="BOOL", family="", class_="")],
         programs=[Program(name="Prog")],
     )
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ws104_non_bool_condition(r, table, _loc())
     assert result == []
 
@@ -56,7 +58,7 @@ def test_if_with_dint_condition_emits_ws104():
         data_types=[DataType(name="DINT", family="", class_="")],
         programs=[Program(name="Prog")],
     )
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ws104_non_bool_condition(r, table, _loc())
     assert len(result) == 1
     assert result[0].code == "WS104"
@@ -81,7 +83,7 @@ def test_while_with_bool_no_diagnostic():
         data_types=[DataType(name="BOOL", family="", class_="")],
         programs=[Program(name="Prog")],
     )
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ws104_non_bool_condition(r, table, _loc())
     assert result == []
 
@@ -89,7 +91,7 @@ def test_while_with_bool_no_diagnostic():
 def test_no_body():
     r = Routine(name="Main", type="ST")
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ws104_non_bool_condition(r, table, _loc())
     assert result == []
 
@@ -97,6 +99,6 @@ def test_no_body():
 def test_non_st_ignored():
     r = Routine(name="Main", type="RLL")
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ws104_non_bool_condition(r, table, _loc())
     assert result == []

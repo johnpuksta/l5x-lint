@@ -1,3 +1,5 @@
+from helpers import make_project
+
 from domain.checks.cross.ws101_float_equality import ws101_float_equality
 from domain.models import (
     Controller,
@@ -42,7 +44,7 @@ def test_st_float_equality_emits_ws101():
     )
     r = Routine(name="Main", type="ST", st_body=prog)
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ws101_float_equality(r, table, _loc())
     assert len(result) >= 1
     assert result[0].code == "WS101"
@@ -63,7 +65,7 @@ def test_st_dint_comparison_no_diagnostic():
     )
     r = Routine(name="Main", type="ST", st_body=prog)
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ws101_float_equality(r, table, _loc())
     assert result == []
 
@@ -86,7 +88,7 @@ def test_rll_equ_with_float_emits_ws101():
         ],
     )
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ws101_float_equality(r, table, _loc())
     assert len(result) >= 1
     assert result[0].code == "WS101"
@@ -110,7 +112,7 @@ def test_rll_grt_no_float_no_diagnostic():
         ],
     )
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ws101_float_equality(r, table, _loc())
     assert result == []
 
@@ -118,6 +120,6 @@ def test_rll_grt_no_float_no_diagnostic():
 def test_empty_text():
     r = Routine(name="Main", type="ST", st_body=StProgram(statements=[]))
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ws101_float_equality(r, table, _loc())
     assert result == []

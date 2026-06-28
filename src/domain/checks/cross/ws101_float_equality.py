@@ -2,6 +2,7 @@ import re
 
 from application._registry import register
 from domain.checks._codes import WS101
+from domain.checks._opcode_sets import COMPARE_OPS
 from domain.diagnostics import Diagnostic
 from domain.models import Location, Routine
 from domain.st_models import StBinaryOp, StLiteral, StProgram
@@ -82,29 +83,19 @@ def ws101_float_equality(
             for inst in rung.instructions:
                 for op in inst.operands:
                     if _has_float_literal(op.value):
-                        for cmp_op in (
-                            "EQU",
-                            "NEQ",
-                            "GRT",
-                            "LES",
-                            "GEQ",
-                            "LEQ",
-                            "CMP",
-                            "GT",
-                        ):
-                            if inst.opcode.upper() == cmp_op:
-                                result.append(
-                                    Diagnostic(
-                                        code=WS101.code,
-                                        severity=WS101.severity,
-                                        location=Location(
-                                            program=loc.program,
-                                            routine=loc.routine,
-                                            rung=rung.number,
-                                        ),
-                                        message=WS101(
-                                            text=f"{inst.opcode}({op.value})"
-                                        ).message,
-                                    )
+                        if inst.opcode.upper() in COMPARE_OPS:
+                            result.append(
+                                Diagnostic(
+                                    code=WS101.code,
+                                    severity=WS101.severity,
+                                    location=Location(
+                                        program=loc.program,
+                                        routine=loc.routine,
+                                        rung=rung.number,
+                                    ),
+                                    message=WS101(
+                                        text=f"{inst.opcode}({op.value})"
+                                    ).message,
                                 )
+                            )
     return result

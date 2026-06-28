@@ -52,7 +52,7 @@ def validate(
 
     source_lines = project.controller.source_lines
 
-    analysis = analyze(project.controller, config=config)
+    analysis = analyze(project, config=config)
     match analysis:
         case Failure(err):
             print(f"Analysis error: {err}", file=sys.stderr)

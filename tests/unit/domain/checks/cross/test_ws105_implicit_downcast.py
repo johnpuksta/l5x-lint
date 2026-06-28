@@ -1,3 +1,5 @@
+from helpers import make_project
+
 from domain.checks.cross.ws105_implicit_downcast import ws105_implicit_downcast
 from domain.models import (
     Controller,
@@ -38,7 +40,7 @@ def test_lint_to_dint_downcast_emits_ws105():
         ],
         programs=[Program(name="Prog")],
     )
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ws105_implicit_downcast(r, table, _loc())
     assert len(result) == 1
     assert result[0].code == "WS105"
@@ -65,7 +67,7 @@ def test_dint_to_lint_widen_no_diagnostic():
         ],
         programs=[Program(name="Prog")],
     )
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ws105_implicit_downcast(r, table, _loc())
     assert result == []
 
@@ -86,7 +88,7 @@ def test_same_type_no_diagnostic():
         data_types=[DataType(name="DINT", family="", class_="")],
         programs=[Program(name="Prog")],
     )
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ws105_implicit_downcast(r, table, _loc())
     assert result == []
 
@@ -94,6 +96,6 @@ def test_same_type_no_diagnostic():
 def test_non_st_ignored():
     r = Routine(name="Main", type="RLL")
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ws105_implicit_downcast(r, table, _loc())
     assert result == []

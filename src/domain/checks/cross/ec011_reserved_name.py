@@ -1,82 +1,13 @@
 from application._registry import register
 from domain.checks._codes import EC011
+from domain.checks._opcode_sets import builtin_opcodes, resolve_opcode
 from domain.diagnostics import Diagnostic
 from domain.models import Location, Routine
 from domain.symbols import SymbolTable
 
-_RESERVED_NAMES: frozenset[str] = frozenset(
-    {
-        "JSR",
-        "JXR",
-        "XIC",
-        "XIO",
-        "OTE",
-        "OTL",
-        "OTU",
-        "TON",
-        "TOF",
-        "RTO",
-        "CTU",
-        "CTD",
-        "ADD",
-        "SUB",
-        "MUL",
-        "DIV",
-        "MOV",
-        "CLR",
-        "CPT",
-        "EQU",
-        "NEQ",
-        "LES",
-        "LEQ",
-        "GRT",
-        "GEQ",
-        "GT",
-        "RES",
-        "PID",
-        "MSG",
-        "GSV",
-        "SSV",
-        "COP",
-        "CPS",
-        "FAL",
-        "FSC",
-        "MCR",
-        "JMP",
-        "LBL",
-        "AFI",
-        "NOP",
-        "TND",
-        "BST",
-        "BND",
-        "NXB",
-        "ONS",
-        "OSR",
-        "OSF",
-        "SCL",
-        "CPW",
-        "SWPB",
-        "MOD",
-        "NEG",
-        "SQR",
-        "ABS",
-        "CMP",
-        "LIM",
-        "DDT",
-        "SDT",
-        "SFC",
-        "FBC",
-        "TRN",
-        "REF",
-        "IOT",
-        "SPP",
-        "SRT",
-        "SFP",
-        "SFR",
-        "DTOS",
-        "STOD",
-    }
-)
+# Reserved names are the full set across all versions — an AOI named "EQ"
+# would shadow the v36+ builtin even on older projects.
+_RESERVED_NAMES = builtin_opcodes("99.00")
 
 
 _reported: set[str] = set()
@@ -95,7 +26,8 @@ def ec011_reserved_name(
     global _reported
     result: list[Diagnostic] = []
     for name in symbols.aoi_names:
-        if name.upper() in _RESERVED_NAMES and name not in _reported:
+        canonical = resolve_opcode(name, symbols.software_revision)
+        if canonical in _RESERVED_NAMES and name not in _reported:
             _reported.add(name)
             result.append(
                 Diagnostic(
@@ -106,7 +38,8 @@ def ec011_reserved_name(
                 )
             )
     for prog_name in symbols.program_tags:
-        if prog_name.upper() in _RESERVED_NAMES and prog_name not in _reported:
+        canonical = resolve_opcode(prog_name, symbols.software_revision)
+        if canonical in _RESERVED_NAMES and prog_name not in _reported:
             _reported.add(prog_name)
             result.append(
                 Diagnostic(

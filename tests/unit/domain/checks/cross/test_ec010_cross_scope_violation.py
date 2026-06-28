@@ -1,3 +1,5 @@
+from helpers import make_project
+
 from application import analyze
 from domain.checks.cross.ec010_cross_scope_violation import (
     ec010_cross_scope_violation,
@@ -33,7 +35,7 @@ def test_same_program_no_diagnostic():
             Program(name="Prog", tags=[Tag(name="LocalTag", data_type="DINT")]),
         ],
     )
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec010_cross_scope_violation(r, table, _loc(program="Prog"))
     assert result == []
 
@@ -45,7 +47,7 @@ def test_controller_tag_cross_program_no_diagnostic():
         tags=[Tag(name="CtrlTag", data_type="DINT")],
         programs=[Program(name="ProgA"), Program(name="ProgB")],
     )
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec010_cross_scope_violation(r, table, _loc(program="ProgA"))
     assert result == []
 
@@ -59,7 +61,7 @@ def test_different_program_tag_emits_ec010():
             Program(name="ProgB", tags=[Tag(name="PrivateTag", data_type="DINT")]),
         ],
     )
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     loc = _loc(program="ProgA")
     result = ec010_cross_scope_violation(r, table, loc)
     assert len(result) == 1
@@ -69,6 +71,6 @@ def test_different_program_tag_emits_ec010():
 def test_non_rll_ignored():
     r = Routine(name="Main", type="FBD")
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec010_cross_scope_violation(r, table, _loc())
     assert result == []

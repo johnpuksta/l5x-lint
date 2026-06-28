@@ -1,35 +1,13 @@
 from application._registry import register
 from domain.checks._codes import WS108
+from domain.checks._opcode_sets import ST_PURE_CALLS
 from domain.checks._walkers import StWalker
 from domain.st_models import StCall
-
-_NO_EFFECT_CALLS: frozenset[str] = frozenset(
-    {
-        "ADD",
-        "SUB",
-        "MUL",
-        "DIV",
-        "MOD",
-        "NEG",
-        "ABS",
-        "SQR",
-        "GT",
-        "LT",
-        "GEQ",
-        "LEQ",
-        "EQU",
-        "NEQ",
-        "AND",
-        "OR",
-        "NOT",
-        "XOR",
-    }
-)
 
 
 class Ws108Check(StWalker):
     def visit_call(self, node: StCall) -> None:
-        if node.name.upper() in _NO_EFFECT_CALLS:
+        if node.name.upper() in ST_PURE_CALLS:
             self.add_diagnostic(
                 WS108.code,
                 WS108.severity,

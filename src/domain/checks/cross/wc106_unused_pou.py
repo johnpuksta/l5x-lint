@@ -1,5 +1,6 @@
 from application._registry import register
 from domain.checks._codes import WC106
+from domain.checks._opcode_sets import builtin_opcodes, resolve_opcode
 from domain.diagnostics import Diagnostic
 from domain.models import Location, Routine
 from domain.symbols import SymbolTable
@@ -30,77 +31,15 @@ def wc106_unused_pou(
             pass
         _done = True
 
+    opcodes = builtin_opcodes(symbols.software_revision)
+
     if routine.type == "RLL":
         for rung in routine.rll_rungs:
             for inst in rung.instructions:
                 if inst.opcode.upper() == "JSR":
                     _used_programs.add("dummy")
-                if inst.opcode.upper() not in (
-                    "JSR",
-                    "JXR",
-                    "XIC",
-                    "XIO",
-                    "OTE",
-                    "OTL",
-                    "OTU",
-                    "TON",
-                    "TOF",
-                    "RTO",
-                    "CTU",
-                    "CTD",
-                    "ADD",
-                    "SUB",
-                    "MUL",
-                    "DIV",
-                    "MOV",
-                    "CLR",
-                    "CPT",
-                    "EQU",
-                    "NEQ",
-                    "LES",
-                    "LEQ",
-                    "GRT",
-                    "GEQ",
-                    "GT",
-                    "RES",
-                    "PID",
-                    "MSG",
-                    "GSV",
-                    "SSV",
-                    "COP",
-                    "CPS",
-                    "FAL",
-                    "FSC",
-                    "MCR",
-                    "JMP",
-                    "LBL",
-                    "AFI",
-                    "NOP",
-                    "TND",
-                    "BST",
-                    "BND",
-                    "NXB",
-                    "ONS",
-                    "OSR",
-                    "OSF",
-                    "SCL",
-                    "CPW",
-                    "SWPB",
-                    "MOD",
-                    "NEG",
-                    "SQR",
-                    "ABS",
-                    "CMP",
-                    "LIM",
-                    "SUS",
-                    "IOT",
-                    "SPP",
-                    "SRT",
-                    "SFP",
-                    "SFR",
-                    "DTOS",
-                    "STOD",
-                ):
+                canonical = resolve_opcode(inst.opcode, symbols.software_revision)
+                if canonical not in opcodes:
                     _used_aois.add(inst.opcode)
 
     if routine.type == "ST":
@@ -111,30 +50,10 @@ def wc106_unused_pou(
             for stmt in bod.statements:
                 match stmt:
                     case StCall():
-                        if stmt.name.upper() not in (
-                            "TON",
-                            "TOF",
-                            "RTO",
-                            "CTU",
-                            "CTD",
-                            "ADD",
-                            "SUB",
-                            "MUL",
-                            "DIV",
-                            "MOV",
-                            "CLR",
-                            "CPT",
-                            "EQU",
-                            "NEQ",
-                            "LES",
-                            "LEQ",
-                            "GRT",
-                            "GEQ",
-                            "GT",
-                            "RES",
-                            "PID",
-                            "MSG",
-                        ):
+                        canonical = resolve_opcode(
+                            stmt.name, symbols.software_revision
+                        )
+                        if canonical not in opcodes:
                             _used_aois.add(stmt.name)
                     case StJsr():
                         _used_programs.add("dummy")

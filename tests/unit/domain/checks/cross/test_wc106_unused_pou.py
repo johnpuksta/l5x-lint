@@ -1,3 +1,5 @@
+from helpers import make_project
+
 from domain.checks.cross.wc106_unused_pou import _reset, wc106_unused_pou
 from domain.models import AOI, Controller, Location, Routine
 from domain.rll_models import Instruction, Operand, ParsedRung
@@ -10,7 +12,7 @@ def _loc(program="", routine=""):
 
 def test_no_aois_no_diagnostic():
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = wc106_unused_pou(Routine(name="Main", type="RLL"), table, _loc())
     assert result == []
 
@@ -18,7 +20,7 @@ def test_no_aois_no_diagnostic():
 def test_unused_aoi_emits_wc106():
     _reset()
     c = Controller(name="Test", aois=[AOI(name="UnusedAOI")])
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     r = Routine(
         name="Main",
         type="RLL",
@@ -40,7 +42,7 @@ def test_unused_aoi_emits_wc106():
 def test_used_aoi_no_diagnostic():
     _reset()
     c = Controller(name="Test", aois=[AOI(name="MyAOI")])
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     r = Routine(
         name="Main",
         type="RLL",
@@ -61,6 +63,6 @@ def test_used_aoi_no_diagnostic():
 def test_empty_routine():
     _reset()
     c = Controller(name="Test", aois=[AOI(name="UnusedAOI")])
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = wc106_unused_pou(Routine(name="Main", type="RLL"), table, _loc())
     assert len(result) == 1

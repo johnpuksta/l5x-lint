@@ -3,7 +3,7 @@ from returns.pointfree import bind
 from returns.result import Failure, Result, Success
 
 from domain.errors import LintInternalError, RLLParseError
-from domain.models import Controller
+from domain.models import L5XProject
 from domain.rll_models import ParsedRung
 from domain.st_models import StProgram
 from infrastructure import rung_parser, st_parser
@@ -11,18 +11,18 @@ from infrastructure import rung_parser, st_parser
 _ROUTABLE = frozenset({"RLL", "ST"})
 
 
-def route_routines(controller: Controller) -> Result[Controller, LintInternalError]:
+def route_routines(project: L5XProject) -> Result[L5XProject, LintInternalError]:
     return flow(
-        Success(controller),
+        Success(project),
         bind(_parse_all_routines),
     )
 
 
 def _parse_all_routines(
-    controller: Controller,
-) -> Result[Controller, LintInternalError]:
+    project: L5XProject,
+) -> Result[L5XProject, LintInternalError]:
     failures: list[tuple[str, LintInternalError]] = []
-    for prog in controller.programs:
+    for prog in project.controller.programs:
         for r in prog.routines:
             if not r.cdata or r.type not in _ROUTABLE:
                 continue
@@ -36,7 +36,7 @@ def _parse_all_routines(
     if failures:
         detail = "; ".join(f"'{name}': {err}" for name, err in failures)
         return Failure(RLLParseError(text=detail))
-    return Success(controller)
+    return Success(project)
 
 
 def _assign(routine, type_, value):

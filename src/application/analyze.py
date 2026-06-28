@@ -13,19 +13,19 @@ from application.filter import filter_diagnostics
 from application.routine_router import route_routines
 from domain.diagnostics import AnalysisResult, Diagnostic
 from domain.errors import LintInternalError
-from domain.models import Controller, Location
+from domain.models import L5XProject, Location
 from domain.symbols import build_symbol_table
 
 
 def analyze(
-    controller: Controller,
+    project: L5XProject,
     config: LintConfig | None = None,
 ) -> Result[AnalysisResult, LintInternalError]:
     if config is not None:
         config.apply_rule_pack()
         config.apply_dialect_preset()
     result = flow(
-        Success(controller),
+        Success(project),
         bind(route_routines),
         bind(_run_checks),
     )
@@ -46,11 +46,11 @@ def analyze(
             return result
 
 
-def _run_checks(controller: Controller) -> Result[AnalysisResult, LintInternalError]:
-    symbols = build_symbol_table(controller)
+def _run_checks(project: L5XProject) -> Result[AnalysisResult, LintInternalError]:
+    symbols = build_symbol_table(project)
     diagnostics: list[Diagnostic] = []
 
-    for prog in controller.programs:
+    for prog in project.controller.programs:
         for r in prog.routines:
             loc = Location(program=prog.name, routine=r.name)
             for check in _registry:

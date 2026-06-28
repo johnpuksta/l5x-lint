@@ -1,3 +1,5 @@
+from helpers import make_project
+
 from application import analyze
 from domain.checks._codes import EC001
 from domain.checks.cross.ec001_undefined_tag import (
@@ -126,7 +128,7 @@ def _inst(opcode, *operand_values):
 def test_rll_known_tag_no_diagnostic():
     r = _rll_routine("Main", _rungs(_rung(_inst("XIC", "MyTag"))))
     controller = Controller(name="Test", tags=[Tag(name="MyTag", data_type="DINT")])
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_rll(r, table, loc)
     assert result == []
@@ -135,7 +137,7 @@ def test_rll_known_tag_no_diagnostic():
 def test_rll_unknown_tag_emits_ec001():
     r = _rll_routine("Main", _rungs(_rung(_inst("XIC", "NoSuchTag"))))
     controller = Controller(name="Test")
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_rll(r, table, loc)
     assert len(result) == 1
@@ -149,7 +151,7 @@ def test_rll_unknown_tag_emits_ec001():
 def test_rll_mixed_known_unknown():
     r = _rll_routine("Main", _rungs(_rung(_inst("XIC", "GoodTag", "BadTag"))))
     controller = Controller(name="Test", tags=[Tag(name="GoodTag", data_type="DINT")])
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_rll(r, table, loc)
     assert len(result) == 1
@@ -163,7 +165,7 @@ def test_rll_jsr_skips_first_operand():
     )
     r = _rll_routine("Main", _rungs(_rung(jsr)))
     controller = Controller(name="Test", tags=[Tag(name="ParamTag", data_type="DINT")])
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_rll(r, table, loc)
     assert result == []
@@ -176,7 +178,7 @@ def test_rll_jsr_unknown_param_emits_ec001():
     )
     r = _rll_routine("Main", _rungs(_rung(jsr)))
     controller = Controller(name="Test")
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_rll(r, table, loc)
     assert len(result) == 1
@@ -186,7 +188,7 @@ def test_rll_jsr_unknown_param_emits_ec001():
 def test_rll_numeric_literal_skipped():
     r = _rll_routine("Main", _rungs(_rung(_inst("TON", "Timer0", "10000"))))
     controller = Controller(name="Test", tags=[Tag(name="Timer0", data_type="TIMER")])
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_rll(r, table, loc)
     assert result == []
@@ -195,7 +197,7 @@ def test_rll_numeric_literal_skipped():
 def test_rll_wildcard_skipped():
     r = _rll_routine("Main", _rungs(_rung(_inst("XIC", "?"))))
     controller = Controller(name="Test")
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_rll(r, table, loc)
     assert result == []
@@ -204,7 +206,7 @@ def test_rll_wildcard_skipped():
 def test_rll_empty_rungs():
     r = _rll_routine("Main", [])
     controller = Controller(name="Test")
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_rll(r, table, loc)
     assert result == []
@@ -216,7 +218,7 @@ def test_rll_branches_checked():
     main_inst = Instruction(opcode="BST", branch=[[branch_inst], [branch_inst2]])
     r = _rll_routine("Main", _rungs(_rung(main_inst)))
     controller = Controller(name="Test", tags=[Tag(name="BranchTag", data_type="DINT")])
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_rll(r, table, loc)
     assert len(result) == 1
@@ -226,7 +228,7 @@ def test_rll_branches_checked():
 def test_rll_member_access_known_base():
     r = _rll_routine("Main", _rungs(_rung(_inst("XIC", "MyTag.Member"))))
     controller = Controller(name="Test", tags=[Tag(name="MyTag", data_type="MyUDT")])
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_rll(r, table, loc)
     assert result == []
@@ -235,7 +237,7 @@ def test_rll_member_access_known_base():
 def test_rll_member_access_unknown_base():
     r = _rll_routine("Main", _rungs(_rung(_inst("XIC", "NoTag.SomeMember"))))
     controller = Controller(name="Test")
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_rll(r, table, loc)
     assert len(result) == 1
@@ -254,7 +256,7 @@ def test_rll_program_scope_overrides_controller():
             )
         ],
     )
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_rll(r, table, loc)
     assert result == []
@@ -278,7 +280,7 @@ def test_rll_multiple_rungs():
         name="Test",
         tags=[Tag(name="TagA", data_type="DINT"), Tag(name="TagB", data_type="DINT")],
     )
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_rll(r, table, loc)
     assert len(result) == 1
@@ -303,7 +305,7 @@ def test_st_known_tag_no_diagnostic():
         name="Test",
         tags=[Tag(name="Out", data_type="DINT"), Tag(name="In", data_type="DINT")],
     )
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_st(r, table, loc)
     assert result == []
@@ -322,7 +324,7 @@ def test_st_unknown_tag_emits_ec001():
     )
     r = _st_routine("Main", prog)
     controller = Controller(name="Test", tags=[Tag(name="Out", data_type="DINT")])
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_st(r, table, loc)
     assert len(result) == 1
@@ -340,7 +342,7 @@ def test_st_target_unknown():
     )
     r = _st_routine("Main", prog)
     controller = Controller(name="Test")
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_st(r, table, loc)
     assert len(result) == 1
@@ -371,7 +373,7 @@ def test_st_if_condition_tags():
             Tag(name="ThenTag", data_type="DINT"),
         ],
     )
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_st(r, table, loc)
     assert result == []
@@ -390,7 +392,7 @@ def test_st_if_unknown_condition():
     )
     r = _st_routine("Main", prog)
     controller = Controller(name="Test")
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_st(r, table, loc)
     assert len(result) == 1
@@ -416,7 +418,7 @@ def test_st_binary_op_tags():
         name="Test",
         tags=[Tag(name="Result", data_type="DINT"), Tag(name="A", data_type="DINT")],
     )
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_st(r, table, loc)
     assert len(result) == 1
@@ -453,7 +455,7 @@ def test_st_while():
             Tag(name="Counter", data_type="DINT"),
         ],
     )
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_st(r, table, loc)
     assert result == []
@@ -473,7 +475,7 @@ def test_st_for():
     )
     r = _st_routine("Main", prog)
     controller = Controller(name="Test", tags=[Tag(name="i", data_type="DINT")])
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_st(r, table, loc)
     assert result == []
@@ -503,7 +505,7 @@ def test_st_for_with_exprs():
             Tag(name="StepVal", data_type="DINT"),
         ],
     )
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_st(r, table, loc)
     assert result == []
@@ -524,7 +526,7 @@ def test_st_call_args():
     )
     r = _st_routine("Main", prog)
     controller = Controller(name="Test", tags=[Tag(name="Timer0", data_type="TIMER")])
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_st(r, table, loc)
     assert result == []
@@ -545,7 +547,7 @@ def test_st_call_unknown_arg():
     )
     r = _st_routine("Main", prog)
     controller = Controller(name="Test")
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_st(r, table, loc)
     assert len(result) == 1
@@ -554,7 +556,7 @@ def test_st_call_unknown_arg():
 def test_st_empty_program():
     r = _st_routine("Main", StProgram(statements=[]))
     controller = Controller(name="Test")
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_st(r, table, loc)
     assert result == []
@@ -563,7 +565,7 @@ def test_st_empty_program():
 def test_st_none_body():
     r = _st_routine("Main", None)
     controller = Controller(name="Test")
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_st(r, table, loc)
     assert result == []
@@ -590,7 +592,7 @@ def test_ec001_via_analyze_pipeline():
             )
         ],
     )
-    result = analyze.analyze(controller)
+    result = analyze.analyze(make_project(controller))
     ar = result.unwrap()
     assert not ar.passed
     assert ar.error_count == 1
@@ -614,7 +616,7 @@ def test_ec001_no_duplicates_for_same_tag():
             )
         ],
     )
-    result = analyze.analyze(controller)
+    result = analyze.analyze(make_project(controller))
     ar = result.unwrap()
     assert ar.error_count == 2
 
@@ -622,7 +624,7 @@ def test_ec001_no_duplicates_for_same_tag():
 def test_rll_non_rll_routine_ignored():
     r = Routine(name="Main", type="FBD")
     controller = Controller(name="Test")
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_rll(r, table, loc)
     assert result == []
@@ -641,7 +643,7 @@ def test_st_jsr_args():
     )
     r = _st_routine("Main", prog)
     controller = Controller(name="Test", tags=[Tag(name="Arg1", data_type="DINT")])
-    table = build_symbol_table(controller)
+    table = build_symbol_table(make_project(controller))
     loc = _loc()
     result = _check_st(r, table, loc)
     assert result == []

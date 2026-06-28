@@ -1,3 +1,4 @@
+from helpers import make_project
 from returns.result import Failure, Success
 
 from application.routine_router import route_routines
@@ -15,32 +16,32 @@ def _controller(routines: list[Routine], prog_name: str = "MainProgram") -> Cont
 
 def test_no_programs():
     c = Controller(name="TestPLC")
-    result = route_routines(c)
+    result = route_routines(make_project(c))
     assert isinstance(result, Success)
-    assert result.unwrap() is c
+    assert result.unwrap().controller is c
 
 
 def test_no_routines():
     c = _controller([])
-    result = route_routines(c)
+    result = route_routines(make_project(c))
     assert isinstance(result, Success)
-    assert result.unwrap() is c
+    assert result.unwrap().controller is c
 
 
 def test_empty_cdata():
     c = _controller([Routine(name="Main", type="RLL", cdata="")])
-    result = route_routines(c)
+    result = route_routines(make_project(c))
     assert isinstance(result, Success)
-    r = result.unwrap().programs[0].routines[0]
+    r = result.unwrap().controller.programs[0].routines[0]
     assert r.rll_rungs == []
     assert r.st_body is None
 
 
 def test_rll_routine():
     c = _controller([Routine(name="Main", type="RLL", cdata="XIC(Start)OTE(Run);")])
-    result = route_routines(c)
+    result = route_routines(make_project(c))
     assert isinstance(result, Success)
-    r = result.unwrap().programs[0].routines[0]
+    r = result.unwrap().controller.programs[0].routines[0]
     assert len(r.rll_rungs) == 1
     assert isinstance(r.rll_rungs[0], ParsedRung)
     assert r.rll_rungs[0].instructions[0].opcode == "XIC"
@@ -49,9 +50,9 @@ def test_rll_routine():
 
 def test_st_routine():
     c = _controller([Routine(name="Main", type="ST", cdata="x := 42;")])
-    result = route_routines(c)
+    result = route_routines(make_project(c))
     assert isinstance(result, Success)
-    r = result.unwrap().programs[0].routines[0]
+    r = result.unwrap().controller.programs[0].routines[0]
     assert isinstance(r.st_body, StProgram)
     assert len(r.st_body.statements) == 1
     assert isinstance(r.st_body.statements[0], StAssignment)
@@ -65,9 +66,9 @@ def test_mixed_rll_and_st():
             Routine(name="STRoutine", type="ST", cdata="x := 1;"),
         ]
     )
-    result = route_routines(c)
+    result = route_routines(make_project(c))
     assert isinstance(result, Success)
-    prog = result.unwrap().programs[0]
+    prog = result.unwrap().controller.programs[0]
     rll_r = prog.routines[0]
     st_r = prog.routines[1]
     assert len(rll_r.rll_rungs) == 1
@@ -92,10 +93,11 @@ def test_multiple_programs():
             ),
         ],
     )
-    result = route_routines(c)
+    result = route_routines(make_project(c))
     assert isinstance(result, Success)
-    prog_a = result.unwrap().programs[0]
-    prog_b = result.unwrap().programs[1]
+    proj = result.unwrap()
+    prog_a = proj.controller.programs[0]
+    prog_b = proj.controller.programs[1]
     assert len(prog_a.routines[0].rll_rungs) == 1
     assert len(prog_b.routines[0].st_body.statements) == 1
 
@@ -103,23 +105,23 @@ def test_multiple_programs():
 def test_unsupported_type_skipped():
     for rtype in ("FBD", "SFC", "FUNCTION", "FUNCTION_BLOCK"):
         c = _controller([Routine(name="Main", type=rtype, cdata="some content")])
-        result = route_routines(c)
+        result = route_routines(make_project(c))
         assert isinstance(result, Success), f"Failed for type {rtype}"
-        r = result.unwrap().programs[0].routines[0]
+        r = result.unwrap().controller.programs[0].routines[0]
         assert r.rll_rungs == []
         assert r.st_body is None
 
 
 def test_rll_parse_error():
     c = _controller([Routine(name="Main", type="RLL", cdata="XIC(")])
-    result = route_routines(c)
+    result = route_routines(make_project(c))
     assert isinstance(result, Failure)
 
 
 def test_st_parse_error():
     c = _controller([Routine(name="Main", type="ST", cdata="x := ")])
 
-    result = route_routines(c)
+    result = route_routines(make_project(c))
     assert isinstance(result, Failure)
 
 
@@ -147,5 +149,5 @@ def test_first_failure_stops():
             ),
         ],
     )
-    result = route_routines(c)
+    result = route_routines(make_project(c))
     assert isinstance(result, Failure)

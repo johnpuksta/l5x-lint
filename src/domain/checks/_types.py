@@ -1,5 +1,6 @@
 from returns.maybe import Some
 
+from domain.checks._opcode_sets import BIT_OPS, COMPARE_OPS, MATH_OPS
 from domain.st_models import (
     StBinaryOp,
     StCall,
@@ -9,18 +10,16 @@ from domain.st_models import (
 )
 from domain.symbols import BUILTIN_TYPES, SymbolTable
 
-_REAL_OPS: frozenset[str] = frozenset({"ADD", "SUB", "MUL", "DIV", "NEG", "MOV", "CPT"})
-_BOOL_OPS: frozenset[str] = frozenset({"XIC", "XIO", "OTE", "OTL", "OTU"})
-_COMPARE_OPS: frozenset[str] = frozenset(
-    {"EQU", "NEQ", "LES", "LEQ", "GRT", "GEQ", "CMP", "LIM", "GT"}
-)
+# Math ops return None (void); bit and compare ops return BOOL.
+# MOVE is a math op (returns void like MOV).
+_RETURN_BOOL = BIT_OPS | COMPARE_OPS
 
 
 def _call_return_type(name: str, symbols: SymbolTable) -> str | None:
     upper = name.upper()
-    if upper in _BOOL_OPS or upper in _COMPARE_OPS:
+    if upper in _RETURN_BOOL:
         return "BOOL"
-    if upper in _REAL_OPS:
+    if upper in MATH_OPS:
         return None
     return None
 

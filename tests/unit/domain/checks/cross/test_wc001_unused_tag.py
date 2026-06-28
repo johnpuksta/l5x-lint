@@ -1,3 +1,5 @@
+from helpers import make_project
+
 from application import analyze
 from domain.checks.cross.wc001_unused_tag import _reset, wc001_unused_tag
 from domain.models import Controller, Location, Program, Routine, Tag
@@ -28,7 +30,7 @@ def test_used_controller_tag_no_diagnostic():
     _reset()
     r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("XIC", "MyTag"))])
     c = Controller(name="Test", tags=[Tag(name="MyTag", data_type="DINT")])
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = wc001_unused_tag(r, table, _loc())
     assert result == []
 
@@ -37,7 +39,7 @@ def test_unused_controller_tag_emits_wc001():
     _reset()
     r = Routine(name="Main", type="RLL", rll_rungs=[])
     c = Controller(name="Test", tags=[Tag(name="UnusedTag", data_type="DINT")])
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = wc001_unused_tag(r, table, _loc())
     assert len(result) == 1
     assert result[0].code == "WC001"
@@ -52,7 +54,7 @@ def test_used_program_tag_no_diagnostic():
             Program(name="Prog", tags=[Tag(name="ProgTag", data_type="DINT")]),
         ],
     )
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = wc001_unused_tag(r, table, _loc(program="Prog"))
     assert result == []
 
@@ -78,6 +80,6 @@ def test_st_routine():
             Tag(name="In", data_type="DINT"),
         ],
     )
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = wc001_unused_tag(r, table, _loc())
     assert result == []

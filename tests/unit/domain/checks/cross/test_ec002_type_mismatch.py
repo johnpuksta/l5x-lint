@@ -1,3 +1,5 @@
+from helpers import make_project
+
 from application import analyze
 from domain.checks.cross.ec002_type_mismatch import ec002_type_mismatch
 from domain.models import Controller, Location, Routine, Tag
@@ -26,7 +28,7 @@ def _inst(opcode, *operand_values):
 def test_ton_with_timer_no_diagnostic():
     r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("TON", "MyTimer"))])
     c = Controller(name="Test", tags=[Tag(name="MyTimer", data_type="TIMER")])
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec002_type_mismatch(r, table, _loc())
     assert result == []
 
@@ -34,7 +36,7 @@ def test_ton_with_timer_no_diagnostic():
 def test_ton_with_dint_emits_ec002():
     r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("TON", "MyDint"))])
     c = Controller(name="Test", tags=[Tag(name="MyDint", data_type="DINT")])
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec002_type_mismatch(r, table, _loc())
     assert len(result) == 1
     assert result[0].code == "EC002"
@@ -43,7 +45,7 @@ def test_ton_with_dint_emits_ec002():
 def test_no_expected_type_no_diagnostic():
     r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("XIC", "MyTag"))])
     c = Controller(name="Test", tags=[Tag(name="MyTag", data_type="DINT")])
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec002_type_mismatch(r, table, _loc())
     assert result == []
 
@@ -64,7 +66,7 @@ def test_st_call_type_mismatch():
     )
     r = Routine(name="Main", type="ST", st_body=prog)
     c = Controller(name="Test", tags=[Tag(name="MyDint", data_type="DINT")])
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec002_type_mismatch(r, table, _loc())
     assert len(result) == 1
     assert result[0].code == "EC002"
@@ -73,7 +75,7 @@ def test_st_call_type_mismatch():
 def test_unknown_tag_skipped():
     r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("TON", "NoTag"))])
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec002_type_mismatch(r, table, _loc())
     assert result == []
 
@@ -81,7 +83,7 @@ def test_unknown_tag_skipped():
 def test_ctu_with_counter_no_diagnostic():
     r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("CTU", "MyCtr"))])
     c = Controller(name="Test", tags=[Tag(name="MyCtr", data_type="COUNTER")])
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec002_type_mismatch(r, table, _loc())
     assert result == []
 
@@ -89,7 +91,7 @@ def test_ctu_with_counter_no_diagnostic():
 def test_res_with_timer_no_diagnostic():
     r = Routine(name="Main", type="RLL", rll_rungs=[_rung(_inst("RES", "MyTimer"))])
     c = Controller(name="Test", tags=[Tag(name="MyTimer", data_type="TIMER")])
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec002_type_mismatch(r, table, _loc())
     assert result == []
 
@@ -97,6 +99,6 @@ def test_res_with_timer_no_diagnostic():
 def test_non_rll_ignored():
     r = Routine(name="Main", type="FBD")
     c = Controller(name="Test")
-    table = build_symbol_table(c)
+    table = build_symbol_table(make_project(c))
     result = ec002_type_mismatch(r, table, _loc())
     assert result == []

@@ -35,7 +35,7 @@ def _validate(path: Path, config: LintConfig | None = None) -> str:
 
     source_lines = project.controller.source_lines
 
-    analysis = analyze(project.controller, config=config)
+    analysis = analyze(project, config=config)
     match analysis:
         case Failure(err):
             return json.dumps({"error": f"Analysis error: {err}"})
