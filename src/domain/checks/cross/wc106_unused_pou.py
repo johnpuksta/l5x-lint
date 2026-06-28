@@ -50,9 +50,7 @@ def wc106_unused_pou(
             for stmt in bod.statements:
                 match stmt:
                     case StCall():
-                        canonical = resolve_opcode(
-                            stmt.name, symbols.software_revision
-                        )
+                        canonical = resolve_opcode(stmt.name, symbols.software_revision)
                         if canonical not in opcodes:
                             _used_aois.add(stmt.name)
                     case StJsr():

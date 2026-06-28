@@ -440,7 +440,9 @@ def test_rll_walker_add_diagnostic():
         ],
     )
     c = Controller(name="C")
-    result = w(prog, build_symbol_table(make_project(c)), _loc(program="P", routine="R"))
+    result = w(
+        prog, build_symbol_table(make_project(c)), _loc(program="P", routine="R")
+    )
     assert len(result) == 1
     assert result[0].code == "WR005"
     assert result[0].severity == "warning"

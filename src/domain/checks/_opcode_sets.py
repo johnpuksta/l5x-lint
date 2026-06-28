@@ -30,28 +30,67 @@ TIMER_COUNTER_OPS: frozenset[str] = frozenset(
     {"TON", "TOF", "RTO", "CTU", "CTD", "RES"}
 )
 
-INPUT_OPCODES: frozenset[str] = frozenset(
-    {"XIC", "XIO", "ONS", "OSR", "OSF"}
-) | COMPARE_OPS
+INPUT_OPCODES: frozenset[str] = (
+    frozenset({"XIC", "XIO", "ONS", "OSR", "OSF"}) | COMPARE_OPS
+)
 
 OUTPUT_OPCODES: frozenset[str] = frozenset(
     {
-        "OTE", "OTL", "OTU",
-        "TON", "TOF", "RTO", "CTU", "CTD", "RES",
-        "MOV", "ADD", "SUB", "MUL", "DIV", "CLR", "NEG", "MOD",
-        "SCL", "CPW", "SWPB", "DTOS", "STOD",
-        "PID", "MSG", "IOT",
-        "COP", "CPS", "FAL", "FSC",
-        "GSV", "SSV",
+        "OTE",
+        "OTL",
+        "OTU",
+        "TON",
+        "TOF",
+        "RTO",
+        "CTU",
+        "CTD",
+        "RES",
+        "MOV",
+        "ADD",
+        "SUB",
+        "MUL",
+        "DIV",
+        "CLR",
+        "NEG",
+        "MOD",
+        "SCL",
+        "CPW",
+        "SWPB",
+        "DTOS",
+        "STOD",
+        "PID",
+        "MSG",
+        "IOT",
+        "COP",
+        "CPS",
+        "FAL",
+        "FSC",
+        "GSV",
+        "SSV",
     }
 )
 
 # ST calls that are pure functions (no side effects, return a value)
 ST_PURE_CALLS: frozenset[str] = frozenset(
     {
-        "ADD", "SUB", "MUL", "DIV", "MOD", "NEG", "ABS", "SQR",
-        "GT", "LT", "GEQ", "LEQ", "EQU", "NEQ",
-        "AND", "OR", "NOT", "XOR",
+        "ADD",
+        "SUB",
+        "MUL",
+        "DIV",
+        "MOD",
+        "NEG",
+        "ABS",
+        "SQR",
+        "GT",
+        "LT",
+        "GEQ",
+        "LEQ",
+        "EQU",
+        "NEQ",
+        "AND",
+        "OR",
+        "NOT",
+        "XOR",
     }
 )
 
@@ -93,14 +132,48 @@ def builtin_opcodes(revision: str = "") -> frozenset[str]:
     For pre-v36, only classic names are included.
     """
     base: frozenset[str] = (
-        MATH_OPS | COMPARE_OPS | BIT_OPS | TIMER_COUNTER_OPS
-        | frozenset({
-            "JSR", "JXR", "JMP", "LBL", "MCR", "AFI", "NOP", "TND", "SUS",
-            "BST", "BND", "NXB", "ONS", "OSR", "OSF",
-            "SCL", "CPW", "SWPB", "DTOS", "STOD",
-            "PID", "MSG", "GSV", "SSV", "COP", "CPS", "FAL", "FSC",
-            "IOT", "SFP", "SFR", "SPP", "SRT", "MOV",
-        })
+        MATH_OPS
+        | COMPARE_OPS
+        | BIT_OPS
+        | TIMER_COUNTER_OPS
+        | frozenset(
+            {
+                "JSR",
+                "JXR",
+                "JMP",
+                "LBL",
+                "MCR",
+                "AFI",
+                "NOP",
+                "TND",
+                "SUS",
+                "BST",
+                "BND",
+                "NXB",
+                "ONS",
+                "OSR",
+                "OSF",
+                "SCL",
+                "CPW",
+                "SWPB",
+                "DTOS",
+                "STOD",
+                "PID",
+                "MSG",
+                "GSV",
+                "SSV",
+                "COP",
+                "CPS",
+                "FAL",
+                "FSC",
+                "IOT",
+                "SFP",
+                "SFR",
+                "SPP",
+                "SRT",
+                "MOV",
+            }
+        )
     )
     major = _parse_major(revision)
     if major >= 36:
