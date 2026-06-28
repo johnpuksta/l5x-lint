@@ -1,25 +1,15 @@
 """RLL rung parser using Lark.
 
-Lark Scanner Priority:
-    Lark's BasicLexer._build_scanner() sorts terminals by
-    (-priority, -max_width, -len(pattern.value), name) ascending.
-    Higher numeric priority in grammar (e.g., NAME.100) means the
-    terminal matches first (because -100 < 0).
+Expression grammar uses recursive rules (not regex tokens) to handle
+arbitrary nesting depth of parenthesized sub-expressions and function
+calls.  All Rockwell CPT/CMP operators are supported including
+comparison (<, <=, >, >=, =, <<>), logical (&&, ^^, ||), bitwise
+(AND, XOR, OR), arithmetic (+, -, *, /, **, MOD), and function calls
+(ABS, SQRT, SIN, …).
 
-    TAG_BASE uses priority -1 to sort after keywords (priority 0)
-    — otherwise -max_width tiebreaker puts unbounded TAG_BASE before
-    fixed-length keywords like IF.
-
-    CMP.100 and HEX_LITERAL.100 use high priority to match before
-    broader OPCODE/NUMBER patterns.
-
-Inline String Literals in Alternatives:
-    Lark drops inline string literal tokens (e.g., "[", "]") from
-    alternatives within (...)* groups. The tag_path rule uses
-    "[" NUMBER ("," NUMBER)* "]" but the transformer receives only
-    TAG_BASE, NUMBER tokens — brackets are invisible. Array indices
-    are internally represented as .N (dot notation). To preserve
-    brackets, use named terminals (LSQB: "[", RSQB: "]") in grammar.
+Lark drops inline string literals (e.g., "[", "]") from alternatives
+inside (...)* groups.  Array indices are therefore represented in dot
+notation internally (Array[5] → Array.5).
 """
 
 from dataclasses import dataclass, field
@@ -40,34 +30,43 @@ items: item*
 item: instruction
     | branch
 
-instruction: CMP "(" CMP_CONTENT ")"
-           | OPCODE ("(" params? ")")?
+instruction: IDENT (LPAREN params? RPAREN)?
 
 branch: "[" items ("," items)* "]"
 
 params: param (COMMA param?)*
 
-param: tag_path
-     | NUMBER
-     | HEX_LITERAL
-     | WILDCARD
-     | EXPR
+param: WILDCARD | expr
 
-tag_path: TAG_BASE ("." (TAG_BASE | NUMBER | "[" TAG_BASE ("." TAG_BASE)* "]") | "[" NUMBER ("," NUMBER)* "]" | "[" TAG_BASE ("." TAG_BASE)* "]")*
+// Recursive expression grammar — handles arbitrary depth natively.
+// EXPR_OP is a single terminal matching all binary operators; longer
+// patterns (<=, <>, **, &&, etc.) are listed first so the regex
+// matches them before single-char variants.
+expr: expr_atom (EXPR_OP expr_atom)*
 
-// Tokens
-OPCODE: /[A-Za-z_][A-Za-z0-9_]*/
-TAG_BASE: /[A-Za-z_][A-Za-z0-9_]*:[0-9]+:[A-Za-z_][A-Za-z0-9_]*/
-        | /[A-Za-z_][A-Za-z0-9_]*:[A-Za-z][A-Za-z0-9_]*/
-        | /[A-Za-z_][A-Za-z0-9_]*/
+expr_atom: NUMBER
+         | HEX_LITERAL
+         | tag_or_call
+         | LPAREN expr RPAREN
+
+tag_or_call: tag_path (LPAREN (expr (COMMA expr)*)? RPAREN)?
+
+tag_path: IDENT ("." (IDENT | NUMBER | "[" IDENT ("." IDENT)* "]")
+               | "[" NUMBER ("," NUMBER)* "]"
+               | "[" IDENT ("." IDENT)* "]")*
+
+// Terminals
+IDENT: /[A-Za-z_][A-Za-z0-9_]*/
+     | /[A-Za-z_][A-Za-z0-9_]*:[0-9]+:[A-Za-z_][A-Za-z0-9_]*/
+     | /[A-Za-z_][A-Za-z0-9_]*:[A-Za-z][A-Za-z0-9_]*/
+EXPR_OP.5: /\*\*|<>|<=|>=|&&|\|\||\^\^|MOD|AND|XOR|OR|[+\-*\/<>=!]/
+LPAREN: "("
+RPAREN: ")"
 WILDCARD: "?"
 HEX_LITERAL.100: /16#[0-9A-Fa-f][0-9A-Fa-f_]*/
 NUMBER: /-?[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?/
 SEMICOLON: ";"
 COMMA: ","
-EXPR.50: /[A-Za-z0-9_]+(\s*[+*\/\-]\s*[A-Za-z0-9_\s]+)+/
-CMP.100: "CMP"
-CMP_CONTENT: /(?:[^)()]+|\([^)]*\))+/
 %ignore /[ \t\n\r]+/
 """
 
@@ -135,7 +134,35 @@ class _RLLTransformer(Transformer):
         return result
 
     def param(self, items):
+        if not items:
+            return Operand(value="")
         return items[0]
+
+    def expr(self, items):
+        parts = []
+        for item in items:
+            if isinstance(item, Operand):
+                parts.append(item.value)
+            elif isinstance(item, str):
+                parts.append(item)
+        return Operand(value=" ".join(parts) if parts else "")
+
+    def expr_atom(self, items):
+        if len(items) == 1:
+            return items[0]
+        # "(" expr ")" — wrap with parens
+        inner = items[1] if len(items) > 1 else Operand(value="")
+        return Operand(value=f"({inner.value})")
+
+    def tag_or_call(self, items):
+        if len(items) == 1:
+            return items[0]
+        # tag_path "(" args ")"
+        tag_val = items[0].value if isinstance(items[0], Operand) else str(items[0])
+        args = [item.value for item in items[1:] if isinstance(item, Operand)]
+        if args:
+            return Operand(value=f"{tag_val}({', '.join(args)})")
+        return Operand(value=f"{tag_val}()")
 
     def tag_path(self, items):
         value = ""
@@ -161,10 +188,13 @@ class _RLLTransformer(Transformer):
                 prev = s
         return Operand(value=value)
 
-    def OPCODE(self, token):  # noqa: N802
+    def expr_op(self, items):
+        return str(items[0])
+
+    def EXPR_OP(self, token):  # noqa: N802
         return str(token)
 
-    def TAG_BASE(self, token):  # noqa: N802
+    def IDENT(self, token):  # noqa: N802
         return str(token)
 
     def NUMBER(self, token):  # noqa: N802
@@ -176,17 +206,8 @@ class _RLLTransformer(Transformer):
     def HEX_LITERAL(self, token):  # noqa: N802
         return Operand(value=str(token))
 
-    def EXPR(self, token):  # noqa: N802
-        return Operand(value=str(token).strip())
-
     def SEMICOLON(self, token):  # noqa: N802
         return None
-
-    def CMP(self, token):  # noqa: N802
-        return str(token)
-
-    def CMP_CONTENT(self, token):  # noqa: N802
-        return Operand(value=str(token).strip())
 
 
 def _merge_branches(items: list) -> list[Instruction]:

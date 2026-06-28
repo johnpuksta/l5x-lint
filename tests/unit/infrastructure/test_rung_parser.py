@@ -156,7 +156,7 @@ def test_parse_expression_operand():
     instr = rungs[0].instructions[0]
     assert instr.opcode == "CPT"
     # second operand is expression
-    assert instr.operands[1].value == "A+B*C"
+    assert instr.operands[1].value == "A + B * C"
 
 
 def test_parse_rung_numbering():
@@ -570,7 +570,7 @@ class TestInstructionOperands:
     def test_expression_operand(self):
         result = parse("CPT(Dest,A+B*C);")
         rungs = result.unwrap()
-        assert rungs[0].instructions[0].operands[1].value == "A+B*C"
+        assert rungs[0].instructions[0].operands[1].value == "A + B * C"
 
     def test_empty_operands_middle(self):
         result = parse("CAL(A,,B);")
@@ -733,7 +733,7 @@ class TestCmpInstruction:
         result = parse("CMP(A>B AND C<D);")
         rungs = result.unwrap()
         assert rungs[0].instructions[0].opcode == "CMP"
-        assert rungs[0].instructions[0].operands[0].value == "A>B AND C<D"
+        assert rungs[0].instructions[0].operands[0].value == "A > B AND C < D"
 
     def test_cmp_with_comparison(self):
         result = parse("CMP(Val > 100);")
@@ -746,6 +746,98 @@ class TestCmpInstruction:
         rungs = result.unwrap()
         assert len(rungs[0].instructions) == 2
         assert rungs[0].instructions[0].branch is not None
+
+    def test_cmp_with_nested_parentheses(self):
+        result = parse("CMP(SQRT(SQRT(4)));")
+        rungs = result.unwrap()
+        assert rungs[0].instructions[0].opcode == "CMP"
+        assert rungs[0].instructions[0].operands[0].value == "SQRT(SQRT(4))"
+
+    def test_cmp_with_deeply_nested_parentheses(self):
+        result = parse("CMP(((Tag_a*2)));")
+        rungs = result.unwrap()
+        assert rungs[0].instructions[0].opcode == "CMP"
+        assert rungs[0].instructions[0].operands[0].value == "((Tag_a * 2))"
+
+    def test_cmp_with_nested_math(self):
+        result = parse("CMP(A * (B + (C / D)));")
+        rungs = result.unwrap()
+        assert rungs[0].instructions[0].opcode == "CMP"
+        assert rungs[0].instructions[0].operands[0].value == "A * (B + (C / D))"
+
+
+# ---------------------------------------------------------------------------
+# CPT with parenthesized expressions and function calls
+# ---------------------------------------------------------------------------
+
+class TestCptParenthesizedExpressions:
+    def test_cpt_with_parenthesized_expression(self):
+        result = parse("CPT(Dest, (A+B)*C);")
+        rungs = result.unwrap()
+        instr = rungs[0].instructions[0]
+        assert instr.opcode == "CPT"
+        assert instr.operands[0].value == "Dest"
+        assert instr.operands[1].value == "(A + B) * C"
+
+    def test_cpt_with_function_call(self):
+        result = parse("CPT(Dest, SQRT(A));")
+        rungs = result.unwrap()
+        instr = rungs[0].instructions[0]
+        assert instr.opcode == "CPT"
+        assert instr.operands[0].value == "Dest"
+        assert instr.operands[1].value == "SQRT(A)"
+
+    def test_cpt_with_nested_function_call(self):
+        result = parse("CPT(Dest, SQRT(SQRT(A)));")
+        rungs = result.unwrap()
+        instr = rungs[0].instructions[0]
+        assert instr.opcode == "CPT"
+        assert instr.operands[1].value == "SQRT(SQRT(A))"
+
+    def test_cpt_with_abs_function(self):
+        result = parse("CPT(Dest, ABS(A));")
+        rungs = result.unwrap()
+        instr = rungs[0].instructions[0]
+        assert instr.opcode == "CPT"
+        assert instr.operands[1].value == "ABS(A)"
+
+    def test_cpt_with_multiple_parenthesized_groups(self):
+        result = parse("CPT(Dest, (A+B) * (C-D));")
+        rungs = result.unwrap()
+        instr = rungs[0].instructions[0]
+        assert instr.opcode == "CPT"
+        assert instr.operands[1].value == "(A + B) * (C - D)"
+
+    def test_cpt_with_parenthesized_leading_expression(self):
+        result = parse("CPT(Dest, (A+B));")
+        rungs = result.unwrap()
+        instr = rungs[0].instructions[0]
+        assert instr.opcode == "CPT"
+        assert instr.operands[1].value == "(A + B)"
+
+    def test_cpt_with_function_and_operators(self):
+        result = parse("CPT(Dest, SQRT(A) * 2);")
+        rungs = result.unwrap()
+        instr = rungs[0].instructions[0]
+        assert instr.opcode == "CPT"
+        assert instr.operands[1].value == "SQRT(A) * 2"
+
+    def test_mov_with_function_call(self):
+        result = parse("MOV(SQRT(4), Dest);")
+        rungs = result.unwrap()
+        instr = rungs[0].instructions[0]
+        assert instr.opcode == "MOV"
+        assert instr.operands[0].value == "SQRT(4)"
+        assert instr.operands[1].value == "Dest"
+
+    def test_add_with_parenthesized_operand(self):
+        result = parse("ADD((A + B), C, Dest);")
+        rungs = result.unwrap()
+        instr = rungs[0].instructions[0]
+        assert instr.opcode == "ADD"
+        assert instr.operands[0].value == "(A + B)"
+        assert instr.operands[1].value == "C"
+        assert instr.operands[2].value == "Dest"
 
 
 # ---------------------------------------------------------------------------
