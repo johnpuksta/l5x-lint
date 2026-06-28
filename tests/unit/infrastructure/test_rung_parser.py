@@ -722,3 +722,50 @@ class TestErrorCases:
     def test_invalid_token(self):
         result = parse("@invalid!;")
         assert isinstance(result, Failure)
+
+
+# ---------------------------------------------------------------------------
+# CMP instruction with expression
+# ---------------------------------------------------------------------------
+
+class TestCmpInstruction:
+    def test_cmp_with_expression(self):
+        result = parse("CMP(A>B AND C<D);")
+        rungs = result.unwrap()
+        assert rungs[0].instructions[0].opcode == "CMP"
+        assert rungs[0].instructions[0].operands[0].value == "A>B AND C<D"
+
+    def test_cmp_with_comparison(self):
+        result = parse("CMP(Val > 100);")
+        rungs = result.unwrap()
+        assert rungs[0].instructions[0].opcode == "CMP"
+        assert "Val > 100" in rungs[0].instructions[0].operands[0].value
+
+    def test_cmp_in_branch(self):
+        result = parse("XIC(A)[CMP(X>0)]OTE(B);")
+        rungs = result.unwrap()
+        assert len(rungs[0].instructions) == 2
+        assert rungs[0].instructions[0].branch is not None
+
+
+# ---------------------------------------------------------------------------
+# Deeply nested branches (3+ levels)
+# ---------------------------------------------------------------------------
+
+class TestDeepNestedBranches:
+    def test_three_way_parallel(self):
+        result = parse("XIC(A)[XIO(B),XIO(C),XIO(D)]OTE(E);")
+        rungs = result.unwrap()
+        branch = rungs[0].instructions[0].branch
+        assert branch is not None
+        assert len(branch) == 3
+
+    def test_nested_parallel_in_parallel(self):
+        # Two-level: outer branch has 2 paths, each with 2 sub-paths
+        result = parse("XIC(A)[XIO(B)XIC(C),XIO(D)XIC(E)]OTE(F);")
+        rungs = result.unwrap()
+        branch = rungs[0].instructions[0].branch
+        assert branch is not None
+        assert len(branch) == 2
+        assert len(branch[0]) == 2
+        assert len(branch[1]) == 2

@@ -297,7 +297,10 @@ ENDREGION: /(?i:#endregion[^\n]*)/
 
 
 def _process_string_escapes(s: str) -> str:
-    """Process IEC 61131-3 $-based string escape sequences."""
+    """Process IEC 61131-3 $-based string escape sequences.
+
+    Supports both 2nd edition ($nn) and 4th edition (${nn}) hex escapes.
+    """
     result = []
     i = 0
     while i < len(s):
@@ -324,8 +327,23 @@ def _process_string_escapes(s: str) -> str:
             elif next_char in ("P", "p"):
                 result.append("\f")
                 i += 2
+            elif next_char == "{":
+                # 4th edition braced hex: ${nn}, ${nnnn}, ${nnnnnn}
+                j = i + 2
+                while j < len(s) and s[j] != "}" and j < i + 10:
+                    j += 1
+                if j < len(s) and s[j] == "}":
+                    hex_str = s[i + 2 : j]
+                    try:
+                        result.append(chr(int(hex_str, 16)))
+                    except ValueError:
+                        result.append(s[i : j + 1])
+                    i = j + 1
+                else:
+                    result.append(s[i])
+                    i += 1
             elif next_char in "0123456789ABCDEFabcdef":
-                # Hex escape: $nn (2 hex digits for STRING)
+                # Hex escape: $nn (2 hex digits for STRING, up to 4 for WSTRING)
                 hex_str = ""
                 j = i + 1
                 while j < len(s) and j < i + 5 and s[j] in "0123456789ABCDEFabcdef":

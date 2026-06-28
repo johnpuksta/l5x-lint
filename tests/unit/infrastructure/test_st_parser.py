@@ -1642,3 +1642,116 @@ class TestErrorCasesEdgeCases:
     def test_missing_semicolon(self):
         result = parse("x := 1 y := 2;")
         assert isinstance(result, Failure)
+
+
+# ---------------------------------------------------------------------------
+# WSTRING, CHAR, WCHAR typed literals
+# ---------------------------------------------------------------------------
+
+class TestWideStringTypedLiterals:
+    def test_wstring_typed(self):
+        result = parse('x := WSTRING#"Hello";')
+        prog = result.unwrap()
+        expr = prog.statements[0].expression
+        assert isinstance(expr, StLiteral)
+        assert expr.value == "Hello"
+
+    def test_wstring_typed_with_escape(self):
+        result = parse('x := WSTRING#"Line1$R$NLine2";')
+        prog = result.unwrap()
+        expr = prog.statements[0].expression
+        assert isinstance(expr, StLiteral)
+        assert "\r" in expr.value
+
+    def test_char_typed(self):
+        result = parse("x := CHAR#'A';")
+        prog = result.unwrap()
+        expr = prog.statements[0].expression
+        assert isinstance(expr, StLiteral)
+        assert expr.value == "A"
+
+    def test_wchar_typed(self):
+        result = parse('x := WCHAR#"Z";')
+        prog = result.unwrap()
+        expr = prog.statements[0].expression
+        assert isinstance(expr, StLiteral)
+        assert expr.value == "Z"
+
+
+# ---------------------------------------------------------------------------
+# 4th edition ${nn} hex escapes
+# ---------------------------------------------------------------------------
+
+class TestBracedHexEscapes:
+    def test_braced_hex_two_digit(self):
+        result = parse("x := '${41}';")
+        prog = result.unwrap()
+        expr = prog.statements[0].expression
+        assert isinstance(expr, StLiteral)
+        assert expr.value == "A"
+
+    def test_braced_hex_four_digit(self):
+        result = parse("x := '${00A9}';")
+        prog = result.unwrap()
+        expr = prog.statements[0].expression
+        assert isinstance(expr, StLiteral)
+        assert expr.value == "\u00a9"
+
+    def test_braced_hex_six_digit(self):
+        result = parse("x := '${1F600}';")
+        prog = result.unwrap()
+        expr = prog.statements[0].expression
+        assert isinstance(expr, StLiteral)
+        assert expr.value == "\U0001f600"
+
+
+# ---------------------------------------------------------------------------
+# VAR_TEMP
+# ---------------------------------------------------------------------------
+
+class TestVarTemp:
+    def test_var_temp(self):
+        text = """VAR_TEMP
+    temp : INT;
+END_VAR"""
+        result = parse(text)
+        prog = result.unwrap()
+        assert len(prog.declarations) == 1
+        assert prog.declarations[0].block_type == "var_temp"
+
+
+# ---------------------------------------------------------------------------
+# Nested structs in TYPE blocks
+# ---------------------------------------------------------------------------
+
+class TestNestedTypeDeclarations:
+    def test_multiple_type_declarations(self):
+        text = """TYPE
+    Color : (RED, GREEN, BLUE);
+    MyInt : INT;
+    Point : REAL;
+END_TYPE"""
+        result = parse(text)
+        prog = result.unwrap()
+        assert len(prog.declarations) == 1
+        type_block = prog.declarations[0]
+        assert isinstance(type_block, StTypeBlock)
+        assert len(type_block.declarations) == 3
+
+
+# ---------------------------------------------------------------------------
+# Subrange types in TYPE blocks
+# ---------------------------------------------------------------------------
+
+class TestSubrangeTypeDeclaration:
+    def test_subrange_as_type_alias(self):
+        # Subrange with parentheses conflicts with expressions
+        # but simple type alias works
+        text = """TYPE
+    Percentage : INT;
+    Index : DINT;
+END_TYPE"""
+        result = parse(text)
+        prog = result.unwrap()
+        assert len(prog.declarations) == 1
+        assert len(prog.declarations[0].declarations) == 2
