@@ -2,27 +2,7 @@ from application._registry import register
 from domain.checks._codes import EC015
 from domain.diagnostics import Diagnostic
 from domain.models import Location, Routine
-from domain.symbols import SymbolTable
-
-_BUILTIN_TYPES: frozenset[str] = frozenset(
-    {
-        "BOOL",
-        "SINT",
-        "INT",
-        "DINT",
-        "LINT",
-        "USINT",
-        "UINT",
-        "UDINT",
-        "ULINT",
-        "REAL",
-        "LREAL",
-        "STRING",
-        "TIMER",
-        "COUNTER",
-        "CONTROL",
-    }
-)
+from domain.symbols import BUILTIN_TYPES, SymbolTable
 
 _processed: bool = False
 _reported: set[str] = set()
@@ -46,7 +26,7 @@ def ec015_invalid_data_type(
         return result
     _processed = True
 
-    valid_types: set[str] = set(symbols.data_types.keys()) | _BUILTIN_TYPES
+    valid_types: set[str] = set(symbols.data_types.keys()) | BUILTIN_TYPES
 
     for tag in symbols.controller_tags.values():
         if tag.data_type and tag.data_type not in valid_types:
