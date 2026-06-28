@@ -42,12 +42,17 @@ param: WILDCARD | expr
 // EXPR_OP is a single terminal matching all binary operators; longer
 // patterns (<=, <>, **, &&, etc.) are listed first so the regex
 // matches them before single-char variants.
+// UNARY_OP has higher priority than IDENT so NOT/!/− are consumed as
+// operators rather than tag names.  The contextual lexer ensures − is
+// only matched as UNARY_OP when the parser expects an expr_atom start
+// (i.e. unary position), not after an expr_atom (binary position).
 expr: expr_atom (EXPR_OP expr_atom)*
 
 expr_atom: NUMBER
          | HEX_LITERAL
          | tag_or_call
          | LPAREN expr RPAREN
+         | UNARY_OP expr_atom
 
 tag_or_call: tag_path (LPAREN (expr (COMMA expr)*)? RPAREN)?
 
@@ -59,7 +64,8 @@ tag_path: IDENT ("." (IDENT | NUMBER | "[" IDENT ("." IDENT)* "]")
 IDENT: /[A-Za-z_][A-Za-z0-9_]*/
      | /[A-Za-z_][A-Za-z0-9_]*:[0-9]+:[A-Za-z_][A-Za-z0-9_]*/
      | /[A-Za-z_][A-Za-z0-9_]*:[A-Za-z][A-Za-z0-9_]*/
-EXPR_OP.5: /\*\*|<>|<=|>=|&&|\|\||\^\^|MOD|AND|XOR|OR|[+\-*\/<>=!]/
+EXPR_OP.5: /\*\*|<>|<=|>=|&&|\|\||\^\^|MOD|AND|XOR|OR|[+\-*\/<>=]/
+UNARY_OP.10: /NOT(?![A-Za-z0-9_])|!|-/
 LPAREN: "("
 RPAREN: ")"
 WILDCARD: "?"
@@ -150,9 +156,18 @@ class _RLLTransformer(Transformer):
     def expr_atom(self, items):
         if len(items) == 1:
             return items[0]
-        # "(" expr ")" — wrap with parens
-        inner = items[1] if len(items) > 1 else Operand(value="")
-        return Operand(value=f"({inner.value})")
+        if len(items) == 3:
+            # LPAREN expr RPAREN — parenthesised sub-expression
+            inner = items[1]
+            return Operand(value=f"({inner.value})")
+        if len(items) == 2:
+            # UNARY_OP expr_atom — prefix operator
+            op = str(items[0])
+            operand = items[1]
+            if op == "NOT":
+                return Operand(value=f"NOT {operand.value}")
+            return Operand(value=f"{op}{operand.value}")
+        return items[0]
 
     def tag_or_call(self, items):
         if len(items) == 1:
@@ -194,6 +209,9 @@ class _RLLTransformer(Transformer):
     def EXPR_OP(self, token):  # noqa: N802
         return str(token)
 
+    def UNARY_OP(self, token):  # noqa: N802
+        return str(token)
+
     def IDENT(self, token):  # noqa: N802
         return str(token)
 
@@ -227,7 +245,7 @@ def _merge_branches(items: list) -> list[Instruction]:
 
 
 _transformer = _RLLTransformer()
-_parser = Lark(_GRAMMAR, parser="lalr", transformer=_transformer)
+_parser = Lark(_GRAMMAR, parser="lalr", lexer="contextual", transformer=_transformer)
 
 
 def parse(text: str) -> Result[list[ParsedRung], RLLParseError]:

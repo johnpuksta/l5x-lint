@@ -841,6 +841,58 @@ class TestCptParenthesizedExpressions:
 
 
 # ---------------------------------------------------------------------------
+# Unary prefix operators (NOT, !, -)
+# ---------------------------------------------------------------------------
+
+class TestUnaryOperators:
+    def test_not_prefix(self):
+        result = parse("CMP(NOT A);")
+        rungs = result.unwrap()
+        assert rungs[0].instructions[0].operands[0].value == "NOT A"
+
+    def test_negate_prefix(self):
+        result = parse("CPT(Dest, -A);")
+        rungs = result.unwrap()
+        assert rungs[0].instructions[0].operands[1].value == "-A"
+
+    def test_bang_prefix(self):
+        result = parse("CPT(Dest, !A);")
+        rungs = result.unwrap()
+        assert rungs[0].instructions[0].operands[1].value == "!A"
+
+    def test_not_with_binary_operator(self):
+        result = parse("CPT(Dest, NOT A AND B);")
+        rungs = result.unwrap()
+        assert rungs[0].instructions[0].operands[1].value == "NOT A AND B"
+
+    def test_negate_with_binary_operator(self):
+        result = parse("CPT(Dest, A + -B);")
+        rungs = result.unwrap()
+        assert rungs[0].instructions[0].operands[1].value == "A + -B"
+
+    def test_negate_parenthesised(self):
+        result = parse("CPT(Dest, -(A + B));")
+        rungs = result.unwrap()
+        assert rungs[0].instructions[0].operands[1].value == "-(A + B)"
+
+    def test_negate_function_call(self):
+        result = parse("CPT(Dest, -SQRT(A));")
+        rungs = result.unwrap()
+        assert rungs[0].instructions[0].operands[1].value == "-SQRT(A)"
+
+    def test_not_with_comparison(self):
+        result = parse("CMP(NOT A > B);")
+        rungs = result.unwrap()
+        assert rungs[0].instructions[0].operands[0].value == "NOT A > B"
+
+    def test_not_does_not_consume_identifier(self):
+        """NOT should not eat into a longer identifier like NOTIFY."""
+        result = parse("XIC(NOTIFY)OTE(B);")
+        rungs = result.unwrap()
+        assert rungs[0].instructions[0].operands[0].value == "NOTIFY"
+
+
+# ---------------------------------------------------------------------------
 # Deeply nested branches (3+ levels)
 # ---------------------------------------------------------------------------
 
